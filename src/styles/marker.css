@@ -1,0 +1,24 @@
+.custom-popup > .leaflet-popup-content-wrapper {
+    border-radius: 10px;
+    min-width: 200px;
+    padding: 0;
+    padding-top: 0.75rem;
+}
+
+.custom-popup .leaflet-popup-content {
+    margin: 0;
+}
+
+.custom-popup .leaflet-popup-tip-container {
+}
+
+.data-label {
+    padding: 5px 0;
+}
+
+/* Etiqueta del valor del indicador */
+.rt-data-row > span {
+    width: 10ch;
+    text-align: center;
+    border-color: transparent;
+}
