@@ -22,3 +22,7 @@
     text-align: center;
     border-color: transparent;
 }
+
+.leaflet-container {
+    z-index: 0;
+}

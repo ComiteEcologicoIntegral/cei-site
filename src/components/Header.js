@@ -1,5 +1,5 @@
 import { Nav, Navbar } from 'react-bootstrap';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useState } from 'react'
 
 const Header = () => {
@@ -26,7 +26,7 @@ const Header = () => {
                 <Nav className="ml-auto">
                 <NavLink  onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" exact to="/">Mapa</NavLink>
                 <NavLink  onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/registro">Registro histórico</NavLink>
-                <NavLink  onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/calendario">Compara datos</NavLink>
+                <NavLink  onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/compara">Compara datos</NavLink>
                 <NavLink  onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/">Acerca de</NavLink>
                 </Nav>
             </Navbar.Collapse>

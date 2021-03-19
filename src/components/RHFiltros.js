@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form, ButtonGroup, Button, Col } from 'react-bootstrap';
 import Select, { components } from 'react-select';
 import { NavLink } from 'react-router-dom';
@@ -20,11 +20,6 @@ const indicadores = [
     {value: 'SO2', label: 'SO2'}
 ]
 
-const radios = [
-    { name: 'Grafica', value: '1' },
-    { name: 'Calendario', value: '2' },
-  ];
-
 const Placeholder = props => {
     return <components.Placeholder {...props} />;
 };
@@ -32,7 +27,7 @@ const Placeholder = props => {
 function RHFiltros() {
     return (
         <div className="mt-5">
-            <div className="rec-desc">
+            <div className="ta-center mb-5">
                 <h2>Registro Histórico</h2>
                 <p>Consulta los datos históricos de la calidad del aire</p>
             </div>
@@ -70,7 +65,7 @@ function RHFiltros() {
                     </Col>
                 </Form.Row>
             </Form>
-            <hr className="mt-2"/>
+            <hr className="mt-2 mb-4"/>
         </div>
     )
 }

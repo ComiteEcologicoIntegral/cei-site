@@ -12,6 +12,25 @@
   color:var(--color-extmala);
 }
 
+.bueno {
+  color: var(--color-buena);
+}
+.acept {
+  color: var(--color-acept);
+}
+.mala {
+  color: var(--color-mala);
+}
+.muymala {
+  color: var(--color-muymala);
+}
+.extmala {
+  color: var(--color-extmala);
+}
+.white {
+  color: white;
+}
+
 nav {
   background-color: var(--color-darkgreen);
   box-shadow: 5px 0 10px grey;
@@ -24,10 +43,6 @@ nav a img {
 .h1-nav {
   font-size: 1.5rem;
   font-weight: 400;
-}
-
-.white {
-  color: white;
 }
 
 .menu-link {
@@ -47,8 +62,32 @@ nav a img {
   text-decoration: none;
 }
 
+.mb-10 {
+  margin-bottom: 100px;
+}
+
+.mb-75 {
+  margin-bottom: 75px;
+}
 
 /******* RECOMENDACIONES TABS ********/
+
+.tab-content {
+  display: flex;
+}
+
+.tab-content > .tab-pane {
+  display: block; /* undo "display: none;" */
+  visibility: hidden;
+  margin-right: -100%;
+  width: 100%;
+}
+
+.tab-content > .active {
+  visibility: visible;
+}
+
+
 .navbar-toggler, .navbar-toggler:focus {
   border:none;
   box-shadow: none;
@@ -119,9 +158,8 @@ nav a img {
   padding: 25px;
 }
 
-.rec-desc {
+.ta-center {
   text-align: center;
-  margin-bottom: 40px;
 }
 
 /***** FILTROS MAPA ******/
@@ -191,5 +229,70 @@ button, button:focus {
   color:white;
 }
 
+/****** COMPARA FILTROS ****/
+.compara-filtros {
+  background-color:rgba(70,130,180,0.5);
+  padding:20px;
+  border-radius: 5px;
+}
+
+.compara-filtros h5, .compara-filtros p {
+  font-weight: 500;
+  margin-top:5px;
+}
+
+.compara-filtros .cf-input {
+  margin-bottom: 10px;
+}
+
+.grafico {
+  margin-top:15px;
+  width: 90%;
+  margin:auto;
+  height: 100%;
+  min-height: 300px;
+  background-color: rgba(0,0,0,0.05);
+}
+
+/****** CUADRITOS min, max, avg *****/
+.dato-calculado {
+  border-radius: 5px;
+  border: 1px solid lightgray;
+  box-shadow: -3px 3px 10px rgba(0,0,0,0.2);
+  padding:10px;
+  margin-bottom:25px;
+}
+
+.dato-calculado .tipo {
+  font-weight: 500;
+  font-size: 1.25rem;
+  margin-bottom: 0px;
+  margin-top:10px;
+}
+
+.dato-calculado .numero {
+  font-weight: 600;
+  font-size: 2.5rem;
+  margin-bottom: 0px;
+}
+
+.desc {
+  font-size: 0.75rem;
+  color:gray;
+  font-weight: 300;
+}
+
+.detalles {
+  border: 1px solid rgba(0,0,0,0.25);
+  height: 300px;
+  padding:20px;
+  border-radius: 5px;
+}
+
+/****** FOOTER ****/
+footer {
+  background-color: var(--color-darkgreen);
+  color: white;
+}
 
 @import 'bootstrap/dist/css/bootstrap.min.css';

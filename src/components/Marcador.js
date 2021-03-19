@@ -43,13 +43,13 @@ class Marcador extends Component {
     getTintByStatus(status) {
         switch (status) {
             case 'red':
-                return this.makeTint('red', 'rgba(255, 0, 0, 0.5)');
+                return this.makeTint('red', '#F2811D');
             case 'orange':
-                return this.makeTint('orange', 'rgba(255, 128, 0, 0.5)');
+                return this.makeTint('orange', '#F2811D');
             case 'yellow':
-                return this.makeTint('yellow', 'rgba(255, 255, 0, 0.5)');
+                return this.makeTint('yellow', '#F2E313');
             case 'green':
-                return this.makeTint('green', 'rgba(0, 204, 0, 0.5)');
+                return this.makeTint('green', '#95BF39');
             default:
                 return this.makeTint('gray', 'rgba(0, 0, 0, 0.3)');
         }

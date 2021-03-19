@@ -1,0 +1,74 @@
+.calendar {
+    width: 50%;
+    margin: auto;
+    border: solid 1px gray;
+    border-radius: 5px;
+}
+
+.calendar .day {
+    position: relative;
+    width: calc(100% / 7);
+    height: 44px;
+    display: inline-block;
+    background-color: white;
+    padding-top: 5px;
+    margin: 0;
+    box-sizing: border-box;
+    z-index: 1;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.calendar .selected {
+    background-color: #F2811D;
+    color: white;
+    font-weight: bold;
+}
+
+.calendar .today {
+    background-color: lightgray;
+}
+
+.calendar .month {
+    color: gray;
+}
+
+.calendar .after {
+    color: lightgrey;
+}
+
+.cal-header {
+    background-color: lightskyblue;
+    border-radius: 5px 5px 0 0;
+    padding:5px 20px;
+}
+
+.current {
+    text-align: center;
+    font-weight: bold;
+}
+.next {
+    text-align: end;
+    cursor: pointer;
+}
+
+.previous {
+    cursor: pointer;
+}
+
+.day-names {
+    margin-bottom: 10px;
+    background-color: lightgrey;
+}
+
+.weekday {
+    font-weight: 500;
+    position: relative;
+    width: calc(100% / 7);
+    display: inline-block;
+    padding: 5px;
+    margin: 0;
+    box-sizing: border-box;
+    z-index: 1;
+    text-align: center;
+}
