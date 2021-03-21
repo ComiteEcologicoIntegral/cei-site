@@ -17,8 +17,37 @@
 }
 
 /* Etiqueta del valor del indicador */
-.rt-data-row > span {
-    width: 10ch;
-    text-align: center;
+.rt-data-row > div {
+    width: 12ch;
     border-color: transparent;
+}
+
+.marker-0 {
+    background-color: var(--color-buena-b);
+    color: var(--color-buena-d);
+}
+
+.marker-1 {
+    background-color: var(--color-acept-b);
+    color: var(--color-acept-d);
+}
+
+.marker-2 {
+    background-color: var(--color-mala-b);
+    color: var(--color-mala-d);
+}
+
+.marker-3 {
+    background-color: var(--color-muymala-b);
+    color: var(--color-muymala-d);
+}
+
+.marker-4 {
+    background-color: var(--color-extmala-b);
+    color: var(--color-extmala-d);
+}
+
+.marker-99 {
+    background-color: var(--color-nodata);
+    color: var(--color-nodata-d);
 }
