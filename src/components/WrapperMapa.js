@@ -17,6 +17,7 @@ export default class Wrapper extends Component {
             <MapContainer
                 center={center}
                 zoom={13}
+                minZoom={10}
                 scrollWheelZoom={false}
                 style={{
                     height: '100%',
