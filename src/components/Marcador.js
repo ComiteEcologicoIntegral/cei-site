@@ -5,6 +5,7 @@ import { divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { Marker, Popup } from 'react-leaflet';
+import { Button } from 'react-bootstrap';
 
 /**
  * Marcador
@@ -13,17 +14,15 @@ import { Marker, Popup } from 'react-leaflet';
 class Marcador extends Component {
     constructor(props) {
         super(props);
+        this.marker = document.createElement('div');
         this.updateMarker(this.props.label, this.props.status);
     }
 
     updateMarker(label, status) {
-        const html = document.createElement('div');
-        html.style.width = 50;
-
-        ReactDOM.render(this.renderMarker(label, status), html);
+        ReactDOM.render(this.renderMarker(label, status), this.marker);
 
         this.icon = divIcon({
-            html,
+            html: this.marker,
             className: 'sensor-icon',
             popupAnchor: [7, 0],
         });
@@ -33,40 +32,18 @@ class Marcador extends Component {
         this.updateMarker(this.props.label, this.props.status);
     }
 
-    makeTint(borderColor, bgColor) {
-        return {
-            backgroundColor: bgColor,
-            // border: `1px solid ${borderColor}`,
-        };
-    }
-
-    getTintByStatus(status) {
-        switch (status) {
-            case 'red':
-                return this.makeTint('red', '#F2811D');
-            case 'orange':
-                return this.makeTint('orange', '#F2811D');
-            case 'yellow':
-                return this.makeTint('yellow', '#F2E313');
-            case 'green':
-                return this.makeTint('green', '#95BF39');
-            default:
-                return this.makeTint('gray', 'rgba(0, 0, 0, 0.3)');
-        }
-    }
-
     renderMarker(label, status) {
         return (
             <div
+                className={`marker-${status}`}
                 style={{
-                    fontSize: '18px',
-                    width: '28px',
-                    height: '28px',
+                    fontSize: '12px',
+                    width: '36px',
+                    height: '36px',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    ...this.getTintByStatus(status),
                 }}
             >
                 {label}
@@ -75,13 +52,7 @@ class Marcador extends Component {
     }
 
     render() {
-        const {
-            position,
-            status,
-            labels,
-            provider,
-            locationStr,
-        } = this.props;
+        const { position, current, provider, locationStr, labels } = this.props;
 
         return (
             <Marker position={position} icon={this.icon}>
@@ -98,15 +69,14 @@ class Marcador extends Component {
                 >
                     <div className="px-3 py-2">
                         <div
-                            className="rounded"
+                            className={`rounded marker-${current.status}`}
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 padding: '0 0.1rem ',
-                                ...this.getTintByStatus(status),
                             }}
                         >
-                            {this.props.indicator}: {this.props.label}
+                            {current.indicator}: {current.label} {current.units}
                         </div>
                         <div className="data-label">
                             <small className="text-muted">Ubicación</small>
@@ -129,22 +99,18 @@ class Marcador extends Component {
                         </div>
                         <div>
                             {labels.map(
-                                ({ label, status, value, ref }, idx) => (
+                                ({ label, status, value, units, ref }, idx) => (
                                     <div
                                         key={idx}
                                         className="d-flex justify-content-between rt-data-row mb-1"
                                     >
                                         <a href={ref}>{label}</a>
-                                        <span
-                                            className="rounded"
-                                            style={{
-                                                backgroundColor: this.getTintByStatus(
-                                                    status
-                                                ).backgroundColor,
-                                            }}
+                                        <div
+                                            className={`d-inline-flex justify-content-between px-1 rounded marker-${status}`}
                                         >
-                                            {value}
-                                        </span>
+                                            <span>{value}</span>
+                                            <span>{units}</span>
+                                        </div>
                                     </div>
                                 )
                             )}
@@ -152,9 +118,7 @@ class Marcador extends Component {
                     </div>
 
                     <div className="py-2 px-3 border-top text-center">
-                        <button className="btn btn-primary btn-sm">
-                            Más información
-                        </button>
+                        <Button size="sm">Más información</Button>
                         <p className="lh-sm mt-2 mb-0">
                             Fuente(s):{' '}
                             <a href={provider.ref}>{provider.name}</a>
@@ -175,19 +139,18 @@ Marcador.propTypes = {
     indicator: PropTypes.string,
 
     /**
-     * Valor del indicador
+     * Informacion del indicador que muestra el popup
      */
-    label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
-    /**
-     * Estado del indicador (['red', 'orange', 'yellow', 'green'])
-     */
-    status: PropTypes.oneOf(['red', 'orange', 'yellow', 'green']),
+    current: PropTypes.shape({
+        label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        status: PropTypes.number,
+        units: PropTypes.string,
+    }),
 
     /**
      * Fecha de la ultima actualización del sensor en milisegundos
      */
-    lastUpdate: PropTypes.number,
+    lastUpdate: PropTypes.instanceOf(Date),
 
     /**
      * Etiqueta de la ubicación del sensor
@@ -213,8 +176,9 @@ Marcador.propTypes = {
     labels: PropTypes.arrayOf(
         PropTypes.shape({
             indicator: PropTypes.string,
-            label: PropTypes.string,
-            status: PropTypes.oneOf(['red', 'orange', 'yellow', 'green']),
+            label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+            status: PropTypes.number,
+            units: PropTypes.string,
             ref: PropTypes.string,
         })
     ),
