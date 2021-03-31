@@ -1,7 +1,6 @@
 import './App.css';
 import Mapa from './Mapa'
-import registro from './Registro'
-import Calendario from './Calendario'
+import Registro from './Registro'
 import Compara from './Compara'
 import {Route, Switch, BrowserRouter} from 'react-router-dom';
 import Header from './components/Header.js';
@@ -14,8 +13,7 @@ function App() {
         <Header />
         <Switch>
           <Route exact path="/" component={Mapa}/>
-          <Route exact path="/registro" component={registro}/>
-          <Route exact path="/calendario" component={Calendario}/>
+          <Route exact path="/registro" component={Registro}/>
           <Route exact path="/compara" component={Compara}/>
         </Switch>
       <Footer />

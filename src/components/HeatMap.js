@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import moment from 'moment'
-import '../styles/calendario.css';
 import buildCalendar from './buildCalendar';
-import { Col, Row } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap';
+import { v4 } from 'uuid';
 
-const HeatMap = () => {
+const HeatMap = ({value, onChange}) => {
 
     const [calendar, setCalendar] = useState([]);
-    const [value, setValue] = useState(moment()); // currently selected date
 
     // build calendar
 
@@ -52,7 +50,7 @@ const HeatMap = () => {
     }
 
     function nextMonth() {
-        return value.clone().add(1, "month")
+        return value.clone().endOf("month").add(1, "day")
     }
 
     function currMonth() {
@@ -63,13 +61,13 @@ const HeatMap = () => {
         <div className="calendar mt-5">
             <div className="cal-header">
             <Row>
-                <Col className="previous" onClick={() => setValue(prevMonth)}>
+                <Col className="previous" onClick={() => onChange(prevMonth)}>
                     {String.fromCharCode(171)}
                 </Col>
                 <Col className="current">
                     {currMonthName()}, {currYear()}
                 </Col>
-                <Col className="next" onClick={() => !currMonth() && setValue(nextMonth)}>
+                <Col className="next" onClick={() => !currMonth() && onChange(nextMonth)}>
                     {!currMonth() ? String.fromCharCode(187) : null}
                 </Col>
             </Row>
@@ -77,25 +75,26 @@ const HeatMap = () => {
             <div className="body">
                 <div className="day-names">
                     {
-                        ["D", "L", "M" , "M" , "J", "V" , "S"].map(d => 
-                                <div className="weekday">{d}</div>
+                        ["D", "L", "M" , "M" , "J", "V" , "S"].map((d,i) => 
+                                <div className="weekday" key={i}>{d}</div>
                             )
                     }
                 </div>
-            { 
-                calendar.map((week) => 
-                <div>
+                { 
+                calendar.map((week, w) => 
+                <div key={w}>
                     {
-                        week.map((day) => <div className="day"
-                            onClick={() => setValue(day)}>
-                            <div className={dayStyles(day)}>
+                        week.map((day, i) => <div className="day"
+                            onClick={() => !afterToday(day) && onChange(day)}>
+                            <div className={dayStyles(day)} key={v4()}>
                                 { day.format("D") }
                             </div>
-                        </div>)
+                            </div>
+                        )
                     }
+                    
                 </div>) 
-            
-            }
+                }
             </div>
         </div>
     )

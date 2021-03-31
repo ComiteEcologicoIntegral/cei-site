@@ -237,14 +237,11 @@ button, button:focus {
   color:var(--color-black);
 }
 
-.rh-active {
-  background-color: var(--color-darkgreen);
+.toggle-vista.btn-light.active {
+  background-color: var(--color-darkgreen) !important;
+  color:white !important;
   border-radius: 5px;
-}
-
-.rh-active .btn-outline-light {
-  background-color: var(--color-darkgreen);
-  color:white;
+  z-index: 0;
 }
 
 /****** COMPARA FILTROS ****/
@@ -298,13 +295,6 @@ button, button:focus {
   font-size: 0.75rem;
   color:gray;
   font-weight: 300;
-}
-
-.detalles {
-  border: 1px solid rgba(0,0,0,0.25);
-  height: 300px;
-  padding:20px;
-  border-radius: 5px;
 }
 
 /****** FOOTER ****/
