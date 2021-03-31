@@ -1,99 +1,60 @@
-import React from 'react'
+import React, { useState, useEffect} from 'react'
 import RHFiltros from './components/RHFiltros'
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import Grafica from './components/Grafica';
+import Calendario from './components/Calendario';
+import recordData from './handlers/last-records.json';
 
-function registro() {
+function Registro() {
+    const [data, setData] = useState(null);
+    const [radioValue, setRadioValue] = useState('1');
+    const [q, setQ] = useState(null);
+    
+    const [indi, setIndi] = useState("PM25");
+    const [desde, setDesde] = useState(null);
+    const [hasta, setHasta] = useState(null);
+
+    useEffect(() => {
+        if (q) {
+            console.log(q);
+        }
+        setData(recordData);
+
+    }, [q]);
+    
+    function createQuery(ind, ubic) {
+        if (!ubic) {
+            alert("Selecciona una ubicación.");
+            return;
+        }
+
+        let query = {};
+        if (radioValue === "1") {
+            if (!desde || !hasta) {
+                alert("Llena las fechas.");
+                return;
+            }
+            query.fechaInicial = desde;
+            query.fechaFinal = hasta;
+        }
+
+        query.indicador = ind.value;
+        query.ubicacion = ubic;
+
+        setIndi(ind.value);
+        setQ(query); 
+    }
+
     return (
         <div className="container mb-10">
-            <RHFiltros />
-            <Form className="mt-4 mb-4">
-                <Form.Row className="d-flex justify-content-evenly">
-                    <Col xs={12} lg={5} className="mb-3">
-                        <Row>
-                            <Col xs={2}>
-                            <Form.Label className="col-form-label" for="desde-fecha">Desde: </Form.Label>
-                            </Col>
-
-                            <Col xs={5}>
-                            <Form.Control type="date"></Form.Control>
-                            </Col>
-                        
-                            <Col xs={5}>
-                            <Form.Control type="time"></Form.Control>
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col xs={12} lg={5} className="mb-3">
-                        <Row>
-                            <Col xs={2}>
-                            <Form.Label  className="col-form-label" for="hasta-fecha">Hasta: </Form.Label>
-                            </Col>
-
-                            <Col xs={5}>
-                            <Form.Control type="date"></Form.Control>
-                            </Col>
-                        
-                            <Col xs={5}>
-                            <Form.Control type="time"></Form.Control>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Form.Row>
-            </Form>
-
-            <Row className="mb-5">
-                
-                <Col sm={12} lg={4} xl={3}>
-                    <Row>
-                        <Button className="btn btn-light mb-4" block>Descargar datos</Button>
-                    </Row>
-                    <Row className="d-flex justify-content-around">
-                        <Col sm={5} lg={12}>
-                            <Row className="dato-calculado">
-                                <Col sm={8}>
-                                    <p className="tipo">Máximo</p>
-                                    <p className="desc">Registrado el 00-00-000</p>
-                                </Col>
-                                <Col sm={4} className="d-flex align-items-center">
-                                    <p className="numero muymala">XX</p>
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col sm={5} lg={12}>
-                            <Row className="dato-calculado">
-                                <Col sm={8}>
-                                    <p className="tipo">Mínimo</p>
-                                    <p className="desc">Registrado el 00-00-000</p>
-                                </Col>
-                                <Col sm={4} className="d-flex align-items-center">
-                                <p className="numero acept">XX</p>
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col sm={5} lg={12}>
-                            <Row className="dato-calculado">
-                                <Col sm={8}>
-                                    <p className="tipo">Promedio</p>
-                                    <p className="desc">Registrado el 00-00-000</p>
-                                </Col>
-                                <Col sm={4} className="d-flex align-items-center">
-                                    <p className="numero mala">XX</p>
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Col>
-
-                <Col sm={12} lg={8} xl={9}>
-                    <div class="grafico mb-4">
-
-                    </div>
-                </Col>
-                
-            </Row>
-
+            <RHFiltros createQuery={createQuery} radioValue={radioValue} setRadioValue={setRadioValue}/>
+            { radioValue === '1' && (
+                <Grafica setDesde={setDesde} setHasta={setHasta}/>
+            )}
+            { radioValue === '2' && (
+                <Calendario data={data} indi={indi}/>
+            )}
         </div>
     )
 }
 
-export default registro
+export default Registro

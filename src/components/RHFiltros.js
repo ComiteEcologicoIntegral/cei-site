@@ -1,7 +1,6 @@
-import React from 'react';
-import { Form, ButtonGroup, Button, Col } from 'react-bootstrap';
-import Select, { components } from 'react-select';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Form, ButtonGroup, Button, Col, ToggleButton } from 'react-bootstrap';
+import Select from 'react-select';
 
 const sensores = [
     {value : 'S1', label: 'Pastora'},
@@ -12,7 +11,7 @@ const sensores = [
 ]
 
 const indicadores = [
-    {value: 'PM25', label: 'PM25'},
+    {value: 'PM25', label: 'PM2.5'},
     {value: 'PM10', label: 'PM10'},
     {value: 'O3', label: 'O3'},
     {value: 'CO', label: 'CO'},
@@ -20,11 +19,16 @@ const indicadores = [
     {value: 'SO2', label: 'SO2'}
 ]
 
-const Placeholder = props => {
-    return <components.Placeholder {...props} />;
-};
+function RHFiltros({createQuery, radioValue, setRadioValue}) {
+    
+    const radios = [
+        { name: 'Grafica', value: '1' },
+        { name: 'Calendario', value: '2' }
+    ];
 
-function RHFiltros() {
+    const [ind, setInd] = useState({value: "PM25"});
+    const [ubic, setUbic] = useState(null);
+    
     return (
         <div className="mt-5">
             <div className="ta-center mb-5">
@@ -38,28 +42,41 @@ function RHFiltros() {
                             isMulti 
                             options={sensores}
                             placeholder={'Ubicación'}
+                            onChange={(value) => setUbic(value)}
                             />
                         </Col>
                 </Form.Row>
                 <Form.Row>
                     <Col>
-                        <ButtonGroup aria-label="Basic example">
-                            <NavLink to="/registro" activeClassName="rh-active">
-                                <Button className="rh-btn" variant="outline-light">Grafica</Button>
-                            </NavLink> 
-                            <NavLink to="/calendario" activeClassName="rh-active">         
-                                <Button className="rh-btn" variant="outline-light">Calendario</Button>
-                            </NavLink>     
+                        <ButtonGroup toggle>
+                            {radios.map((radio, idx) => (
+                            <ToggleButton
+                                className="toggle-vista"
+                                key={idx}
+                                type="radio"
+                                variant="light"
+                                name="radio"
+                                value={radio.value}
+                                checked={radioValue === radio.value}
+                                onChange={(e) => setRadioValue(e.currentTarget.value)}
+                            >
+                                {radio.name}
+                            </ToggleButton>
+                            ))}      
                         </ButtonGroup>
                     </Col>
                     <Col className="mb-3">
                         <Select
                         options={indicadores}
                         placeholder={'Indicador'}
+                        onChange={(value) => setInd(value)}
+                        defaultValue={indicadores[0]}
                         />
                     </Col>
                     <Col xs={12} sm={3} className="mb-3">
-                        <Button className="btn-aplicar" variant="primary" block>
+                        <Button className="btn-aplicar" variant="primary" block
+                            onClick={() => createQuery(ind, ubic)}
+                        >
                             Aplicar
                         </Button>
                     </Col>
