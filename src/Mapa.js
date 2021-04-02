@@ -8,17 +8,18 @@ import { gases } from './constants.js';
 import { getStatus } from './handlers/statusCriteria.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSensorData } from './redux/reducers.js';
+import moment from 'moment';
 
 const center = [25.67, -100.25];
 
 function Mapa() {
     const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
     const dispatch = useDispatch();
-    console.log(sensorData);
     const [currentGas, setCurrentGas] = useState(gases[0]);
 
     useEffect(() => {
-        if (!sensorDataLastUpdate) {
+        const diff = moment().diff(sensorDataLastUpdate, 'minutes');
+        if (diff > 60) {
             fetch('http://127.0.0.1:8000/sensor-summary')
                 .then((res) => {
                     return res.json();
