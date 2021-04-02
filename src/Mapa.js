@@ -1,43 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Recomendaciones from './components/Recomendaciones.js';
 import MapaFiltros from './components/MapaFiltros.js';
 import Marcador from './components/Marcador.js';
 import Wrapper from './components/WrapperMapa.js';
 
-// Datos de prueba de marcadores
-// TODO: Obtener datos desde DB
-import recordData from './handlers/last-records.json';
-import sensorData from './handlers/sensors.json';
-
 import { gases } from './constants.js';
 import { getStatus } from './handlers/statusCriteria.js';
-
-
-const filteredSensors = sensorData.filter(
-    (sensor) =>
-        typeof sensor.Longitud === 'number' &&
-        typeof sensor.Latitud === 'number'
-);
+import { useDispatch, useSelector } from 'react-redux';
+import { setSensorData } from './redux/reducers.js';
 
 const center = [25.67, -100.25];
 
 function Mapa() {
+    const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
+    const dispatch = useDispatch();
+    console.log(sensorData);
     const [currentGas, setCurrentGas] = useState(gases[0]);
-    const markers = recordData
-        .filter((record) =>
-            filteredSensors.map((s) => s.Sensor_id).includes(record.Sensor_id)
-        )
-        .map((data) => {
-            const sensor = filteredSensors.find(
-                (s) => data.Sensor_id === s.Sensor_id
-            );
+
+    useEffect(() => {
+        if (!sensorDataLastUpdate) {
+            fetch('http://127.0.0.1:8000/sensor-summary')
+                .then((res) => {
+                    return res.json();
+                })
+                .then((json) => {
+                    dispatch(setSensorData(json));
+                })
+                .catch(console.log);
+        }
+    }, []);
+
+    const markers = useMemo(() => {
+        const filteredSensors = sensorData.filter(
+            (sensor) =>
+                typeof sensor.Longitud === 'number' &&
+                typeof sensor.Latitud === 'number'
+        );
+
+        return filteredSensors.map((data) => {
             const { name: gasName, units: gasUnits } = currentGas;
 
             return {
-                position: [sensor.Longitud, -sensor.Latitud],
+                position: [data.Longitud, -data.Latitud],
                 current: {
                     indicator: gasName,
-                    label: data[gasName] ?? 'ND',
+                    label:
+                        typeof data[gasName] === 'number'
+                            ? data[gasName]
+                            : 'ND',
                     units: gasUnits,
                     status: data[gasName]
                         ? getStatus(gasName, data[gasName])
@@ -45,7 +55,7 @@ function Mapa() {
                     ref: '#',
                 },
                 lastUpdate: new Date(data.Dia),
-                locationStr: sensor.Zona ?? 'ND',
+                locationStr: data.Zona?.length > 0 ? data.Zona : 'ND',
                 provider: {
                     name: 'Purple Air',
                     ref: '/purple-air',
@@ -53,12 +63,13 @@ function Mapa() {
                 labels: gases.map(({ name, units }) => ({
                     label: name,
                     units,
-                    value: data[name] ?? 'ND',
+                    value: typeof data[name] === 'number' ? data[name] : 'ND',
                     status: data[name] ? getStatus(name, data[name]) : 99,
                     ref: '#',
                 })),
             };
         });
+    }, [sensorData, currentGas]);
 
     return (
         <div>
@@ -78,7 +89,7 @@ function Mapa() {
                     height: '500px',
                 }}
             >
-                <Wrapper center={center} >
+                <Wrapper center={center}>
                     {markers.map((markerProps, idx) => (
                         <Marcador
                             key={idx}
