@@ -61,13 +61,13 @@ const HeatMap = ({value, onChange}) => {
         <div className="calendar mt-5">
             <div className="cal-header">
             <Row>
-                <Col className="previous" onClick={() => onChange(prevMonth)}>
+                <Col sm={3} className="previous" onClick={() => onChange(prevMonth)}>
                     {String.fromCharCode(171)}
                 </Col>
-                <Col className="current">
+                <Col sm={6} className="current">
                     {currMonthName()}, {currYear()}
                 </Col>
-                <Col className="next" onClick={() => !currMonth() && onChange(nextMonth)}>
+                <Col  sm={3} className="next" onClick={() => !currMonth() && onChange(nextMonth)}>
                     {!currMonth() ? String.fromCharCode(187) : null}
                 </Col>
             </Row>

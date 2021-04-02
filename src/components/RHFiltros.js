@@ -1,14 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, ButtonGroup, Button, Col, ToggleButton } from 'react-bootstrap';
 import Select from 'react-select';
-
-const sensores = [
-    {value : 'S1', label: 'Pastora'},
-    {value : 'S2', label: 'San Nicolás'},
-    {value : 'S3', label: 'Santa Catarina'},
-    {value : 'S4', label: 'San Pedro'},
-    {value : 'S5', label: 'Universidad'}
-]
 
 const indicadores = [
     {value: 'PM25', label: 'PM2.5'},
@@ -19,15 +11,27 @@ const indicadores = [
     {value: 'SO2', label: 'SO2'}
 ]
 
-function RHFiltros({createQuery, radioValue, setRadioValue}) {
+function RHFiltros({createQuery, radioValue, setRadioValue, setInd, setUbic}) {
     
     const radios = [
         { name: 'Grafica', value: '1' },
         { name: 'Calendario', value: '2' }
     ];
 
-    const [ind, setInd] = useState({value: "PM25"});
-    const [ubic, setUbic] = useState(null);
+    const [sensRaw, setSensRaw] = useState(null);
+    let sensores = [];
+
+    useEffect(() => {
+        fetch("http://127.0.0.1:8000/sensor-summary")
+        .then((response) => response.json())
+        .then((json) => {setSensRaw(json)})
+    }, []);
+
+    if (sensRaw) {
+        sensRaw.forEach(element => {
+            sensores.push({value: element.Sensor_id, label: element.Zona});
+        });
+    }
     
     return (
         <div className="mt-5">
@@ -75,7 +79,7 @@ function RHFiltros({createQuery, radioValue, setRadioValue}) {
                     </Col>
                     <Col xs={12} sm={3} className="mb-3">
                         <Button className="btn-aplicar" variant="primary" block
-                            onClick={() => createQuery(ind, ubic)}
+                            onClick={() => createQuery()}
                         >
                             Aplicar
                         </Button>
