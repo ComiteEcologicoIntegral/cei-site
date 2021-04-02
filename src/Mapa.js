@@ -18,6 +18,7 @@ function Mapa() {
     const [currentGas, setCurrentGas] = useState(gases[0]);
 
     useEffect(() => {
+        // Llama a la api si los datos se guardaron hace menos de una hora
         const diff = moment().diff(sensorDataLastUpdate, 'minutes');
         if (diff > 60) {
             fetch('http://127.0.0.1:8000/sensor-summary')
@@ -75,11 +76,12 @@ function Mapa() {
     return (
         <div>
             <MapaFiltros
-                onSelect={(value) =>
+                onApply={({ gas }) => {
                     setCurrentGas(
-                        gases.find((gas) => gas.name === value) ?? currentGas
-                    )
-                }
+                        gases.find((gas_) => gas_.name === gas.label) ??
+                            currentGas
+                    );
+                }}
             />
             <div
                 className="my-4"
