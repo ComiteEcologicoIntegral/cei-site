@@ -12,46 +12,49 @@ function Registro() {
     const [indi, setIndi] = useState("PM25");
     const [desde, setDesde] = useState(null);
     const [hasta, setHasta] = useState(null);
+    const [ind, setInd] = useState({value: "PM25"});
+    const [ubic, setUbic] = useState(null);
 
     useEffect(() => {
         if (q) {
-            console.log(q);
+            fetch (`http://127.0.0.1:8000/datos-fecha?${q}`)
+            .then(response => response.json())
+            .then(json => setData(json))
         }
-        setData(recordData);
-
     }, [q]);
     
-    function createQuery(ind, ubic) {
+    function createQuery() {
+        // Ejemplo:
+        // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&inicio=2020-10-05&fin=2020-10-06
+        
         if (!ubic) {
             alert("Selecciona una ubicación.");
             return;
-        }
+        } 
 
-        let query = {};
-        if (radioValue === "1") {
-            if (!desde || !hasta) {
-                alert("Llena las fechas.");
-                return;
-            }
-            query.fechaInicial = desde;
-            query.fechaFinal = hasta;
-        }
+        let queryStr = "ubic=";
 
-        query.indicador = ind.value;
-        query.ubicacion = ubic;
+        ubic.forEach(element => {
+            queryStr += element.value + ",";
+        });
+
+        queryStr = queryStr.slice(0, -1);
+        queryStr += "&ind=" + ind.value + "&inicio=" + desde + "&fin=" + hasta;
+
+        console.log(queryStr);
 
         setIndi(ind.value);
-        setQ(query); 
+        setQ(queryStr); 
     }
 
     return (
         <div className="container mb-10">
-            <RHFiltros createQuery={createQuery} radioValue={radioValue} setRadioValue={setRadioValue}/>
+            <RHFiltros createQuery={createQuery} radioValue={radioValue} setRadioValue={setRadioValue} setInd={setInd} setUbic={setUbic}/>
             { radioValue === '1' && (
                 <Grafica setDesde={setDesde} setHasta={setHasta}/>
             )}
             { radioValue === '2' && (
-                <Calendario data={data} indi={indi}/>
+                <Calendario create={createQuery} data={data} indi={indi} setDesde={setDesde} setHasta={setHasta}/>
             )}
         </div>
     )

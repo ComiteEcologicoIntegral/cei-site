@@ -1,7 +1,12 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
 function Grafica({setDesde, setHasta}) {
+    useEffect(() => {
+        setDesde(null);
+        setHasta(null);
+    }, []);
+
     return (
         <div>
             <Form className="mt-4 mb-4">
