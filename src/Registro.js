@@ -2,7 +2,10 @@ import React, { useState, useEffect} from 'react'
 import RHFiltros from './components/RHFiltros'
 import Grafica from './components/Grafica';
 import Calendario from './components/Calendario';
-import recordData from './handlers/last-records.json';
+import moment from 'moment'
+import 'moment/locale/es';
+
+moment.locale('es');
 
 function Registro() {
     const [data, setData] = useState(null);
@@ -25,12 +28,15 @@ function Registro() {
     
     function createQuery() {
         // Ejemplo:
-        // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&inicio=2020-10-05&fin=2020-10-06
+        // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
         
         if (!ubic) {
             alert("Selecciona una ubicación.");
             return;
         } 
+        if (!desde || !hasta) {
+            alert("Selecciona las fechas.");
+        }
 
         let queryStr = "ubic=";
 
@@ -39,12 +45,52 @@ function Registro() {
         });
 
         queryStr = queryStr.slice(0, -1);
-        queryStr += "&ind=" + ind.value + "&inicio=" + desde + "&fin=" + hasta;
+        queryStr += "&ind=" + ind.value + "&inicio=" + desde.format("YYYY-MM-DD") + "&fin=" + hasta.format("YYYY-MM-DD");
 
         console.log(queryStr);
 
         setIndi(ind.value);
         setQ(queryStr); 
+    }
+
+    function downloadFile() {
+        if (q) {
+            let queryStr = "ubic=";
+            ubic.forEach(element => {
+                queryStr += element.value + ",";
+            });
+            queryStr = queryStr.slice(0, -1);
+
+            if (radioValue === '2') {
+                // para el calendario se descarga todo el mes
+                queryStr += "&ind=" + ind.value + "&inicio=" + desde.startOf("month").format("YYYY-MM-DD") + "&fin=" + hasta.endOf("month").format("YYYY-MM-DD");
+            } else {
+                queryStr += "&ind=" + ind.value + "&inicio=" + desde.format("YYYY-MM-DD") + "&fin=" + hasta.format("YYYY-MM-DD");
+            }
+
+            console.log(queryStr);
+
+            fetch(`http://127.0.0.1:8000/download-data?${queryStr}`)
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = "data.csv";
+
+                const clickHandler = () => {
+                    setTimeout(() => {
+                        URL.revokeObjectURL(url);
+                        a.removeEventListener('click', clickHandler);
+                    }, 150);
+                };
+
+                a.addEventListener('click', clickHandler, false);
+                a.click();
+            });
+
+        }
     }
 
     return (
@@ -54,7 +100,7 @@ function Registro() {
                 <Grafica setDesde={setDesde} setHasta={setHasta}/>
             )}
             { radioValue === '2' && (
-                <Calendario create={createQuery} data={data} indi={indi} setDesde={setDesde} setHasta={setHasta}/>
+                <Calendario create={createQuery} data={data} indi={indi} setDesde={setDesde} setHasta={setHasta} downloadFile={downloadFile}/>
             )}
         </div>
     )

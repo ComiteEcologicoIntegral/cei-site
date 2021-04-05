@@ -8,8 +8,7 @@ import 'moment/locale/es';
 
 moment.locale('es');
 
-
-function Calendario({create, data, indi, setDesde, setHasta}) {
+function Calendario({create, data, indi, setDesde, setHasta, downloadFile}) {
     const [value, setValue] = useState(moment()); // currently selected date
     let dataCol1 = [];
     let dataCol2 = [];
@@ -18,21 +17,19 @@ function Calendario({create, data, indi, setDesde, setHasta}) {
 
     useEffect(() => {
         let today = moment();
-        setDesde(today.format("YYYY-MM-DD"));
-        setHasta(today.format("YYYY-MM-DD"));
+        setDesde(today);
+        setHasta(today);
     }, []);
 
     useEffect(() => {
-        setDesde(value.format("YYYY-MM-DD"));
-        setHasta(value.format("YYYY-MM-DD"));
+        setDesde(value);
+        setHasta(value);
         if (data) {
-            dataCol1 = [];
-            dataCol2 = [];
             create();
         }
     }, [value]);
 
-    if (data && data.length != 0) {
+    if (data && data.length !== 0) {
         while (currHour < 12 && index < data.length) {
             let ch = "T" + currHour.toString().padStart(2, 0);
             let info = [];
@@ -44,7 +41,7 @@ function Calendario({create, data, indi, setDesde, setHasta}) {
             }
 
             currHour++;
-            if (index == data.length) {
+            if (index === data.length) {
                 index--;
             }
 
@@ -65,7 +62,7 @@ function Calendario({create, data, indi, setDesde, setHasta}) {
                     </Accordion.Collapse>
                 </Card>
             </Accordion>
-            )    
+            )
         }
         
         while (currHour < 24 && index < data.length) {
@@ -79,7 +76,7 @@ function Calendario({create, data, indi, setDesde, setHasta}) {
             }
 
             currHour++;
-            if (index == data.length) {
+            if (index === data.length) {
                 index--;
             }
 
@@ -100,7 +97,7 @@ function Calendario({create, data, indi, setDesde, setHasta}) {
                     </Accordion.Collapse>
                 </Card>
             </Accordion>
-            )    
+            )
         }
     } else {
         dataCol1.push(<p>No hay datos para este día</p>);
@@ -112,7 +109,7 @@ function Calendario({create, data, indi, setDesde, setHasta}) {
             <Row className="mb-5">
             <Col sm={12} lg={6}>
             <div>
-                <Button className="btn btn-light mb-3 mt-3" block>Descargar datos</Button>
+                <Button className="btn btn-light mb-3 mt-3" block onClick={downloadFile}>Descargar datos del mes</Button>
                 <div className="detalles">
                     <h4>{value.format("DD/MM/YYYY")} Detalle por hora</h4>
                     <Row>
