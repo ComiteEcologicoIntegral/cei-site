@@ -25,8 +25,11 @@ const Placeholder = props => {
     return <components.Placeholder {...props} />;
 };
 
-const MapaFiltros = () => {
+const MapaFiltros = ({onApply}) => {
     const [show, setShow] = useState(false);
+    const [location, setLocation] = useState('');
+    const [interval, setInterval] = useState(intervalos[0]);
+    const [gas, setGas] = useState('');
   
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -36,12 +39,13 @@ const MapaFiltros = () => {
             <Form>
                 <Form.Row className="mapa-filtros">
                     <Col className="mb-3" xs={12} lg={4}>
-                    <Form.Control placeholder="Ubicación" />
+                    <Form.Control placeholder="Ubicación" onChange={(e) => setLocation(e.target.value)} value={location}/>
                     </Col>
                     <Col className="mb-3" xs={6} lg={3}>
                     <Select 
                     options={intervalos} 
-                    defaultValue={intervalos[0]}
+                    onChange={setInterval}
+                    value={interval}
                     />
                     </Col>
                     <Col xs={6} lg={3}>
@@ -49,7 +53,8 @@ const MapaFiltros = () => {
                             <Col xs={10}>
                                 <Select 
                                 options={indicadores} 
-                                defaultValue={indicadores[0]}
+                                value={gas}
+                                onChange={setGas}
                                 />
                             </Col>
                             <Col xs={2}>
@@ -72,7 +77,7 @@ const MapaFiltros = () => {
                     </Col>
                     <Col>
 
-                        <Button className="btn-aplicar" variant="primary" block>
+                        <Button className="btn-aplicar" variant="primary" block onClick={() => onApply({gas, location, interval})}>
                             Aplicar
                         </Button>
 
