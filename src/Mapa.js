@@ -10,12 +10,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSensorData } from './redux/reducers.js';
 import moment from 'moment';
 
-const center = [25.67, -100.25];
+const mapDefaultProps = {
+    center: [25.67, -100.25],
+    zoom: 13,
+    minZoom: 10,
+};
 
 function Mapa() {
     const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
     const dispatch = useDispatch();
     const [currentGas, setCurrentGas] = useState(gases[0]);
+    const [map, setMap] = useState(null);
 
     useEffect(() => {
         // Llama a la api si los datos se guardaron hace menos de una hora
@@ -92,9 +97,10 @@ function Mapa() {
                     height: '500px',
                 }}
             >
-                <Wrapper center={center}>
+                <Wrapper whenCreated={setMap} {...mapDefaultProps}>
                     {markers.map((markerProps, idx) => (
                         <Marcador
+                            map={map}
                             key={idx}
                             {...markerProps}
                             label={markerProps.current.label}
