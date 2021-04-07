@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Recomendaciones from './components/Recomendaciones.js';
 import MapaFiltros from './components/MapaFiltros.js';
 import Marcador from './components/Marcador.js';
@@ -21,19 +21,39 @@ function Mapa() {
     const dispatch = useDispatch();
     const [currentGas, setCurrentGas] = useState(gases[0]);
     const [map, setMap] = useState(null);
+    // const [lastCenter, setLastCenter] = useState(null);
+
+    const setCenter = useCallback(
+        (pos) => {
+            if (map) {
+                // setLastCenter(pos);
+                map.setView(pos, mapDefaultProps.zoom, {
+                    animate: true,
+                });
+            }
+        },
+        [map]
+    );
+
+    const fetchSummaryData = (retry = 0) => {
+        if (retry > 5) return; // TODO: Maximo de Intentos, mostrar mensaje de error cuando lo sobrepasa
+
+        fetch('http://127.0.0.1:8000/sensor-summary')
+            .then((res) => res.json())
+            .then((json) => {
+                dispatch(setSensorData(json));
+            })
+            .catch((err) => setTimeout(() => fetchSummaryData(retry + 1), 500));
+    };
 
     useEffect(() => {
         // Llama a la api si los datos se guardaron hace menos de una hora
-        const diff = moment().diff(sensorDataLastUpdate, 'minutes');
+        const diff = sensorDataLastUpdate
+            ? moment().diff(sensorDataLastUpdate, 'minutes')
+            : 999; // Caso sensorDataLastUpdate == null, se tienen que solicitar los datos
+
         if (diff > 60) {
-            fetch('http://127.0.0.1:8000/sensor-summary')
-                .then((res) => {
-                    return res.json();
-                })
-                .then((json) => {
-                    dispatch(setSensorData(json));
-                })
-                .catch(console.log);
+            fetchSummaryData();
         }
     }, []);
 
@@ -81,11 +101,24 @@ function Mapa() {
     return (
         <div>
             <MapaFiltros
-                onApply={({ gas }) => {
-                    setCurrentGas(
-                        gases.find((gas_) => gas_.name === gas.label) ??
-                            currentGas
-                    );
+                onApply={({ gas, location }) => {
+                    if (location) {
+                        // encuentra sensor al que le corresponde la ubicación de los filtros
+                        const fSensor = sensorData.find(
+                            (record) => record.Sensor_id === location.value
+                        );
+
+                        if (fSensor) {
+                            setCenter([fSensor.Longitud, -fSensor.Latitud]);
+                        }
+                    }
+
+                    if (gas) {
+                        const nGas = gases.find(
+                            (gas_) => gas_.name === gas.label
+                        );
+                        setCurrentGas(nGas ?? currentGas);
+                    }
                 }}
             />
             <div
