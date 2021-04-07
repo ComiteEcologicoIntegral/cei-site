@@ -1,6 +1,15 @@
-import { useState } from 'react'
-import { Form, Modal, Button, Col, Row, Tooltip, OverlayTrigger } from 'react-bootstrap'
-import { BsInfoCircle } from "react-icons/bs";
+import { useMemo, useState } from 'react';
+import {
+    Form,
+    Modal,
+    Button,
+    Col,
+    Row,
+    Tooltip,
+    OverlayTrigger,
+} from 'react-bootstrap';
+import { BsInfoCircle } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
 import Select, { components } from 'react-select';
 
 const indicadores = [
@@ -21,16 +30,26 @@ const intervalos =  [
     {value: '6', label: 'Último año'}
 ]
 
-const Placeholder = props => {
-    return <components.Placeholder {...props} />;
-};
+const MapaFiltros = ({ onApply }) => {
+    const { sensorData } = useSelector((state) => state);
+    const locationOptions = useMemo(() => {
+        return sensorData
+            .filter(
+                (sensor) =>
+                    typeof sensor.Longitud === 'number' &&
+                    typeof sensor.Latitud === 'number'
+            )
+            .map((record) => ({
+                value: record.Sensor_id,
+                label: record.Zona,
+            }));
+    }, [sensorData]);
 
-const MapaFiltros = ({onApply}) => {
     const [show, setShow] = useState(false);
-    const [location, setLocation] = useState('');
+    const [location, setLocation] = useState(null);
     const [interval, setInterval] = useState(intervalos[0]);
-    const [gas, setGas] = useState('');
-  
+    const [gas, setGas] = useState(null);
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -39,22 +58,27 @@ const MapaFiltros = ({onApply}) => {
             <Form>
                 <Form.Row className="mapa-filtros">
                     <Col className="mb-3" xs={12} lg={4}>
-                    <Form.Control placeholder="Ubicación" onChange={(e) => setLocation(e.target.value)} value={location}/>
+                        <Select
+                            placeholder="Ubicación"
+                            value={location}
+                            onChange={setLocation}
+                            options={locationOptions}
+                        />
                     </Col>
                     <Col className="mb-3" xs={6} lg={3}>
-                    <Select 
-                    options={intervalos} 
-                    onChange={setInterval}
-                    value={interval}
-                    />
+                        <Select
+                            options={intervalos}
+                            onChange={setInterval}
+                            value={interval}
+                        />
                     </Col>
                     <Col xs={6} lg={3}>
                         <Row>
                             <Col xs={10}>
-                                <Select 
-                                options={indicadores} 
-                                value={gas}
-                                onChange={setGas}
+                                <Select
+                                    options={indicadores}
+                                    value={gas}
+                                    onChange={setGas}
                                 />
                             </Col>
                             <Col xs={2}>
@@ -76,11 +100,14 @@ const MapaFiltros = ({onApply}) => {
                         </Row>
                     </Col>
                     <Col>
-
-                        <Button className="btn-aplicar" variant="primary" block onClick={() => onApply({gas, location, interval})}>
+                        <Button
+                            className="btn-aplicar"
+                            variant="primary"
+                            block
+                            onClick={() => onApply({ gas, location, interval })}
+                        >
                             Aplicar
                         </Button>
-
                     </Col>
                 </Form.Row>
             </Form>
@@ -135,7 +162,7 @@ const MapaFiltros = ({onApply}) => {
             </Modal>
 
         </div>
-    )
-}
+    );
+};
 
-export default MapaFiltros
+export default MapaFiltros;
