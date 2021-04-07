@@ -9,30 +9,25 @@ import { MapContainer, TileLayer } from 'react-leaflet';
  * Wrapper
  * @augments {Component<Props, State>}
  */
-export default class Wrapper extends Component {
-    render() {
-        const { center, children } = this.props;
-
-        return (
-            <MapContainer
-                center={center}
-                zoom={13}
-                minZoom={10}
-                scrollWheelZoom={false}
-                style={{
-                    height: '100%',
-                    widht: '100%',
-                }}
-            >
-                <TileLayer
-                    attribution='&copy; <a href="http://osm.org/copyright
+function Wrapper({ center, children, ...props }) {
+    return (
+        <MapContainer
+            center={center}
+            scrollWheelZoom={false}
+            style={{
+                height: '100%',
+                widht: '100%',
+            }}
+            {...props}
+        >
+            <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright
                     ">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {children}
-            </MapContainer>
-        );
-    }
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {children}
+        </MapContainer>
+    );
 }
 
 Wrapper.defaultProps = {};
@@ -47,4 +42,8 @@ Wrapper.propTypes = {
      * Un arreglo [lat, lng] con la posición del centro del mapa
      */
     center: PropTypes.arrayOf(PropTypes.number),
+
+    setMap: PropTypes.func,
 };
+
+export default Wrapper;
