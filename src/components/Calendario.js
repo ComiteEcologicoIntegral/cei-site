@@ -2,13 +2,42 @@ import React, { useState, useEffect } from 'react'
 import '../styles/calendario.css';
 import { Button, Col, Row, Accordion, Card } from 'react-bootstrap'
 import HeatMap from './HeatMap'
-import { AiFillCaretDown } from "react-icons/ai";
+import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
+import { getStatus } from '../handlers/statusCriteria';
 import moment from 'moment'
 import 'moment/locale/es';
 
 moment.locale('es');
 
+const unidad = {
+    PM25: "µg/m3",
+    PM10: "µg/m3",
+    CO: "ppm",
+    O3: "ppm",
+    NO2:"ppm", 
+    SO2: "ppm"
+}
+
 function Calendario({create, data, indi, setDesde, setHasta, downloadFile}) {
+    function colorIndice(medida) {
+        let val = getStatus(indi, medida);
+
+        switch (val) {
+            case 0:
+                return "bueno";
+            case 1:
+                return "acept";
+            case 2:
+                return "mala";
+            case 3:
+                return "muymala";
+            case 4:
+                return "extmala";
+            default:
+                return "";
+        }
+    }
+    
     const [value, setValue] = useState(moment()); // currently selected date
     let dataCol1 = [];
     let dataCol2 = [];
@@ -34,28 +63,26 @@ function Calendario({create, data, indi, setDesde, setHasta, downloadFile}) {
             let ch = "T" + currHour.toString().padStart(2, 0);
             let info = [];
 
+            let firstIndex = index;
             // junta todos los de la misma hora
             while ( index < data.length && data[index]["dia"].includes(ch) ) {
-                info.push(<p>{data[index]["zona"]}: {data[index][indi] ? data[index][indi] : "No hay registro"}</p>);
+                info.push(<p><AiFillRightSquare className={colorIndice(data[index][indi])}/>{data[index]["zona"]}: {data[index][indi] ? ` ${data[index][indi]} ${unidad[indi]}` : " No hay registro"}</p>);
                 index++;
             }
 
             currHour++;
-            if (index === data.length) {
-                index--;
-            }
 
             dataCol1.push(
-            <Accordion key={data[index].registros_id} id={data[index].registros_id}>
+            <Accordion key={data[firstIndex].registros_id} id={data[firstIndex].registros_id}>
                 <Card>
                     <Card.Header>
                         <Accordion.Toggle as={Button} className="hora"
                             variant="link"
-                            eventKey={data[index].registros_id}>
+                            eventKey={data[firstIndex].registros_id}>
                             <AiFillCaretDown color="lightgray"/> {currHour.toString().padStart(2, 0)}:00
                         </Accordion.Toggle>
                     </Card.Header>
-                    <Accordion.Collapse eventKey={data[index].registros_id}>
+                    <Accordion.Collapse eventKey={data[firstIndex].registros_id}>
                         <Card.Body>
                             {info}
                         </Card.Body>
@@ -69,28 +96,26 @@ function Calendario({create, data, indi, setDesde, setHasta, downloadFile}) {
             let ch = "T" + currHour.toString().padStart(2, 0);
             let info = [];
 
+            let firstIndex = index;
             // junta todos los de la misma hora
             while ( index < data.length && data[index]["dia"].includes(ch) ) {
-                info.push(<p>{data[index]["zona"]}: {data[index][indi] ? data[index][indi] : "No hay registro"}</p>);
+                info.push(<p><AiFillRightSquare className={colorIndice(data[index][indi])}/> {data[index]["zona"]}: {data[index][indi] ? `${data[index][indi]} ${unidad[indi]}` : "No hay registro"}</p>);
                 index++;
             }
 
             currHour++;
-            if (index === data.length) {
-                index--;
-            }
 
             dataCol2.push(
-            <Accordion key={data[index].registros_id} id={data[index].registros_id}>
+            <Accordion key={data[firstIndex].registros_id} id={data[firstIndex].registros_id}>
                 <Card>
                     <Card.Header>
                         <Accordion.Toggle as={Button} className="hora"
                             variant="link"
-                            eventKey={data[index].registros_id}>
+                            eventKey={data[firstIndex].registros_id}>
                             <AiFillCaretDown color="lightgray"/> {currHour.toString().padStart(2, 0)}:00
                         </Accordion.Toggle>
                     </Card.Header>
-                    <Accordion.Collapse eventKey={data[index].registros_id}>
+                    <Accordion.Collapse eventKey={data[firstIndex].registros_id}>
                         <Card.Body>
                             {info}
                         </Card.Body>
