@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap';
 import { BsInfoCircle } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
-import Select, { components } from 'react-select';
+import Select from 'react-select';
 
 const indicadores = [
     {value: 'PM25', label: 'PM25'},
@@ -47,7 +47,7 @@ const MapaFiltros = ({ onApply }) => {
 
     const [show, setShow] = useState(false);
     const [location, setLocation] = useState(null);
-    const [interval, setInterval] = useState(intervalos[0]);
+    const [interval, setInterval_] = useState(intervalos[0]);
     const [gas, setGas] = useState(null);
 
     const handleClose = () => setShow(false);
@@ -67,8 +67,9 @@ const MapaFiltros = ({ onApply }) => {
                     </Col>
                     <Col className="mb-3" xs={6} lg={3}>
                         <Select
+                            isDisabled
                             options={intervalos}
-                            onChange={setInterval}
+                            onChange={setInterval_}
                             value={interval}
                         />
                     </Col>
@@ -104,7 +105,11 @@ const MapaFiltros = ({ onApply }) => {
                             className="btn-aplicar"
                             variant="primary"
                             block
-                            onClick={() => onApply({ gas, location, interval })}
+                            onClick={() => {
+                                onApply({ gas, location, interval });
+                                setLocation(null);
+                                setInterval_(intervalos[0]);
+                            }}
                         >
                             Aplicar
                         </Button>
