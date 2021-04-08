@@ -35,8 +35,9 @@ function Registro() {
             alert("Selecciona una ubicación.");
             return;
         } 
-        if (!desde || !hasta) {
+        if ((!desde || !hasta) && radioValue=='1') {
             alert("Selecciona las fechas.");
+            return;
         }
 
         let queryStr = "ubic=";
