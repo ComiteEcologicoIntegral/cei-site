@@ -1,5 +1,4 @@
 import React, {
-    Component,
     useCallback,
     useEffect,
     useMemo,
@@ -10,6 +9,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { Link } from 'react-router-dom';
 
 import { Marker, Popup } from 'react-leaflet';
 import { Button } from 'react-bootstrap';
@@ -116,12 +116,19 @@ function Marcador({
                     </div>
                     <div>
                         {labels.map(
-                            ({ label, status, value, units, ref }, idx) => (
+                            ({ label, status, value, units }, idx) => (
                                 <div
                                     key={idx}
                                     className="d-flex justify-content-between rt-data-row mb-1"
                                 >
-                                    <a href={ref}>{label}</a>
+                                    <Link
+                                        to={{
+                                            pathname: 'registro',
+                                            search: `?gas=${label}`,
+                                        }}
+                                    >
+                                        {label}
+                                    </Link>
                                     <div
                                         className={`d-inline-flex justify-content-between px-1 rounded marker-${status}`}
                                     >

@@ -1,7 +1,9 @@
+import moment from 'moment';
 import React, {useEffect} from 'react'
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import Plot from 'react-plotly.js'
 
-function Grafica({setDesde, setHasta}) {
+function Grafica({setDesde, setHasta, data, layout}) {
     useEffect(() => {
         setDesde(null);
         setHasta(null);
@@ -18,7 +20,7 @@ function Grafica({setDesde, setHasta}) {
                             </Col>
 
                             <Col xs={5}>
-                            <Form.Control type="date" required onChange={(event) => setDesde(event.target.value)}></Form.Control>
+                            <Form.Control type="date" required onChange={(event) => setDesde(moment(event.target.value))}></Form.Control>
                             </Col>
                         
                             <Col xs={5}>
@@ -33,7 +35,7 @@ function Grafica({setDesde, setHasta}) {
                             </Col>
 
                             <Col xs={5}>
-                            <Form.Control type="date" required onChange={(event) => setHasta(event.target.value)}></Form.Control>
+                            <Form.Control type="date" required onChange={(event) => setHasta(moment(event.target.value))}></Form.Control>
                             </Col>
                         
                             <Col xs={5}>
@@ -89,7 +91,10 @@ function Grafica({setDesde, setHasta}) {
 
                 <Col sm={12} lg={8} xl={9}>
                     <div className="grafico mb-4">
-
+                        <Plot
+                            data={data}
+                            layout={layout}
+                        />
                     </div>
                 </Col>
                 
