@@ -5,6 +5,7 @@ import Calendario from './components/Calendario';
 import moment from 'moment'
 import 'moment/locale/es';
 import { apiUrl } from './constants';
+import qs from 'qs';
 
 moment.locale('es');
 
@@ -21,11 +22,22 @@ function Registro() {
 
     useEffect(() => {
         if (q) {
-            fetch (`${apiUrl}/datos-fecha?${q}`)
-            .then(response => response.json())
-            .then(json => setData(json))
+            const locations = ubic.map(u => u.label).reduce((p, c) => p === '' ? `locations=${c}`:`${p}&locations=${c}`, '');
+
+            fetch (`${apiUrl}/get-graph?${locations}&gas=${ind.value}`)
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                setData(json);
+            })
         }
     }, [q]);
+
+    useEffect(() => {
+        console.log('DESDE', desde)
+        console.log('HASTA', hasta)
+    }, [desde, hasta])
     
     function createQuery() {
         // Ejemplo:
@@ -37,6 +49,7 @@ function Registro() {
         } 
         if (!desde || !hasta) {
             alert("Selecciona las fechas.");
+            return
         }
 
         let queryStr = "ubic=";
@@ -44,6 +57,8 @@ function Registro() {
         ubic.forEach(element => {
             queryStr += element.value + ",";
         });
+
+        console.log(hasta)
 
         queryStr = queryStr.slice(0, -1);
         queryStr += "&ind=" + ind.value + "&inicio=" + desde.format("YYYY-MM-DD") + "&fin=" + hasta.format("YYYY-MM-DD");
@@ -98,7 +113,7 @@ function Registro() {
         <div className="container mb-10">
             <RHFiltros createQuery={createQuery} radioValue={radioValue} setRadioValue={setRadioValue} setInd={setInd} setUbic={setUbic}/>
             { radioValue === '1' && (
-                <Grafica setDesde={setDesde} setHasta={setHasta}/>
+                <Grafica setDesde={setDesde} setHasta={setHasta} {...data}/>
             )}
             { radioValue === '2' && (
                 <Calendario create={createQuery} data={data} indi={indi} setDesde={setDesde} setHasta={setHasta} downloadFile={downloadFile}/>
