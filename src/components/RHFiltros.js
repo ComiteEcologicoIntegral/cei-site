@@ -1,6 +1,10 @@
+import moment from 'moment';
 import React, { useState, useEffect } from 'react';
 import { Form, ButtonGroup, Button, Col, ToggleButton } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
+import { fetchSummaryData } from '../handlers/data';
+import { setSensorData } from '../redux/reducers';
 
 const indicadores = [
     {value: 'PM25', label: 'PM2.5'},
@@ -18,13 +22,28 @@ function RHFiltros({createQuery, radioValue, setRadioValue, setInd, setUbic}) {
         { name: 'Calendario', value: '2' }
     ];
 
+    const dispatch = useDispatch();
+    const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
+
     const [sensRaw, setSensRaw] = useState(null);
     let sensores = [];
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/sensor-summary")
-        .then((response) => response.json())
-        .then((json) => {setSensRaw(json)})
+        // TODO: convertir a hook
+        const diff = sensorDataLastUpdate
+            ? moment().diff(sensorDataLastUpdate, 'minutes')
+            : 999;
+
+        if (diff > 60) {
+            fetchSummaryData()
+                .then((data) => {
+                    dispatch(setSensorData(data));
+                    setSensRaw(data);
+                })
+                .catch((err) => console.error(err));
+        } else {
+            setSensRaw(sensorData);
+        }
     }, []);
 
     if (sensRaw) {
