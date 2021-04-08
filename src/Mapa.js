@@ -9,6 +9,7 @@ import { getStatus } from './handlers/statusCriteria.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSensorData } from './redux/reducers.js';
 import moment from 'moment';
+import { fetchSummaryData } from './handlers/data.js';
 
 const mapDefaultProps = {
     center: [25.67, -100.25],
@@ -35,17 +36,6 @@ function Mapa() {
         [map]
     );
 
-    const fetchSummaryData = (retry = 0) => {
-        if (retry > 5) return; // TODO: Maximo de Intentos, mostrar mensaje de error cuando lo sobrepasa
-
-        fetch('http://127.0.0.1:8000/sensor-summary')
-            .then((res) => res.json())
-            .then((json) => {
-                dispatch(setSensorData(json));
-            })
-            .catch((err) => setTimeout(() => fetchSummaryData(retry + 1), 500));
-    };
-
     useEffect(() => {
         // Llama a la api si los datos se guardaron hace menos de una hora
         const diff = sensorDataLastUpdate
@@ -53,7 +43,11 @@ function Mapa() {
             : 999; // Caso sensorDataLastUpdate == null, se tienen que solicitar los datos
 
         if (diff > 60) {
-            fetchSummaryData();
+            fetchSummaryData()
+                .then((data) => {
+                    dispatch(setSensorData(data));
+                })
+                .catch((err) => console.error(err));
         }
     }, []);
 

@@ -4,6 +4,7 @@ import Grafica from './components/Grafica';
 import Calendario from './components/Calendario';
 import moment from 'moment'
 import 'moment/locale/es';
+import { apiUrl } from './constants';
 
 moment.locale('es');
 
@@ -20,7 +21,7 @@ function Registro() {
 
     useEffect(() => {
         if (q) {
-            fetch (`http://127.0.0.1:8000/datos-fecha?${q}`)
+            fetch (`${apiUrl}/datos-fecha?${q}`)
             .then(response => response.json())
             .then(json => setData(json))
         }
@@ -70,7 +71,7 @@ function Registro() {
 
             console.log(queryStr);
 
-            fetch(`http://127.0.0.1:8000/download-data?${queryStr}`)
+            fetch(`${apiUrl}/download-data?${queryStr}`)
             .then(response => response.blob())
             .then(blob => {
                 const url = URL.createObjectURL(blob);
