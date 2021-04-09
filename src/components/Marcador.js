@@ -143,9 +143,9 @@ function Marcador({
 
                 <div className="py-2 px-3 border-top text-center">
                     <Button size="sm">Más información</Button>
-                    <p className="lh-sm mt-2 mb-0">
+                    {/* <p className="lh-sm mt-2 mb-0">
                         Fuente(s): <a href={provider.ref}>{provider.name}</a>
-                    </p>
+                    </p> */}
                 </div>
             </Popup>
         </Marker>
