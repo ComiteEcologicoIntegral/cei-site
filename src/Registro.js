@@ -1,8 +1,8 @@
-import React, { useState, useEffect} from 'react'
-import RHFiltros from './components/RHFiltros'
+import React, { useState, useEffect } from 'react';
+import RHFiltros from './components/RHFiltros';
 import Grafica from './components/Grafica';
 import Calendario from './components/Calendario';
-import moment from 'moment'
+import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
 import qs from 'qs';
@@ -13,113 +13,150 @@ function Registro() {
     const [data, setData] = useState(null);
     const [radioValue, setRadioValue] = useState('1');
     const [q, setQ] = useState(null);
-    
-    const [indi, setIndi] = useState("PM25");
+
+    const [indi, setIndi] = useState('PM25');
     const [desde, setDesde] = useState(null);
     const [hasta, setHasta] = useState(null);
-    const [ind, setInd] = useState({value: "PM25"});
+    const [ind, setInd] = useState({ value: 'PM25' });
     const [ubic, setUbic] = useState(null);
 
     useEffect(() => {
         if (q) {
-            const locations = ubic.map(u => u.label).reduce((p, c) => p === '' ? `locations=${c}`:`${p}&locations=${c}`, '');
+            if (radioValue === '1') {
+                const locations = ubic
+                    .map((u) => u.label)
+                    .reduce(
+                        (p, c) =>
+                            p === '' ? `locations=${c}` : `${p}&locations=${c}`,
+                        ''
+                    );
 
-            fetch (`${apiUrl}/get-graph?${locations}&gas=${ind.value}`)
-            .then(response => {
-                return response.json();
-            })
-            .then(json => {
-                setData(json);
-            })
+                fetch(`${apiUrl}/get-graph?${locations}&gas=${ind.value}`)
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((json) => {
+                        setData(json);
+                    });
+            } else {
+                fetch(`${apiUrl}/datos-fecha?${q}`)
+                    .then((response) => response.json())
+                    .then((json) => setData(json));
+            }
         }
     }, [q]);
 
     useEffect(() => {
-        console.log('DESDE', desde)
-        console.log('HASTA', hasta)
-    }, [desde, hasta])
-    
+        setData(null);
+    }, [radioValue]);
+
     function createQuery() {
         // Ejemplo:
         // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
-        
+
         if (!ubic) {
-            alert("Selecciona una ubicación.");
+            alert('Selecciona una ubicación.');
             return;
-        } 
-        if ((!desde || !hasta) && radioValue=='1') {
-            alert("Selecciona las fechas.");
+        }
+        if ((!desde || !hasta) && radioValue == '1') {
+            alert('Selecciona las fechas.');
             return;
         }
 
-        let queryStr = "ubic=";
+        let queryStr = 'ubic=';
 
-        ubic.forEach(element => {
-            queryStr += element.value + ",";
+        ubic.forEach((element) => {
+            queryStr += element.value + ',';
         });
 
-        console.log(hasta)
-
         queryStr = queryStr.slice(0, -1);
-        queryStr += "&ind=" + ind.value + "&inicio=" + desde.format("YYYY-MM-DD") + "&fin=" + hasta.format("YYYY-MM-DD");
+        queryStr +=
+            '&ind=' +
+            ind.value +
+            '&inicio=' +
+            desde.format('YYYY-MM-DD') +
+            '&fin=' +
+            hasta.format('YYYY-MM-DD');
 
         console.log(queryStr);
 
         setIndi(ind.value);
-        setQ(queryStr); 
+        setQ(queryStr);
     }
 
     function downloadFile() {
         if (q) {
-            let queryStr = "ubic=";
-            ubic.forEach(element => {
-                queryStr += element.value + ",";
+            let queryStr = 'ubic=';
+            ubic.forEach((element) => {
+                queryStr += element.value + ',';
             });
             queryStr = queryStr.slice(0, -1);
 
             if (radioValue === '2') {
                 // para el calendario se descarga todo el mes
-                queryStr += "&ind=" + ind.value + "&inicio=" + desde.startOf("month").format("YYYY-MM-DD") + "&fin=" + hasta.endOf("month").format("YYYY-MM-DD");
+                queryStr +=
+                    '&ind=' +
+                    ind.value +
+                    '&inicio=' +
+                    desde.startOf('month').format('YYYY-MM-DD') +
+                    '&fin=' +
+                    hasta.endOf('month').format('YYYY-MM-DD');
             } else {
-                queryStr += "&ind=" + ind.value + "&inicio=" + desde.format("YYYY-MM-DD") + "&fin=" + hasta.format("YYYY-MM-DD");
+                queryStr +=
+                    '&ind=' +
+                    ind.value +
+                    '&inicio=' +
+                    desde.format('YYYY-MM-DD') +
+                    '&fin=' +
+                    hasta.format('YYYY-MM-DD');
             }
 
-            console.log(queryStr);
-
             fetch(`${apiUrl}/download-data?${queryStr}`)
-            .then(response => response.blob())
-            .then(blob => {
-                const url = URL.createObjectURL(blob);
+                .then((response) => response.blob())
+                .then((blob) => {
+                    const url = URL.createObjectURL(blob);
 
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = "data.csv";
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'data.csv';
 
-                const clickHandler = () => {
-                    setTimeout(() => {
-                        URL.revokeObjectURL(url);
-                        a.removeEventListener('click', clickHandler);
-                    }, 150);
-                };
+                    const clickHandler = () => {
+                        setTimeout(() => {
+                            URL.revokeObjectURL(url);
+                            a.removeEventListener('click', clickHandler);
+                        }, 150);
+                    };
 
-                a.addEventListener('click', clickHandler, false);
-                a.click();
-            });
-
+                    a.addEventListener('click', clickHandler, false);
+                    a.click();
+                });
         }
     }
 
     return (
         <div className="container mb-10">
-            <RHFiltros createQuery={createQuery} radioValue={radioValue} setRadioValue={setRadioValue} setInd={setInd} setUbic={setUbic}/>
-            { radioValue === '1' && (
-                <Grafica setDesde={setDesde} setHasta={setHasta} {...data}/>
+            <RHFiltros
+                createQuery={createQuery}
+                radioValue={radioValue}
+                setRadioValue={setRadioValue}
+                setInd={setInd}
+                setUbic={setUbic}
+            />
+            {radioValue === '1' && (
+                <Grafica setDesde={setDesde} setHasta={setHasta} {...data} />
             )}
-            { radioValue === '2' && (
-                <Calendario create={createQuery} data={data} indi={indi} setDesde={setDesde} setHasta={setHasta} downloadFile={downloadFile}/>
+            {radioValue === '2' && (
+                <Calendario
+                    create={createQuery}
+                    data={data}
+                    indi={indi}
+                    setDesde={setDesde}
+                    setHasta={setHasta}
+                    downloadFile={downloadFile}
+                />
             )}
         </div>
-    )
+    );
 }
 
-export default Registro
+export default Registro;
