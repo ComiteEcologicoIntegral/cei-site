@@ -9,7 +9,9 @@ const retry = (fn, ms = 1000, maxRetries = 5) =>
                 setTimeout(() => {
                     ++retries;
                     if (retries === maxRetries) {
-                        return reject('Se excedió el número máximo de intentos');
+                        return reject(
+                            'Se excedió el número máximo de intentos'
+                        );
                     }
                     retry(fn, ms).then(resolve);
                 }, ms);
@@ -20,8 +22,11 @@ const fetchSummaryDataFn = () =>
     new Promise((resolve, reject) => {
         fetch(`${apiUrl}/sensor-summary`)
             .then((res) => {
-                if (res.status === 500) reject();
-                return res.json();
+                if (res.status === 200) {
+                    return res.json();
+                } else {
+                    reject();
+                }
             })
             .then((json) => {
                 resolve(json);
