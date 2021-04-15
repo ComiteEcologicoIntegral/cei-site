@@ -1,19 +1,17 @@
 import { apiUrl } from '../constants';
 
-const retry = (fn, ms = 1000, maxRetries = 5) =>
+const retry = (fn, ms = 1000, retries = 5) =>
     new Promise((resolve, reject) => {
-        var retries = 0;
         fn()
             .then(resolve)
             .catch(() => {
                 setTimeout(() => {
-                    ++retries;
-                    if (retries === maxRetries) {
+                    if (!retries) {
                         return reject(
                             'Se excedió el número máximo de intentos'
                         );
                     }
-                    retry(fn, ms).then(resolve);
+                    retry(fn, ms, retries - 1).then(resolve, reject);
                 }, ms);
             });
     });
