@@ -41,7 +41,6 @@ function Mapa() {
         const diff = sensorDataLastUpdate
             ? moment().diff(sensorDataLastUpdate, 'minutes')
             : 999; // Caso sensorDataLastUpdate == null, se tienen que solicitar los datos
-
         if (diff > 60) {
             fetchSummaryData()
                 .then((data) => {
