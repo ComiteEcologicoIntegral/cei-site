@@ -8,8 +8,10 @@ const dataSlice = createSlice({
     initialState,
     reducers: {
         setSensorData(state, action) {
-            state.sensorData = action.payload;
-            state.sensorDataLastUpdate = moment();
+            if (Array.isArray(action.payload)) {
+                state.sensorData = action.payload;
+                state.sensorDataLastUpdate = moment();
+            }
         },
     },
 });
