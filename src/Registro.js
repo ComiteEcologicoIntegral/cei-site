@@ -6,6 +6,7 @@ import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
 import qs from 'qs';
+import Heatmap from './components/Heatmap';
 
 moment.locale('es');
 
@@ -38,11 +39,12 @@ function Registro() {
                     .then((json) => {
                         setData(json);
                     });
-            } else {
+            } 
+            /* else {
                 fetch(`${apiUrl}/datos-fecha?${q}`)
                     .then((response) => response.json())
                     .then((json) => setData(json));
-            }
+            } */
         }
     }, [q]);
 
@@ -78,7 +80,7 @@ function Registro() {
             '&fin=' +
             hasta.format('YYYY-MM-DD');
 
-        console.log(queryStr);
+        // console.log(queryStr);
 
         setIndi(ind.value);
         setQ(queryStr);
@@ -146,6 +148,7 @@ function Registro() {
                 <Grafica setDesde={setDesde} setHasta={setHasta} {...data} />
             )}
             {radioValue === '2' && (
+                <>
                 <Calendario
                     create={createQuery}
                     data={data}
@@ -154,6 +157,8 @@ function Registro() {
                     setHasta={setHasta}
                     downloadFile={downloadFile}
                 />
+                <Heatmap q={q} fecha={desde} ubic={ubic} ind={indi}/>
+                </>
             )}
         </div>
     );

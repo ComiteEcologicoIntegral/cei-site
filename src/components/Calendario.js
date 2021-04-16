@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../styles/calendario.css';
 import { Button, Col, Row, Accordion, Card } from 'react-bootstrap'
-import HeatMap from './HeatMap'
+import DatePicker from './DatePicker'
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
 import { getStatus } from '../handlers/statusCriteria';
 import moment from 'moment'
@@ -149,7 +149,7 @@ function Calendario({create, data, indi, setDesde, setHasta, downloadFile}) {
             </div>
             </Col>
             <Col sm={12} lg={6} className="d-flex align-items-start justify-content-center">
-                <HeatMap value={value} onChange={setValue}/>
+                <DatePicker value={value} onChange={setValue}/>
             </Col>
             </Row>
         </div>
