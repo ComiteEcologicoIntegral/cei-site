@@ -1,103 +1,189 @@
-import React, { useState, useEffect } from 'react'
-import buildCalendar from './buildCalendar';
-import { Col, Row } from 'react-bootstrap';
-import { v4 } from 'uuid';
+import React, { useState, useEffect } from 'react';
+import Chart from 'react-apexcharts';
+import { apiUrl } from '../constants';
+import { criteria } from '../handlers/statusCriteria';
 
-const HeatMap = ({value, onChange}) => {
-
-    const [calendar, setCalendar] = useState([]);
-
-    // build calendar
+const HeatMap = ({q, fecha, ubic, ind}) => {
+    
+    const [mes, setMes] = useState(null); 
+    const [dataHM, setDataHM] = useState(null);
 
     useEffect(() => {
-         setCalendar(buildCalendar(value));
-    }, [value]);
-    
-    function isSelected(day) {
-        return value.isSame(day, "day");
+        if (fecha) {
+            setMes(fecha.clone().startOf('month'));
+        }
+    }, [fecha]);
+
+    useEffect(() => {
+        if (ubic && mes) {
+            // create query 
+            let queryStr = 'ubic=';
+
+            ubic.forEach((element) => {
+                queryStr += element.value + ',';
+            });
+
+            queryStr = queryStr.slice(0, -1);
+            queryStr +=
+                '&ind=' + ind +
+                '&inicio=' + mes.format("YYYY-MM-DD") +
+                '&fin=' + mes.endOf('month').format('YYYY-MM-DD');
+
+            console.log(queryStr);
+
+            // da error CORS
+            //fetch(`${apiUrl}/prom-data?${queryStr}`)
+
+            fetch(`${apiUrl}/prom-data?${queryStr}`)
+                .then(response => response.json())
+                .then((json) => setDataHM(json))
+                .catch((e) => console.log(e));
+
+        }
+    }, [q, mes]);
+
+    var options = {};
+    var series = [];
+
+    if (q && dataHM && dataHM.length > 0) {
+        /* EJEMPLO
+        series:[
+            {
+                name: dataHM[i]["zona"]
+                data: [
+                    {
+                        x: category[i%7],
+                        y: dataHM[i][ind],
+                        fecha: dataHM[i][fecha].format("DD-MM-YYYY")
+                    }
+                ]
+            }
+        ] */
+        
+        var category = ['D', 'L', 'Ma', 'Mi', 'J', 'V', 'S']; // dias de la semana
+
+        let primerDia = new Date(dataHM[0].fecha).getDay(); // primer día de la semana de los datos
+        let currDiaSem = 0;
+        let index = 0; // navegar arreglo de datos
+
+        
+        while (index < dataHM.length) {
+            let seriesItem = { // representa una semana
+                name: dataHM[index]["zona"],
+                data: [] // datos de una semana
+            };
+
+            let dataItem = {
+                // x, y, fecha,,, datos de un día
+            };
+
+            if (index == 0 && primerDia != 0) { // llenar los primeros espacios vacios con null
+                while (currDiaSem != primerDia) {
+                    dataItem.x = category[currDiaSem];
+                    dataItem.y = -1;
+                    dataItem.fecha = "Mes anterior";
+                    seriesItem.data[currDiaSem] = {...dataItem};
+                    currDiaSem++;
+                }
+            }
+
+            while (index < dataHM.length && currDiaSem < 7) {
+                dataItem.x = category[currDiaSem];
+                dataItem.y = dataHM[index]["prom"];
+                dataItem.fecha = dataHM[index]["fecha"];
+
+                seriesItem.data[currDiaSem] = {...dataItem};
+                
+                index++;
+                currDiaSem++;
+            }
+           
+            series.unshift({...seriesItem});
+            currDiaSem = 0;
+        }
+
+        console.log(series);
+
+        options = {
+            chart: {
+              height: 300,
+              type: 'heatmap',
+            },
+            plotOptions: {
+              heatmap: {
+                radius: 10,
+                shadeIntensity: 0.5,
+                radius: 0,
+                useFillColorAsStroke: false,
+                colorScale: {
+                    ranges: [
+                    {
+                        from: -2,
+                        to: 0,
+                        name: 'No data',
+                        color: '#A3A3A3'
+                    },
+                    {
+                        from: 0,
+                        to: criteria['Aire y Salud'][ind][0],
+                        name: 'Buena',
+                        color: '#95BF39'
+                    },
+                    {
+                        from: criteria['Aire y Salud'][ind][0],
+                        to: criteria['Aire y Salud'][ind][1],
+                        name: 'Aceptable',
+                        color: '#F2E313'
+                    },
+                    {
+                        from: criteria['Aire y Salud'][ind][1],
+                        to: criteria['Aire y Salud'][ind][2],
+                        name: 'Mala',
+                        color: '#F2811D'
+                    },
+                    {
+                        from: criteria['Aire y Salud'][ind][2],
+                        to: criteria['Aire y Salud'][ind][3],
+                        name: 'Muy mala',
+                        color: '#F22233'
+                    },
+                    {
+                        from: criteria['Aire y Salud'][ind][3],
+                        to: criteria['Aire y Salud'][ind][3] * 1.5,
+                        name: 'Extremadamente mala',
+                        color: '#73022C'
+                    }
+                  ]
+                }
+              }
+            },
+            dataLabels: {
+              enabled: false
+            },
+            stroke: {
+              width: 1
+            },
+            title: {
+              text: 'Promedio diario del mes'
+            },
+            xaxis: {
+                categories: category,
+                position: "top"
+            },
+            legend: {
+                position: "bottom"
+            }
+          };
+
+        console.log("done");
     }
 
-    function afterToday(day) {
-        return day.isAfter(new Date(), "day");
-    }
-
-    function isToday(day) {
-        return day.isSame(new Date(), "day");
-    }
-
-    function sameMonth(day) {
-        return day.isSame(value, "month");
-    }
-
-    function dayStyles(day) {
-        if (isSelected(day)) return "selected"
-        if (isToday(day)) return "today"
-        if (afterToday(day)) return "after"
-        if (!sameMonth(day)) return "month"
-        return ""
-    }
-
-    function currMonthName() {
-        return value.format("MMM")
-    }
-
-    function currYear() {
-        return value.format("YYYY")
-    }
-
-    function prevMonth() {
-        return value.clone().subtract(1, "month")
-    }
-
-    function nextMonth() {
-        return value.clone().endOf("month").add(1, "day")
-    }
-
-    function currMonth() {
-        return value.isSame(new Date(), "month")
-    }
 
     return (
-        <div className="calendar mt-5">
-            <div className="cal-header">
-            <Row>
-                <Col sm={3} className="previous" onClick={() => onChange(prevMonth)}>
-                    {String.fromCharCode(171)}
-                </Col>
-                <Col sm={6} className="current">
-                    {currMonthName()}, {currYear()}
-                </Col>
-                <Col  sm={3} className="next" onClick={() => !currMonth() && onChange(nextMonth)}>
-                    {!currMonth() ? String.fromCharCode(187) : null}
-                </Col>
-            </Row>
-            </div>
-            <div className="body">
-                <div className="day-names">
-                    {
-                        ["D", "L", "M" , "M" , "J", "V" , "S"].map((d,i) => 
-                                <div className="weekday" key={i}>{d}</div>
-                            )
-                    }
-                </div>
-                { 
-                calendar.map((week, w) => 
-                <div key={w}>
-                    {
-                        week.map((day, i) => <div className="day"
-                            onClick={() => !afterToday(day) && onChange(day)}>
-                            <div className={dayStyles(day)} key={v4()}>
-                                { day.format("D") }
-                            </div>
-                            </div>
-                        )
-                    }
-                    
-                </div>) 
-                }
-            </div>
+        <div>
+            {options && (<Chart options={options} series={series} type="heatmap" width={700} />)}
         </div>
-    )
+    );
 }
 
 export default HeatMap

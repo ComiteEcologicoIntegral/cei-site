@@ -1,4 +1,4 @@
-const criteria = {
+export const criteria = {
     'Aire y Salud': {
         PM10: [76, 156, 236, 277],
         PM25: [46, 80, 148, 214],
