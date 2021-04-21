@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import RHFiltros from './components/RHFiltros';
 import Grafica from './components/Grafica';
 import Calendario from './components/Calendario';
+import Heatmap from './components/HeatMap';
 import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
-import qs from 'qs';
-import Heatmap from './components/Heatmap';
+
 
 moment.locale('es');
 
@@ -39,7 +39,7 @@ function Registro() {
                     .then((json) => {
                         setData(json);
                     });
-            } 
+            }
             /* else {
                 fetch(`${apiUrl}/datos-fecha?${q}`)
                     .then((response) => response.json())
@@ -149,15 +149,15 @@ function Registro() {
             )}
             {radioValue === '2' && (
                 <>
-                <Calendario
-                    create={createQuery}
-                    data={data}
-                    indi={indi}
-                    setDesde={setDesde}
-                    setHasta={setHasta}
-                    downloadFile={downloadFile}
-                />
-                <Heatmap q={q} fecha={desde} ubic={ubic} ind={indi}/>
+                    <Calendario
+                        create={createQuery}
+                        data={data}
+                        indi={indi}
+                        setDesde={setDesde}
+                        setHasta={setHasta}
+                        downloadFile={downloadFile}
+                    />
+                    <Heatmap q={q} fecha={desde} ubic={ubic} ind={indi} />
                 </>
             )}
         </div>
