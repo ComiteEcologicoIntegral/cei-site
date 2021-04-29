@@ -40,11 +40,12 @@ function Registro() {
                         setData(json);
                     });
             } 
-            /* else {
+            else {
                 fetch(`${apiUrl}/datos-fecha?${q}`)
                     .then((response) => response.json())
                     .then((json) => setData(json));
-            } */
+            }
+            
         }
     }, [q]);
 
@@ -80,7 +81,8 @@ function Registro() {
             '&fin=' +
             hasta.format('YYYY-MM-DD');
 
-        // console.log(queryStr);
+        console.log("querystr");
+        console.log(queryStr);
 
         setIndi(ind.value);
         setQ(queryStr);
@@ -150,6 +152,7 @@ function Registro() {
             {radioValue === '2' && (
                 <>
                 <Calendario
+                    q={q}
                     create={createQuery}
                     data={data}
                     indi={indi}
