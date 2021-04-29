@@ -26,6 +26,33 @@
     z-index: 0;
 }
 
+.marker-wrapper {
+    font-size: 12px;
+    width: var(--marker-size);
+    height: var(--marker-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.marker-base {
+    opacity: 0.9;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.marker-shape-round {
+    border-radius: 50%;
+}
+
+.marker-shape-square {
+    border-radius: 0%;
+}
+
 .marker-0 {
     background-color: var(--color-buena-b);
     color: var(--color-buena-d);
