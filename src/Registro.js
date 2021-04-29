@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import RHFiltros from './components/RHFiltros';
 import Grafica from './components/Grafica';
 import Calendario from './components/Calendario';
+import Heatmap from './components/Heatmap';
 import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
-import qs from 'qs';
-import Heatmap from './components/Heatmap';
+
 
 moment.locale('es');
 
@@ -33,9 +33,7 @@ function Registro() {
                     );
 
                 fetch(`${apiUrl}/get-graph?${locations}&gas=${ind.value}`)
-                    .then((response) => {
-                        return response.json();
-                    })
+                    .then((response) => response.json())
                     .then((json) => {
                         setData(json);
                     });
@@ -45,7 +43,6 @@ function Registro() {
                     .then((response) => response.json())
                     .then((json) => setData(json));
             }
-            
         }
     }, [q]);
 
