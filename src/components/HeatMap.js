@@ -1,44 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'react-apexcharts';
 import { apiUrl } from '../constants';
 import { criteria } from '../handlers/statusCriteria';
+import { unidad } from '../constants';
+import moment from 'moment';
+import promdata from '../handlers/prom-data.json';
 
-const HeatMap = ({q, fecha, ubic, ind}) => {
-    
+function HeatMap ({q, fecha, ubic, ind}) {
     const [mes, setMes] = useState(null); 
     const [dataHM, setDataHM] = useState(null);
 
+    const queryAnt = useRef(null);
+    const mesAnt = useRef(mes);
+
     useEffect(() => {
         if (fecha) {
-            setMes(fecha.clone().startOf('month'));
+            if (!mes || !mes.isSame(fecha.clone().startOf('month'))) {
+                mesAnt.current = mes;
+                setMes(fecha.clone().startOf('month'));
+            }
         }
     }, [fecha]);
 
     useEffect(() => {
-        if (ubic && mes) {
-            // create query 
-            let queryStr = 'ubic=';
+        // solo cambia el heatmap cuando cambia el query de RHFiltros o el mes de la fecha seleccionada
+        if (!queryAnt.current || queryAnt.current !== q || mesAnt.current != mes) {
+            if (queryAnt.current !== q) queryAnt.current = q;
+            if (mesAnt.current != mes) mesAnt.current = mes;
 
-            ubic.forEach((element) => {
-                queryStr += element.value + ',';
-            });
+            if (ubic && mes) {
+                // create query 
+                let queryStr = 'ubic=';
 
-            queryStr = queryStr.slice(0, -1);
-            queryStr +=
-                '&ind=' + ind +
-                '&inicio=' + mes.format("YYYY-MM-DD") +
-                '&fin=' + mes.endOf('month').format('YYYY-MM-DD');
+                ubic.forEach((element) => {
+                    queryStr += element.value + ',';
+                });
 
-            console.log(queryStr);
+                queryStr = queryStr.slice(0, -1);
+                queryStr +=
+                    '&ind=' + ind +
+                    '&inicio=' + mes.format("YYYY-MM-DD") +
+                    '&fin=' + mes.clone().endOf('month').format('YYYY-MM-DD');
 
-            // da error CORS
-            //fetch(`${apiUrl}/prom-data?${queryStr}`)
+                    
+                console.log("Query HM");
+                console.log(queryStr);
 
-            fetch(`${apiUrl}/prom-data?${queryStr}`)
-                .then(response => response.json())
-                .then((json) => setDataHM(json))
-                .catch((e) => console.log(e));
+                /*
+                fetch(`${apiUrl}/prom-data?${queryStr}`)
+                    .then(response => response.json())
+                    .then((json) => setDataHM(json))
+                    .catch((e) => console.log(e));
+                    */
+                
+                //console.log("done hm");
+                setDataHM(promdata);
 
+            }
         }
     }, [q, mes]);
 
@@ -46,6 +64,7 @@ const HeatMap = ({q, fecha, ubic, ind}) => {
     var series = [];
 
     if (q && dataHM && dataHM.length > 0) {
+        console.log("creating");
         /* EJEMPLO
         series:[
             {
@@ -59,61 +78,61 @@ const HeatMap = ({q, fecha, ubic, ind}) => {
                 ]
             }
         ] */
-        
-        var category = ['D', 'L', 'Ma', 'Mi', 'J', 'V', 'S']; // dias de la semana
+        let index = 0;
+        let dataItem = {};
 
-        let primerDia = new Date(dataHM[0].fecha).getDay(); // primer día de la semana de los datos
-        let currDiaSem = 0;
-        let index = 0; // navegar arreglo de datos
+        for (let u = 0; u < ubic.length; u++) { // por cada ubicacion seleccionada
+            let currUbic = dataHM[index]["zona"];
+            let primerDia = new Date(dataHM[index].fecha.replace(/-/g, '\/').replace(/T.+/, '')); // primer día registrado de los datos de una ubicacion
+            let currDia = 1;
 
-        
-        while (index < dataHM.length) {
-            let seriesItem = { // representa una semana
-                name: dataHM[index]["zona"],
-                data: [] // datos de una semana
+            let seriesItem = {
+                name : currUbic,
+                data: []
             };
+            
+            // llenar primeros días vacíos
+            while (primerDia.getDate() !== currDia) {
+                dataItem.x = currDia;
+                dataItem.y = -1;
+                seriesItem.data.push({...dataItem});
+                currDia++;
+            }
+            
 
-            let dataItem = {
-                // x, y, fecha,,, datos de un día
-            };
+            // ahora sí hay datos
+            while (index < dataHM.length && dataHM[index]["zona"] === currUbic) {
+                dataItem.x = currDia;
 
-            if (index == 0 && primerDia != 0) { // llenar los primeros espacios vacios con null
-                while (currDiaSem != primerDia) {
-                    dataItem.x = category[currDiaSem];
+                // revisa que haya datos de ese dia
+                if (currDia == parseInt(dataHM[index]["fecha"].substring(8))) {
+                    dataItem.y = dataHM[index]["prom"];
+                    dataItem.fecha = dataHM[index]["fecha"];
+                    index++;
+                } else {
                     dataItem.y = -1;
-                    dataItem.fecha = "Mes anterior";
-                    seriesItem.data[currDiaSem] = {...dataItem};
-                    currDiaSem++;
                 }
+
+                seriesItem.data.push({...dataItem});
+                currDia++;
             }
 
-            while (index < dataHM.length && currDiaSem < 7) {
-                dataItem.x = category[currDiaSem];
-                dataItem.y = dataHM[index]["prom"];
-                dataItem.fecha = dataHM[index]["fecha"];
-
-                seriesItem.data[currDiaSem] = {...dataItem};
-                
-                index++;
-                currDiaSem++;
-            }
-           
-            series.unshift({...seriesItem});
-            currDiaSem = 0;
+            series.push({...seriesItem});
         }
 
         console.log(series);
 
         options = {
             chart: {
-              height: 300,
               type: 'heatmap',
+              toolbar: {
+                  show: false
+              }
             },
             plotOptions: {
               heatmap: {
-                radius: 10,
-                shadeIntensity: 0.5,
-                radius: 0,
+                enableShades: false,
+                radius: 1,
                 useFillColorAsStroke: false,
                 colorScale: {
                     ranges: [
@@ -121,7 +140,7 @@ const HeatMap = ({q, fecha, ubic, ind}) => {
                         from: -2,
                         to: 0,
                         name: 'No data',
-                        color: '#A3A3A3'
+                        color: '#D3D3D3'
                     },
                     {
                         from: 0,
@@ -163,27 +182,39 @@ const HeatMap = ({q, fecha, ubic, ind}) => {
             stroke: {
               width: 1
             },
-            title: {
-              text: 'Promedio diario del mes'
-            },
             xaxis: {
-                categories: category,
-                position: "top"
+                position: "bottom"
             },
             legend: {
-                position: "bottom"
+                position: "top",
+                showForSingleSeries: true
+            },
+            tooltip: {
+                custom: function({series, seriesIndex, dataPointIndex, w}) {
+                    if (series[seriesIndex][dataPointIndex] !== -1) {
+                        return '<div class="arrow_box hmTooltip">' +
+                        '<p>' + w.globals.initialSeries[seriesIndex].data[dataPointIndex].fecha + '</p>' +
+                        '<p><b>' + series[seriesIndex][dataPointIndex].toFixed(4) + ' ' + 
+                        unidad[ind] + '</b></p>' +
+                        '</div>'
+                    }
+                    return '<div style="display:none;">'
+                  }
             }
           };
 
-        console.log("done");
+        //console.log("done");
     }
 
 
     return (
         <div>
-            {options && (<Chart options={options} series={series} type="heatmap" width={700} />)}
+            <h3 className="mb-5">Promedios diarios del mes</h3>
+            {q && (<Chart options={options} series={series} type="heatmap" height={ubic.length * 100}/>)}
         </div>
     );
 }
+
+
 
 export default HeatMap
