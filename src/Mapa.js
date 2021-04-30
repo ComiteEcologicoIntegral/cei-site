@@ -4,7 +4,7 @@ import MapaFiltros from './components/MapaFiltros.js';
 import Marcador from './components/Marcador.js';
 import Wrapper from './components/WrapperMapa.js';
 
-import { gases } from './constants.js';
+import { gases, mapBlacklist } from './constants.js';
 import { getStatus } from './handlers/statusCriteria.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSensorData } from './redux/reducers.js';
@@ -54,7 +54,8 @@ function Mapa() {
         const filteredSensors = sensorData.filter(
             (sensor) =>
                 typeof sensor.Longitud === 'number' &&
-                typeof sensor.Latitud === 'number'
+                typeof sensor.Latitud === 'number' &&
+                !mapBlacklist.includes(sensor.Sistema)
         );
 
         return filteredSensors.map((data) => {
