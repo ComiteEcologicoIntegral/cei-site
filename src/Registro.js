@@ -7,7 +7,6 @@ import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
 
-
 moment.locale('es');
 
 function Registro() {
