@@ -25,6 +25,15 @@ export const gases = [
     },
 ];
 
+export const unidad = {
+    PM25: "µg/m3",
+    PM10: "µg/m3",
+    CO: "ppm",
+    O3: "ppm",
+    NO2:"ppm", 
+    SO2: "ppm"
+};
+
 export const apiUrl =
     process.env.NODE_ENV === 'production'
         ? process.env.REACT_APP_API_URL
