@@ -108,7 +108,7 @@ function Mapa() {
                         );
 
                         if (fSensor) {
-                            setCenter([fSensor.Longitud, -fSensor.Latitud]);
+                            setCenter([fSensor.Latitud, fSensor.Longitud]);
                         }
                     }
 
