@@ -60,26 +60,31 @@ function Mapa() {
         return filteredSensors.map((data) => {
             const { name: gasName, units: gasUnits } = currentGas;
 
+            let preValue =
+                gasName === 'PM25'
+                    ? data.Sistema === 'PurpleAir'
+                        ? data['PM25_Corregido']
+                        : data[gasName]
+                    : data[gasName];
+
+            const value = typeof preValue === 'number' ? preValue : 'ND';
+
             return {
-                position: [data.Longitud, -data.Latitud],
+                position: [data.Latitud, data.Longitud],
                 current: {
                     indicator: gasName,
-                    label:
-                        typeof data[gasName] === 'number'
-                            ? data[gasName]
-                            : 'ND',
+                    label: value,
                     units: gasUnits,
-                    status: data[gasName]
-                        ? getStatus(gasName, data[gasName])
-                        : 99,
+                    status: value !== 'ND' ? getStatus(gasName, value) : 99,
                     ref: '#',
                 },
                 lastUpdate: new Date(data.Dia),
                 locationStr: data.Zona?.length > 0 ? data.Zona : 'ND',
                 provider: {
-                    name: 'Purple Air',
-                    ref: '/purple-air',
+                    name: data.Sistema,
+                    ref: '#',
                 },
+                isPurpleAir: data.Sistema === 'PurpleAir',
                 labels: gases.map(({ name, units }) => ({
                     label: name,
                     units,
@@ -132,6 +137,7 @@ function Mapa() {
                             label={markerProps.current.label}
                             indicator={markerProps.current.indicator}
                             status={markerProps.current.status}
+                            shape={markerProps.isPurpleAir ? 'square' : 'round'}
                         />
                     ))}
                 </Wrapper>
