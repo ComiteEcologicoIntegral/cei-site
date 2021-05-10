@@ -12,6 +12,7 @@ function Heatmap ({q, fecha, ubic, ind}) {
 
     const queryAnt = useRef(null);
     const mesAnt = useRef(mes);
+    let queryStr = "";
 
     useEffect(() => {
         if (fecha) {
@@ -24,13 +25,18 @@ function Heatmap ({q, fecha, ubic, ind}) {
 
     useEffect(() => {
         // solo cambia el heatmap cuando cambia el query de RHFiltros o el mes de la fecha seleccionada
-        if (!queryAnt.current || queryAnt.current !== q || mesAnt.current != mes) {
-            if (queryAnt.current !== q) queryAnt.current = q;
+        let newq = "";
+        if (q) {
+            newq = q.substring(0, q.indexOf("&inicio"));
+        }
+
+        if (!queryAnt.current || queryAnt.current !== newq || mesAnt.current != mes) {
+            if (queryAnt.current !== q) queryAnt.current = newq;
             if (mesAnt.current != mes) mesAnt.current = mes;
 
             if (ubic && mes) {
                 // create query 
-                let queryStr = 'ubic=';
+                queryStr = 'ubic=';
 
                 ubic.forEach((element) => {
                     queryStr += element.value + ',';
@@ -39,12 +45,11 @@ function Heatmap ({q, fecha, ubic, ind}) {
                 queryStr = queryStr.slice(0, -1);
                 queryStr +=
                     '&ind=' + ind +
-                    '&inicio=' + mes.format("YYYY-MM-DD") +
+                    '&inicio=' + mes.clone().format("YYYY-MM-DD") +
                     '&fin=' + mes.clone().endOf('month').format('YYYY-MM-DD');
 
                     
-                console.log("Query HM");
-                console.log(queryStr);
+                console.log("Query HM: " + queryStr);
 
                 /*
                 fetch(`${apiUrl}/prom-data?${queryStr}`)
@@ -64,7 +69,7 @@ function Heatmap ({q, fecha, ubic, ind}) {
     var series = [];
 
     if (q && dataHM && dataHM.length > 0) {
-        console.log("creating");
+        //console.log("creating");
         /* EJEMPLO
         series:[
             {
@@ -120,7 +125,7 @@ function Heatmap ({q, fecha, ubic, ind}) {
             series.push({...seriesItem});
         }
 
-        console.log(series);
+        //console.log(series);
 
         options = {
             chart: {

@@ -62,6 +62,10 @@ function Calendario({q, create, data, indi, setDesde, setHasta, downloadFile}) {
     }
     
     const [value, setValue] = useState(moment()); // currently selected date
+    useEffect(()=> {
+        setDesde(value);
+        setHasta(value);
+    }, []);
 
     let dataCol1 = [];
     let dataCol2 = [];
@@ -72,12 +76,10 @@ function Calendario({q, create, data, indi, setDesde, setHasta, downloadFile}) {
     const [inAnio, setInAnio] = useState(anios[anios.length - 1].value); // currently selected date
 
     useEffect(() => {
-        if (value) {
+        if (data || q) {
             setDesde(value);
             setHasta(value);
-            if (data) {
-                create();
-            }
+            create(value, value);
         }
     }, [value]);
 
