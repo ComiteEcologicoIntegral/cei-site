@@ -50,7 +50,7 @@ function Registro() {
         setData(null);
     }, [radioValue]);
 
-    function createQuery() {
+    function createQueryGraph() {
         // Ejemplo:
         // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
 
@@ -58,7 +58,7 @@ function Registro() {
             alert('Selecciona una ubicación.');
             return;
         }
-        if ((!desde || !hasta) && radioValue == '1') {
+        if ((!desde || !hasta)) {
             alert('Selecciona las fechas.');
             return;
         }
@@ -80,6 +80,40 @@ function Registro() {
 
         console.log("querystr");
         console.log(queryStr);
+
+        setIndi(ind.value);
+        setQ(queryStr);
+    }
+
+    function createQueryCal(d, h) {
+        // Ejemplo:
+        // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
+
+        if (!ubic) {
+            alert('Selecciona una ubicación.');
+            return;
+        }
+        if ((!d || !h)) {
+            d = desde;
+            h = hasta;
+        }
+
+        let queryStr = 'ubic=';
+
+        ubic.forEach((element) => {
+            queryStr += element.value + ',';
+        });
+
+        queryStr = queryStr.slice(0, -1);
+        queryStr +=
+            '&ind=' +
+            ind.value +
+            '&inicio=' +
+            d.format('YYYY-MM-DD') +
+            '&fin=' +
+            h.format('YYYY-MM-DD');
+
+        console.log("querystr: " + queryStr);
 
         setIndi(ind.value);
         setQ(queryStr);
@@ -137,7 +171,8 @@ function Registro() {
     return (
         <div className="container mb-10">
             <RHFiltros
-                createQuery={createQuery}
+                createQueryGraph={createQueryGraph}
+                createQueryCal={createQueryCal}
                 radioValue={radioValue}
                 setRadioValue={setRadioValue}
                 setInd={setInd}
@@ -150,7 +185,7 @@ function Registro() {
                 <>
                 <Calendario
                     q={q}
-                    create={createQuery}
+                    create={createQueryCal}
                     data={data}
                     indi={indi}
                     setDesde={setDesde}

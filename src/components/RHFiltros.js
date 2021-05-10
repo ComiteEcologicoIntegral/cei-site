@@ -15,8 +15,16 @@ const indicadores = [
     {value: 'SO2', label: 'SO2'}
 ]
 
-function RHFiltros({createQuery, radioValue, setRadioValue, setInd, setUbic}) {
+function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue, setInd, setUbic}) {
     
+    function createQuery() {
+        if (radioValue == '1') {
+            createQueryGraph();
+        } else {
+            createQueryCal();
+        }
+    }
+
     const radios = [
         { name: 'Grafica', value: '1' },
         { name: 'Calendario', value: '2' }
