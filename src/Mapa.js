@@ -4,7 +4,7 @@ import MapaFiltros from './components/MapaFiltros.js';
 import Marcador from './components/Marcador.js';
 import Wrapper from './components/WrapperMapa.js';
 
-import { gases } from './constants.js';
+import { gases, mapBlacklist } from './constants.js';
 import { getStatus } from './handlers/statusCriteria.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSensorData } from './redux/reducers.js';
@@ -54,32 +54,38 @@ function Mapa() {
         const filteredSensors = sensorData.filter(
             (sensor) =>
                 typeof sensor.Longitud === 'number' &&
-                typeof sensor.Latitud === 'number'
+                typeof sensor.Latitud === 'number' &&
+                !mapBlacklist.includes(sensor.Sistema)
         );
 
         return filteredSensors.map((data) => {
             const { name: gasName, units: gasUnits } = currentGas;
 
+            let preValue =
+                gasName === 'PM25'
+                    ? data.Sistema === 'PurpleAir'
+                        ? data['PM25_Corregido']
+                        : data[gasName]
+                    : data[gasName];
+
+            const value = typeof preValue === 'number' ? preValue : 'ND';
+
             return {
-                position: [data.Longitud, -data.Latitud],
+                position: [data.Latitud, data.Longitud],
                 current: {
                     indicator: gasName,
-                    label:
-                        typeof data[gasName] === 'number'
-                            ? data[gasName]
-                            : 'ND',
+                    label: value,
                     units: gasUnits,
-                    status: data[gasName]
-                        ? getStatus(gasName, data[gasName])
-                        : 99,
+                    status: value !== 'ND' ? getStatus(gasName, value) : 99,
                     ref: '#',
                 },
                 lastUpdate: new Date(data.Dia),
                 locationStr: data.Zona?.length > 0 ? data.Zona : 'ND',
                 provider: {
-                    name: 'Purple Air',
-                    ref: '/purple-air',
+                    name: data.Sistema,
+                    ref: '#',
                 },
+                isPurpleAir: data.Sistema === 'PurpleAir',
                 labels: gases.map(({ name, units }) => ({
                     label: name,
                     units,
@@ -102,7 +108,7 @@ function Mapa() {
                         );
 
                         if (fSensor) {
-                            setCenter([fSensor.Longitud, -fSensor.Latitud]);
+                            setCenter([fSensor.Latitud, fSensor.Longitud]);
                         }
                     }
 
@@ -132,6 +138,7 @@ function Mapa() {
                             label={markerProps.current.label}
                             indicator={markerProps.current.indicator}
                             status={markerProps.current.status}
+                            shape={markerProps.isPurpleAir ? 'square' : 'round'}
                         />
                     ))}
                 </Wrapper>

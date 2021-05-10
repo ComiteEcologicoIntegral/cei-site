@@ -14,21 +14,18 @@ import { Link } from 'react-router-dom';
 import { Marker, Popup } from 'react-leaflet';
 import { Button } from 'react-bootstrap';
 
-const renderMarker = (label, status) => {
+const renderMarker = (label, status, shape = 'round') => {
     return (
-        <div
-            className={`marker-${status}`}
-            style={{
-                fontSize: '12px',
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
-            {label}
+        <div className="marker-wrapper">
+            <div
+                className={`marker-${status} marker-base marker-shape-${shape}`}
+            ></div>
+            <span
+                className={`marker-${status}`}
+                style={{ backgroundColor: 'transparent' }}
+            >
+                {label}
+            </span>
         </div>
     );
 };
@@ -47,6 +44,7 @@ function Marcador({
     labels,
     lastUpdate,
     map,
+    shape = 'round',
     ...props
 }) {
     const marker = useMemo(() => document.createElement('div'), []);
@@ -55,7 +53,7 @@ function Marcador({
 
     const updateMarker = useCallback(
         (label_, status_) => {
-            ReactDOM.render(renderMarker(label_, status_), marker);
+            ReactDOM.render(renderMarker(label_, status_, shape), marker);
 
             setIcon(
                 divIcon({
@@ -65,7 +63,7 @@ function Marcador({
                 })
             );
         },
-        [marker]
+        [shape]
     );
 
     useEffect(() => {
@@ -115,37 +113,35 @@ function Marcador({
                         <small className="text-muted">Tiempo Real</small>
                     </div>
                     <div>
-                        {labels.map(
-                            ({ label, status, value, units }, idx) => (
-                                <div
-                                    key={idx}
-                                    className="d-flex justify-content-between rt-data-row mb-1"
+                        {labels.map(({ label, status, value, units }, idx) => (
+                            <div
+                                key={idx}
+                                className="d-flex justify-content-between rt-data-row mb-1"
+                            >
+                                <Link
+                                    to={{
+                                        pathname: 'registro',
+                                        search: `?gas=${label}`,
+                                    }}
                                 >
-                                    <Link
-                                        to={{
-                                            pathname: 'registro',
-                                            search: `?gas=${label}`,
-                                        }}
-                                    >
-                                        {label}
-                                    </Link>
-                                    <div
-                                        className={`d-inline-flex justify-content-between px-1 rounded marker-${status}`}
-                                    >
-                                        <span>{value}</span>
-                                        <span>{units}</span>
-                                    </div>
+                                    {label}
+                                </Link>
+                                <div
+                                    className={`d-inline-flex justify-content-between px-1 rounded marker-${status}`}
+                                >
+                                    <span>{value}</span>
+                                    <span>{units}</span>
                                 </div>
-                            )
-                        )}
+                            </div>
+                        ))}
                     </div>
                 </div>
 
                 <div className="py-2 px-3 border-top text-center">
                     <Button size="sm">Más información</Button>
-                    {/* <p className="lh-sm mt-2 mb-0">
+                    <p className="lh-sm mt-2 mb-0">
                         Fuente(s): <a href={provider.ref}>{provider.name}</a>
-                    </p> */}
+                    </p>
                 </div>
             </Popup>
         </Marker>
