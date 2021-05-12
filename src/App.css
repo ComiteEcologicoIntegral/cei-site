@@ -249,8 +249,12 @@ button, button:focus {
 /****** COMPARA FILTROS ****/
 .compara-filtros {
   background-color:rgba(70,130,180,0.5);
-  padding:20px;
+  padding:15px 15px 1px 15px;
   border-radius: 5px;
+}
+
+.compara-filtros .form-group {
+  margin-bottom: 5px;
 }
 
 .compara-filtros h5, .compara-filtros p {
