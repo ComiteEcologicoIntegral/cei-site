@@ -6,7 +6,7 @@ import { unidad } from '../constants';
 import moment from 'moment';
 import promdata from '../handlers/prom-data.json';
 
-function Heatmap ({q, fecha, ubic, ind}) {
+function HeatMap ({q, fecha, ubic, ind}) {
     const [mes, setMes] = useState(null); 
     const [dataHM, setDataHM] = useState(null);
 
@@ -222,4 +222,4 @@ function Heatmap ({q, fecha, ubic, ind}) {
 
 
 
-export default Heatmap
+export default HeatMap
