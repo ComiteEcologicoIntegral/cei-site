@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import RHFiltros from './components/RHFiltros';
 import Grafica from './components/Grafica';
 import Calendario from './components/Calendario';
-import Heatmap from './components/Heatmap';
+import HeatMap from './components/HeatMap';
 import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
@@ -191,7 +191,7 @@ function Registro() {
                     setHasta={setHasta}
                     downloadFile={downloadFile}
                 />
-                <Heatmap q={q} fecha={desde} ubic={ubic} ind={indi}/>
+                <HeatMap q={q} fecha={desde} ubic={ubic} ind={indi}/>
                 </>
             )}
         </div>
