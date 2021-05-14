@@ -40,7 +40,7 @@ function Compara() {
     }
 
     const data = useRef([]);
-    const maxNum = 4;
+    const maxNum = 3;
     const numFiltros = useRef(-1);
     const [filters, setFilters] = useState([]);
     const filterData = useRef([]);
@@ -50,7 +50,7 @@ function Compara() {
     }
 
     function addFiltro() {
-        if (numFiltros !== maxNum) {
+        if (numFiltros.current < maxNum) {
             numFiltros.current = numFiltros.current + 1;
             setFilters([...filters, <ComparaFiltros id={numFiltros.current} modifyData={modifyData} sensores={sensores}/>]);
         }

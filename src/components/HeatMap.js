@@ -5,6 +5,7 @@ import { criteria } from '../handlers/statusCriteria';
 import { unidad } from '../constants';
 import moment from 'moment';
 import promdata from '../handlers/prom-data.json';
+import userEvent from '@testing-library/user-event';
 
 function Heatmap ({q, fecha, ubic, ind}) {
     const [mes, setMes] = useState(null); 
@@ -49,18 +50,16 @@ function Heatmap ({q, fecha, ubic, ind}) {
                     '&fin=' + mes.clone().endOf('month').format('YYYY-MM-DD');
 
                     
-                console.log("Query HM: " + queryStr);
+                //console.log("Query HM: " + queryStr);
 
-                /*
                 fetch(`${apiUrl}/prom-data?${queryStr}`)
                     .then(response => response.json())
                     .then((json) => setDataHM(json))
                     .catch((e) => console.log(e));
-                    */
+            
                 
                 //console.log("done hm");
-                setDataHM(promdata);
-
+                //setDataHM(promdata);
             }
         }
     }, [q, mes]);
@@ -69,7 +68,6 @@ function Heatmap ({q, fecha, ubic, ind}) {
     var series = [];
 
     if (q && dataHM && dataHM.length > 0) {
-        //console.log("creating");
         /* EJEMPLO
         series:[
             {
@@ -86,7 +84,7 @@ function Heatmap ({q, fecha, ubic, ind}) {
         let index = 0;
         let dataItem = {};
 
-        for (let u = 0; u < ubic.length; u++) { // por cada ubicacion seleccionada
+        for (let u = 0; u < ubic.length && dataHM[index]; u++) { // por cada ubicacion seleccionada
             let currUbic = dataHM[index]["zona"];
             let primerDia = new Date(dataHM[index].fecha.replace(/-/g, '\/').replace(/T.+/, '')); // primer día registrado de los datos de una ubicacion
             let currDia = 1;
@@ -215,7 +213,7 @@ function Heatmap ({q, fecha, ubic, ind}) {
     return (
         <div>
             <h3 className="mb-5">Promedios diarios del mes</h3>
-            {q && (<Chart options={options} series={series} type="heatmap" height={ubic.length * 100}/>)}
+            {q && (<Chart options={options} series={series} type="heatmap" height={series.length * 100}/>)}
         </div>
     );
 }
