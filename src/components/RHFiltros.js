@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form, ButtonGroup, Button, Col, ToggleButton } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
@@ -15,15 +15,7 @@ const indicadores = [
     {value: 'SO2', label: 'SO2'}
 ]
 
-function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue, setInd, setUbic}) {
-    
-    function createQuery() {
-        if (radioValue == '1') {
-            createQueryGraph();
-        } else {
-            createQueryCal();
-        }
-    }
+function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue, updateMainFiltros}) {
 
     const radios = [
         { name: 'Grafica', value: '1' },
@@ -60,6 +52,18 @@ function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue,
         });
     }
     
+    const ubicacion = useRef(null);
+    const indicador = useRef(indicadores[0]);
+
+    function createQuery() {
+        updateMainFiltros(ubicacion.current, indicador.current);
+        if (radioValue == '1') {
+            createQueryGraph();
+        } else {
+            createQueryCal();
+        }
+    }
+
     return (
         <div className="mt-5">
             <div className="ta-center mb-5">
@@ -73,7 +77,9 @@ function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue,
                             isMulti 
                             options={sensores}
                             placeholder={'Ubicación'}
-                            onChange={(value) => setUbic(value)}
+                            onChange={(value) => {
+                                ubicacion.current = value;
+                            }}
                             />
                         </Col>
                 </Form.Row>
@@ -100,7 +106,9 @@ function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue,
                         <Select
                         options={indicadores}
                         placeholder={'Indicador'}
-                        onChange={(value) => setInd(value)}
+                        onChange={(value) => {
+                            indicador.current = value.value;
+                        }}
                         defaultValue={indicadores[0]}
                         />
                     </Col>

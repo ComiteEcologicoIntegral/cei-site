@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import RHFiltros from './components/RHFiltros';
 import Grafica from './components/Grafica';
 import Calendario from './components/Calendario';
@@ -17,13 +17,15 @@ function Registro() {
     const [indi, setIndi] = useState('PM25');
     const [desde, setDesde] = useState(null);
     const [hasta, setHasta] = useState(null);
-    const [ind, setInd] = useState({ value: 'PM25' });
-    const [ubic, setUbic] = useState(null);
+    //const [ind, setInd] = useState({ value: 'PM25' });
+    //const [ubic, setUbic] = useState(null);
+    const ind = useRef({ value: 'PM25' });
+    const ubic = useRef(null);
 
     useEffect(() => {
         if (q) {
             if (radioValue === '1') {
-                const locations = ubic
+                const locations = ubic.current
                     .map((u) => u.label)
                     .reduce(
                         (p, c) =>
@@ -31,7 +33,7 @@ function Registro() {
                         ''
                     );
 
-                fetch(`${apiUrl}/get-graph?${locations}&gas=${ind.value}`)
+                fetch(`${apiUrl}/get-graph?${locations}&gas=${ind.current.value}`)
                     .then((response) => response.json())
                     .then((json) => {
                         setData(json);
@@ -49,6 +51,11 @@ function Registro() {
         setData(null);
     }, [radioValue]);
 
+    function updateMainFiltros(u, i) {
+        ubic.current = u;
+        ind.current = i;
+    }
+
     function createQueryGraph() {
         // Ejemplo:
         // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
@@ -64,14 +71,14 @@ function Registro() {
 
         let queryStr = 'ubic=';
 
-        ubic.forEach((element) => {
+        ubic.current.forEach((element) => {
             queryStr += element.value + ',';
         });
 
         queryStr = queryStr.slice(0, -1);
         queryStr +=
             '&ind=' +
-            ind.value +
+            ind.current.value +
             '&inicio=' +
             desde.format('YYYY-MM-DD') +
             '&fin=' +
@@ -80,7 +87,7 @@ function Registro() {
         console.log("querystr");
         console.log(queryStr);
 
-        setIndi(ind.value);
+        setIndi(ind.current.value);
         setQ(queryStr);
     }
 
@@ -88,7 +95,7 @@ function Registro() {
         // Ejemplo:
         // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
 
-        if (!ubic) {
+        if (!ubic.current) {
             alert('Selecciona una ubicación.');
             return;
         }
@@ -99,14 +106,14 @@ function Registro() {
 
         let queryStr = 'ubic=';
 
-        ubic.forEach((element) => {
+        ubic.current.forEach((element) => {
             queryStr += element.value + ',';
         });
 
         queryStr = queryStr.slice(0, -1);
         queryStr +=
             '&ind=' +
-            ind.value +
+            ind.current.value +
             '&inicio=' +
             d.format('YYYY-MM-DD') +
             '&fin=' +
@@ -114,7 +121,7 @@ function Registro() {
 
         console.log("querystr: " + queryStr);
 
-        setIndi(ind.value);
+        setIndi(ind.current.value);
         setQ(queryStr);
     }
 
@@ -174,8 +181,7 @@ function Registro() {
                 createQueryCal={createQueryCal}
                 radioValue={radioValue}
                 setRadioValue={setRadioValue}
-                setInd={setInd}
-                setUbic={setUbic}
+                updateMainFiltros={updateMainFiltros}
             />
             {radioValue === '1' && (
                 <Grafica setDesde={setDesde} setHasta={setHasta} {...data} />
@@ -191,7 +197,7 @@ function Registro() {
                     setHasta={setHasta}
                     downloadFile={downloadFile}
                 />
-                <HeatMap q={q} fecha={desde} ubic={ubic} ind={indi}/>
+                <HeatMap q={q} fecha={desde} ubic={ubic.current} ind={ind.current.value}/>
                 </>
             )}
         </div>
