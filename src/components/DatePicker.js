@@ -57,12 +57,16 @@ const DatePicker = ({value, onChange}) => {
         return value.isSame(new Date(), "month")
     }
 
+    function isFirstMonthRegistered() {
+        return value.isSame(new Date("01-01-2018"), "month") 
+    }
+
     return (
         <div className="calendar mt-5">
             <div className="cal-header">
             <Row>
-                <Col sm={3} className="previous" onClick={() => onChange(prevMonth)}>
-                    {String.fromCharCode(171)}
+                <Col sm={3} className="previous" onClick={() => !isFirstMonthRegistered() && onChange(prevMonth)}>
+                    {!isFirstMonthRegistered() ? String.fromCharCode(171) : null}
                 </Col>
                 <Col sm={6} className="current">
                     {currMonthName()}, {currYear()}

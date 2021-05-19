@@ -28,6 +28,9 @@
   --marker-size: 36px;
 }
 
+.no-data {
+  color:var(--color-nodata);
+}
 .morado {
   color:var(--color-extmala);
 }
