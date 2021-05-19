@@ -31,7 +31,7 @@ function Registro() {
                         ''
                     );
 
-                fetch(`${apiUrl}/get-graph?${locations}&gas=${ind.value}`)
+                fetch(`${apiUrl}/get-graph?${locations}&gas=${ind.value}&start_date=${desde}&end_date=${hasta}`)
                     .then((response) => response.json())
                     .then((json) => {
                         setData(json);
