@@ -3,9 +3,6 @@ import Chart from 'react-apexcharts';
 import { apiUrl } from '../constants';
 import { criteria } from '../handlers/statusCriteria';
 import { unidad } from '../constants';
-import moment from 'moment';
-import promdata from '../handlers/prom-data.json';
-import userEvent from '@testing-library/user-event';
 
 function HeatMap ({q, fecha, ubic, ind}) {
     const [mes, setMes] = useState(null); 
@@ -50,16 +47,12 @@ function HeatMap ({q, fecha, ubic, ind}) {
                     '&fin=' + mes.clone().endOf('month').format('YYYY-MM-DD');
 
                     
-                //console.log("Query HM: " + queryStr);
-
+                console.log("Query HM: " + queryStr);
                 fetch(`${apiUrl}/prom-data?${queryStr}`)
                     .then(response => response.json())
                     .then((json) => setDataHM(json))
                     .catch((e) => console.log(e));
-            
-                
-                //console.log("done hm");
-                //setDataHM(promdata);
+
             }
         }
     }, [q, mes]);
