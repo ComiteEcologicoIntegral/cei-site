@@ -14,11 +14,12 @@ function Registro() {
     const [radioValue, setRadioValue] = useState('1');
     const [q, setQ] = useState(null);
 
+    const [loading, setLoading] = useState(false);
+
+    // Datos de los filtros:
     const [indi, setIndi] = useState('PM25');
     const [desde, setDesde] = useState(null);
     const [hasta, setHasta] = useState(null);
-    //const [ind, setInd] = useState({ value: 'PM25' });
-    //const [ubic, setUbic] = useState(null);
     const ind = useRef({ value: 'PM25' });
     const ubic = useRef(null);
 
@@ -29,6 +30,7 @@ function Registro() {
                     .then((response) => response.json())
                     .then((json) => {
                         setData(json);
+                        setLoading(false);
                     });
             } 
             else {
@@ -44,14 +46,13 @@ function Registro() {
     }, [radioValue]);
 
     function updateMainFiltros(u, i) {
+        setLoading(true);
+        console.log(loading);
         ubic.current = u;
         ind.current = i;
     }
 
     function createQueryGraph() {
-        // Ejemplo:
-        // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
-
         if (!ubic) {
             alert('Selecciona una ubicación.');
             return;
@@ -115,7 +116,7 @@ function Registro() {
     function downloadFile() {
         if (q) {
             let queryStr = 'ubic=';
-            ubic.forEach((element) => {
+            ubic.current.forEach((element) => {
                 queryStr += element.value + ',';
             });
             queryStr = queryStr.slice(0, -1);
@@ -124,7 +125,7 @@ function Registro() {
                 // para el calendario se descarga todo el mes
                 queryStr +=
                     '&ind=' +
-                    ind.value +
+                    ind.current.value +
                     '&inicio=' +
                     desde.startOf('month').format('YYYY-MM-DD') +
                     '&fin=' +
@@ -132,7 +133,7 @@ function Registro() {
             } else {
                 queryStr +=
                     '&ind=' +
-                    ind.value +
+                    ind.current.value +
                     '&inicio=' +
                     desde.format('YYYY-MM-DD') +
                     '&fin=' +
@@ -171,7 +172,7 @@ function Registro() {
                 updateMainFiltros={updateMainFiltros}
             />
             {radioValue === '1' && (
-                <Grafica setDesde={setDesde} setHasta={setHasta} {...data} />
+                <Grafica setDesde={setDesde} setHasta={setHasta} downloadFile={downloadFile} {...data} />
             )}
             {radioValue === '2' && (
                 <>
@@ -187,6 +188,7 @@ function Registro() {
                 <HeatMap q={q} fecha={desde} ubic={ubic.current} ind={ind.current.value}/>
                 </>
             )}
+            <div><img src="loading.gif" alt="Cargando..." className="loading" style={loading ? {}: {display: "none"}}/></div>
         </div>
     );
 }
