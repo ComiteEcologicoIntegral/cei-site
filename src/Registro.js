@@ -25,15 +25,7 @@ function Registro() {
     useEffect(() => {
         if (q) {
             if (radioValue === '1') {
-                const locations = ubic.current
-                    .map((u) => u.label)
-                    .reduce(
-                        (p, c) =>
-                            p === '' ? `locations=${c}` : `${p}&locations=${c}`,
-                        ''
-                    );
-
-                fetch(`${apiUrl}/get-graph?${locations}&gas=${ind.value}&start_date=${desde}&end_date=${hasta}`)
+                fetch(`${apiUrl}/get-graph?${q}`)
                     .then((response) => response.json())
                     .then((json) => {
                         setData(json);
@@ -69,20 +61,15 @@ function Registro() {
             return;
         }
 
-        let queryStr = 'ubic=';
+        const locations = ubic.current
+            .map((u) => u.label)
+            .reduce(
+                (p, c) =>
+                    p === '' ? `locations=${c}` : `${p}&locations=${c}`,
+                    ''
+                );
 
-        ubic.current.forEach((element) => {
-            queryStr += element.value + ',';
-        });
-
-        queryStr = queryStr.slice(0, -1);
-        queryStr +=
-            '&ind=' +
-            ind.current.value +
-            '&inicio=' +
-            desde.format('YYYY-MM-DD') +
-            '&fin=' +
-            hasta.format('YYYY-MM-DD');
+        let queryStr = `${locations}&gas=${ind.current.value}&start_date=${desde}&end_date=${hasta}`;
 
         console.log("querystr");
         console.log(queryStr);
