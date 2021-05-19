@@ -6,7 +6,7 @@ const Footer = () => {
             <div className="container">
                 <div className="row">             
                     <div className="col-auto">
-                        <p className="mt-3">© Comité Ecológico Interescolar, 2021</p>
+                        <p className="mt-3">Patrocinado por Natuuramike® 2021</p>
                     </div>
             </div>
            </div>

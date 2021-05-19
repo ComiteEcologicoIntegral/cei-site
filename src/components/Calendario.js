@@ -57,7 +57,7 @@ function Calendario({q, create, data, indi, setDesde, setHasta, downloadFile}) {
             case 4:
                 return "extmala";
             default:
-                return "";
+                return "no-data";
         }
     }
     
@@ -92,7 +92,7 @@ function Calendario({q, create, data, indi, setDesde, setHasta, downloadFile}) {
 
     if (data && data.length !== 0) {
         while (currHour < 12 && index < data.length) {
-            let ch = "T" + currHour.toString().padStart(2, 0);
+            let ch = "T" + currHour.toString().padStart(2, 0) + ":";
             let info = [];
 
             let firstIndex = index;
@@ -101,8 +101,6 @@ function Calendario({q, create, data, indi, setDesde, setHasta, downloadFile}) {
                 info.push(<p><AiFillRightSquare className={colorIndice(data[index][indi])}/>{data[index]["zona"]}: {data[index][indi] ? ` ${data[index][indi]} ${unidad[indi]}` : " No hay registro"}</p>);
                 index++;
             }
-
-            currHour++;
 
             dataCol1.push(
             <Accordion key={data[firstIndex].registros_id} id={data[firstIndex].registros_id}>
@@ -122,6 +120,8 @@ function Calendario({q, create, data, indi, setDesde, setHasta, downloadFile}) {
                 </Card>
             </Accordion>
             )
+
+            currHour++;
         }
         
         while (currHour < 24 && index < data.length) {
@@ -134,8 +134,6 @@ function Calendario({q, create, data, indi, setDesde, setHasta, downloadFile}) {
                 info.push(<p><AiFillRightSquare className={colorIndice(data[index][indi])}/> {data[index]["zona"]}: {data[index][indi] ? `${data[index][indi]} ${unidad[indi]}` : "No hay registro"}</p>);
                 index++;
             }
-
-            currHour++;
 
             dataCol2.push(
             <Accordion key={data[firstIndex].registros_id} id={data[firstIndex].registros_id}>
@@ -155,6 +153,8 @@ function Calendario({q, create, data, indi, setDesde, setHasta, downloadFile}) {
                 </Card>
             </Accordion>
             )
+
+            currHour++;
         }
     } else {
         dataCol1.push(<p>No hay datos para este día</p>);

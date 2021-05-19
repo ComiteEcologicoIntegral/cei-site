@@ -46,7 +46,6 @@ function Registro() {
     }, [radioValue]);
 
     function updateMainFiltros(u, i) {
-        setLoading(true);
         console.log(loading);
         ubic.current = u;
         ind.current = i;
@@ -61,6 +60,8 @@ function Registro() {
             alert('Selecciona las fechas.');
             return;
         }
+
+        setLoading(true);
 
         const locations = ubic.current
             .map((u) => u.label)
@@ -87,6 +88,7 @@ function Registro() {
             alert('Selecciona una ubicación.');
             return;
         }
+
         if ((!d || !h)) {
             d = desde;
             h = hasta;
