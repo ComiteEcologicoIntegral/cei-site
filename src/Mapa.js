@@ -73,7 +73,7 @@ function Mapa() {
             return {
                 position: [data.Latitud, data.Longitud],
                 current: {
-                    indicator: gasName,
+                    indicator: currentGas.label ? currentGas.label : gasName,
                     label: value,
                     units: gasUnits,
                     status: value !== 'ND' ? getStatus(gasName, value) : 99,
@@ -86,8 +86,8 @@ function Mapa() {
                     ref: '#',
                 },
                 isPurpleAir: data.Sistema === 'PurpleAir',
-                labels: gases.map(({ name, units }) => ({
-                    label: name,
+                labels: gases.map(({ name,label, units }) => ({
+                    label: label ? label : name,
                     units,
                     value: typeof data[name] === 'number' ? data[name] : 'ND',
                     status: data[name] ? getStatus(name, data[name]) : 99,

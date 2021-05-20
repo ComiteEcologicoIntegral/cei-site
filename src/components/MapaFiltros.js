@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import Select from 'react-select';
 
 const indicadores = [
-    {value: 'PM25', label: 'PM25'},
+    {value: 'PM25', label: 'PM2.5'},
     {value: 'PM10', label: 'PM10'},
     {value: 'O3', label: 'O3'},
     {value: 'CO', label: 'CO'},
@@ -48,7 +48,7 @@ const MapaFiltros = ({ onApply }) => {
     const [show, setShow] = useState(false);
     const [location, setLocation] = useState(null);
     const [interval, setInterval_] = useState(intervalos[0]);
-    const [gas, setGas] = useState(null);
+    const [gas, setGas] = useState(indicadores[0]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
