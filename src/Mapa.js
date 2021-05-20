@@ -7,7 +7,7 @@ import Wrapper from './components/WrapperMapa.js';
 import { gases, mapBlacklist } from './constants.js';
 import { getStatus } from './handlers/statusCriteria.js';
 import useSensorData from './hooks/useSensorData.js';
-import { Spinner, Toast } from 'react-bootstrap';
+import { Spinner, OverlayTrigger, Popover, Button } from 'react-bootstrap';
 const mapDefaultProps = {
     center: [25.67, -100.25],
     zoom: 11,
@@ -20,7 +20,7 @@ function Mapa() {
         data: sensorData,
         loading: loadingSensorData,
         error: errorSensorData,
-    } = useSensorData(0);
+    } = useSensorData({});
 
     const [map, setMap] = useState(null);
     // const [lastCenter, setLastCenter] = useState(null);
@@ -118,21 +118,19 @@ function Mapa() {
             >
                 {errorSensorData && (
                     <div
-                        className="position-absolute end-0 bg-danger m-1"
-                        style={{ zIndex: 99 }}
+                        className="position-absolute w-100 end-0 p-2"
+                        style={{ zIndex: 100 }}
                     >
-                        <Toast>
-                            <Toast.Body className="text-danger">
-                                Ocurrió un error al cargar los datos.
-                            </Toast.Body>
-                        </Toast>
+                        <div class="alert alert-danger" role="alert">
+                            Ocurrió un error al cargar los datos.
+                        </div>
                     </div>
                 )}
                 {loadingSensorData && (
                     <div
                         className="w-100 h-100 d-flex position-absolute"
                         style={{
-                            zIndex: 99,
+                            zIndex: 100,
                             backgroundColor: 'rgba(0,0,0,0.2)',
                         }}
                     >
@@ -141,6 +139,40 @@ function Mapa() {
                         </div>
                     </div>
                 )}
+                <div
+                    className="w-100 h-100 position-absolute p-2"
+                    style={{ zIndex: 99, pointerEvents: 'none' }}
+                >
+                    <div className="position-absolute end-0">
+                        <OverlayTrigger
+                            trigger="click"
+                            placement={'left'}
+                            overlay={
+                                <Popover>
+                                    <Popover.Title as="h3">
+                                        Leyenda
+                                    </Popover.Title>
+                                    <Popover.Content>
+                                        <ul>
+                                            <li>
+                                                Los sensores del estado se
+                                                representan con un círculo
+                                            </li>
+                                            <li>
+                                                Los sensores de Purple Air se
+                                                representan con un cuadrado
+                                            </li>
+                                        </ul>
+                                    </Popover.Content>
+                                </Popover>
+                            }
+                        >
+                            <Button variant="link" className="pe-auto">
+                                Leyenda
+                            </Button>
+                        </OverlayTrigger>
+                    </div>
+                </div>
                 <Wrapper whenCreated={setMap} {...mapDefaultProps}>
                     {!loadingSensorData &&
                         markers.map((markerProps, idx) => (

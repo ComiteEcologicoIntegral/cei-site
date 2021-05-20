@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchSummaryData } from '../handlers/data';
 import { setSensorData } from '../redux/reducers';
 
-const useSensorData = ({ cacheTime = 60 }) => {
+const useSensorData = ({ cacheTime = 60, useCache = true }) => {
     const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
     const dispatch = useDispatch();
 
@@ -14,7 +14,7 @@ const useSensorData = ({ cacheTime = 60 }) => {
 
     useEffect(() => {
         // Llama a la api si los datos se guardaron hace menos de una hora
-        const diff = sensorDataLastUpdate
+        const diff = sensorDataLastUpdate && useCache
             ? moment().diff(sensorDataLastUpdate, 'minutes')
             : 999; // Caso sensorDataLastUpdate == null, se tienen que solicitar los datos
 
@@ -33,7 +33,7 @@ const useSensorData = ({ cacheTime = 60 }) => {
         } else {
             setLoading(false);
         }
-    }, [sensorDataLastUpdate, dispatch, cacheTime]);
+    }, [sensorDataLastUpdate, dispatch, cacheTime, useCache]);
 
     return { loading, data, error };
 };
