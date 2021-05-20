@@ -1,10 +1,11 @@
 export const gases = [
     {
-        name: 'PM10',
+        name: 'PM25',
+        label: 'PM2.5',
         units: 'μg/m3',
     },
     {
-        name: 'PM25',
+        name: 'PM10',
         units: 'μg/m3',
     },
     {
@@ -26,12 +27,12 @@ export const gases = [
 ];
 
 export const unidad = {
-    PM25: "µg/m3",
-    PM10: "µg/m3",
-    CO: "ppm",
-    O3: "ppm",
-    NO2:"ppm", 
-    SO2: "ppm"
+    PM25: 'µg/m3',
+    PM10: 'µg/m3',
+    CO: 'ppm',
+    O3: 'ppm',
+    NO2: 'ppm',
+    SO2: 'ppm',
 };
 export const mapBlacklist = ['Sinaica'];
 
