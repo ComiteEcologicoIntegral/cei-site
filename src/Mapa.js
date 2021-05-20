@@ -6,21 +6,22 @@ import Wrapper from './components/WrapperMapa.js';
 
 import { gases, mapBlacklist } from './constants.js';
 import { getStatus } from './handlers/statusCriteria.js';
-import { useDispatch, useSelector } from 'react-redux';
-import { setSensorData } from './redux/reducers.js';
-import moment from 'moment';
-import { fetchSummaryData } from './handlers/data.js';
-
+import useSensorData from './hooks/useSensorData.js';
+import { Spinner, Toast } from 'react-bootstrap';
 const mapDefaultProps = {
     center: [25.67, -100.25],
-    zoom: 13,
+    zoom: 11,
     minZoom: 10,
 };
 
 function Mapa() {
-    const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
-    const dispatch = useDispatch();
     const [currentGas, setCurrentGas] = useState(gases[0]);
+    const {
+        data: sensorData,
+        loading: loadingSensorData,
+        error: errorSensorData,
+    } = useSensorData(0);
+
     const [map, setMap] = useState(null);
     // const [lastCenter, setLastCenter] = useState(null);
 
@@ -35,20 +36,6 @@ function Mapa() {
         },
         [map]
     );
-
-    useEffect(() => {
-        // Llama a la api si los datos se guardaron hace menos de una hora
-        const diff = sensorDataLastUpdate
-            ? moment().diff(sensorDataLastUpdate, 'minutes')
-            : 999; // Caso sensorDataLastUpdate == null, se tienen que solicitar los datos
-        if (diff > 60) {
-            fetchSummaryData()
-                .then((data) => {
-                    dispatch(setSensorData(data));
-                })
-                .catch((err) => console.error(err));
-        }
-    }, []);
 
     const markers = useMemo(() => {
         const filteredSensors = sensorData.filter(
@@ -86,7 +73,7 @@ function Mapa() {
                     ref: '#',
                 },
                 isPurpleAir: data.Sistema === 'PurpleAir',
-                labels: gases.map(({ name,label, units }) => ({
+                labels: gases.map(({ name, label, units }) => ({
                     label: label ? label : name,
                     units,
                     value: typeof data[name] === 'number' ? data[name] : 'ND',
@@ -129,18 +116,46 @@ function Mapa() {
                     height: '500px',
                 }}
             >
+                {errorSensorData && (
+                    <div
+                        className="position-absolute end-0 bg-danger m-1"
+                        style={{ zIndex: 99 }}
+                    >
+                        <Toast>
+                            <Toast.Body className="text-danger">
+                                Ocurrió un error al cargar los datos.
+                            </Toast.Body>
+                        </Toast>
+                    </div>
+                )}
+                {loadingSensorData && (
+                    <div
+                        className="w-100 h-100 d-flex position-absolute"
+                        style={{
+                            zIndex: 99,
+                            backgroundColor: 'rgba(0,0,0,0.2)',
+                        }}
+                    >
+                        <div className="position-absolute top-50 start-50 translate-middle">
+                            <Spinner animation="border" />
+                        </div>
+                    </div>
+                )}
                 <Wrapper whenCreated={setMap} {...mapDefaultProps}>
-                    {markers.map((markerProps, idx) => (
-                        <Marcador
-                            map={map}
-                            key={idx}
-                            {...markerProps}
-                            label={markerProps.current.label}
-                            indicator={markerProps.current.indicator}
-                            status={markerProps.current.status}
-                            shape={markerProps.isPurpleAir ? 'square' : 'round'}
-                        />
-                    ))}
+                    {!loadingSensorData &&
+                        markers.map((markerProps, idx) => (
+                            <Marcador
+                                map={map}
+                                key={idx}
+                                {...markerProps}
+                                label={markerProps.current.label}
+                                indicator={markerProps.current.indicator}
+                                status={markerProps.current.status}
+                                shape={
+                                    markerProps.isPurpleAir ? 'square' : 'round'
+                                }
+                            />
+                        ))}
                 </Wrapper>
             </div>
             <Recomendaciones />
