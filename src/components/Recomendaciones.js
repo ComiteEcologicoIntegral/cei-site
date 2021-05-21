@@ -4,7 +4,7 @@ const Recomendaciones = () => {
     return (
         <div className="container mt-5 mb-3">
             <div className="ta-center mb-5">
-                <h3>Índice de Calidad del aire</h3>
+                <h3>Concentración horaria</h3>
                 <p>Conoce las recomendaciones según el índice de calidad del aire</p>
             </div>
             <Tab.Container fill defaultActiveKey="buena" className="recomendaciones h-100">

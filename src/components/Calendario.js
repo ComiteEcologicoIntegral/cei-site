@@ -76,18 +76,16 @@ function Calendario({q, create, data, indi, setDesde, setHasta, downloadFile}) {
     const [inAnio, setInAnio] = useState(anios[anios.length - 1].value); // currently selected date
 
     useEffect(() => {
+        setDesde(value);
+        setHasta(value);
         if (data || q) {
-            setDesde(value);
-            setHasta(value);
             create(value, value);
         }
     }, [value]);
 
      useEffect(() => {
-        if (q) {
-            let f = new Date(`${inMes}/01/${inAnio}`);
-            setValue(moment(f));
-        }
+        let f = new Date(`${inMes}/${value.clone().format('DD')}/${inAnio}`);
+        setValue(moment(f));
     }, [inMes, inAnio]);
 
     if (data && data.length !== 0) {

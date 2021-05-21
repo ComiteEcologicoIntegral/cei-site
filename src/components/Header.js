@@ -19,7 +19,7 @@ const Header = () => {
                 </NavLink>
             </Navbar.Brand>
             <Navbar.Text>
-                <h1 className="white h1-nav mb-0">Comité Ecológico Interescolar</h1>
+                <h1 className="white h1-nav mb-0">Comité Ecológico Integral (Beta)</h1>
             </Navbar.Text>
             <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
             <Navbar.Collapse id="basic-navbar-nav">
