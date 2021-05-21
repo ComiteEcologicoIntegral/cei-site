@@ -102,8 +102,13 @@ function HeatMap ({q, fecha, ubic, ind}) {
 
                 // revisa que haya datos de ese dia
                 if (currDia == parseInt(dataHM[index]["fecha"].substring(8))) {
-                    dataItem.y = dataHM[index]["prom"];
-                    dataItem.fecha = dataHM[index]["fecha"];
+                    if (dataHM[index]["prom"] !== "") {
+                        console.log(dataHM[index]["prom"] !== "");
+                        dataItem.y = dataHM[index]["prom"];
+                        dataItem.fecha = dataHM[index]["fecha"];
+                    } else {
+                        dataItem.y = -1;
+                    }
                     index++;
                 } else {
                     dataItem.y = -1;
