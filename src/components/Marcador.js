@@ -16,7 +16,7 @@ import { Button } from 'react-bootstrap';
 
 const renderMarker = (label, status, shape = 'round') => {
     return (
-        <div className="marker-wrapper">
+        <div className="marker-wrapper" style={{zIndex: shape === 'round' ? -1 : -10}}>
             <div
                 className={`marker-${status} marker-base marker-shape-${shape}`}
             ></div>
@@ -58,7 +58,7 @@ function Marcador({
             setIcon(
                 divIcon({
                     html: marker,
-                    className: 'sensor-icon',
+                    className: `sensor-icon ${shape === 'round' ? '' : 'behind'}`,
                     popupAnchor: [7, 0],
                 })
             );
