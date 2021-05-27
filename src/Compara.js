@@ -79,7 +79,7 @@ function Compara() {
         console.log(filterData.current);
 
         for (let i=0; i<=numFiltros.current ; i++) {
-            if (!filterData.current[i]) {
+            if (!filterData.current[i] || !filterData.current[i]["desde"] || !filterData.current[i]["hasta"]) {
                 alert("Llena todos los campos");
                 return;
             }
@@ -128,7 +128,7 @@ function Compara() {
         if (data) {
             for (let i = 0; i < data.length; i++) {
                 let ubicacion = sensores.find(sensor => sensor.value === filterData.current[i]["ubic"]).label;
-                let gas = filterData.current[i]["ind"];
+                let gas = filterData.current[i]["ind"] == "PM25" ? "PM2.5" : filterData.current[i]["ind"];
 
                 data[i].name = `${ubicacion} (${gas})`; 
                 data[i].type = "scatter";
@@ -136,7 +136,7 @@ function Compara() {
                 data[i].marker = { color: colors[i] };
                 data[i].text = data[i].dia.map(function(d) { return new Date(d).toLocaleString('es-MX', { timeZone: 'America/Mexico_City'}) } )
 
-                data[i].hovertemplate = '<i>Medida</i>: %{y:.2f}' +'<br><b>%{text}</b>';
+                data[i].hovertemplate = '<i>Medida</i>: %{y:.4f}' +'<br><b>%{text}</b>';
 
                 graph.push(data[i]);
             }
