@@ -34,6 +34,7 @@ export const unidad = {
     NO2: 'ppm',
     SO2: 'ppm',
 };
+
 export const mapBlacklist = ['Sinaica'];
 
 export const apiUrl =
