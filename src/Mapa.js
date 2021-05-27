@@ -51,7 +51,7 @@ function Mapa() {
             let preValue =
                 gasName === 'PM25'
                     ? data.Sistema === 'PurpleAir'
-                        ? data['PM25_Corregido']
+                        ? data['PM25_Promedio']
                         : data[gasName]
                     : data[gasName];
 
@@ -73,13 +73,19 @@ function Mapa() {
                     ref: '#',
                 },
                 isPurpleAir: data.Sistema === 'PurpleAir',
-                labels: gases.map(({ name, label, units }) => ({
-                    label: label ? label : name,
-                    units,
-                    value: typeof data[name] === 'number' ? data[name] : 'ND',
-                    status: data[name] ? getStatus(name, data[name]) : 99,
-                    ref: '#',
-                })),
+                labels: gases.map(({ name, label, units }) => {
+                    let colName = name
+                    if (name === 'PM25' && data.Sistema === 'PurpleAir')
+                        colName = 'PM25_Promedio';
+                    return {
+                        label: label ? label : name,
+                        units,
+                        value:
+                            typeof data[colName] === 'number' ? data[colName] : 'ND',
+                        status: data[colName] ? getStatus(name, data[colName]) : 99,
+                        ref: '#',
+                    };
+                }),
             };
         });
     }, [sensorData, currentGas]);
