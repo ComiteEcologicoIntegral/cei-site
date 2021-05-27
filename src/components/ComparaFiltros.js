@@ -3,7 +3,7 @@ import { Form, Button, Col, Row } from 'react-bootstrap'
 import Select from 'react-select';
 
 const indicadores = [
-    {value: 'PM25', label: 'PM25'},
+    {value: 'PM25', label: 'PM2.5'},
     {value: 'PM10', label: 'PM10'},
     {value: 'O3', label: 'O3'},
     {value: 'CO', label: 'CO'},
