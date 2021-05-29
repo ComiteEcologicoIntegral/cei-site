@@ -111,7 +111,7 @@ function Mapa() {
 
                     if (gas) {
                         const nGas = gases.find(
-                            (gas_) => gas_.name === gas.label
+                            (gas_) => gas_.name === gas.value
                         );
                         setCurrentGas(nGas ?? currentGas);
                     }
