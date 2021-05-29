@@ -74,15 +74,19 @@ function Mapa() {
                 },
                 isPurpleAir: data.Sistema === 'PurpleAir',
                 labels: gases.map(({ name, label, units }) => {
-                    let colName = name
+                    let colName = name;
                     if (name === 'PM25' && data.Sistema === 'PurpleAir')
                         colName = 'PM25_Promedio';
                     return {
                         label: label ? label : name,
                         units,
                         value:
-                            typeof data[colName] === 'number' ? data[colName] : 'ND',
-                        status: data[colName] ? getStatus(name, data[colName]) : 99,
+                            typeof data[colName] === 'number'
+                                ? data[colName]
+                                : 'ND',
+                        status: data[colName]
+                            ? getStatus(name, data[colName])
+                            : 99,
                         ref: '#',
                     };
                 }),
@@ -159,16 +163,35 @@ function Mapa() {
                                         Leyenda
                                     </Popover.Title>
                                     <Popover.Content>
-                                        <ul>
-                                            <li>
-                                                Los sensores del estado se
-                                                representan con un círculo
-                                            </li>
-                                            <li>
-                                                Los sensores de Purple Air se
-                                                representan con un cuadrado
-                                            </li>
-                                        </ul>
+                                        <div className="d-flex align-items-center">
+                                            <div
+                                                style={{
+                                                    boxSizing: 'border-box',
+                                                    borderRadius: '100%',
+                                                    width: '35px',
+                                                    height: '20px',
+                                                    marginRight: '0.75rem',
+                                                    padding: 0,
+                                                    border: '1px solid black',
+                                                }}
+                                            ></div>
+                                            Los sensores del estado se
+                                            representan con un círculo
+                                        </div>
+                                        <div className="d-flex align-items-center">
+                                            <div
+                                                style={{
+                                                    boxSizing: 'border-box',
+                                                    width: '28px',
+                                                    height: '20px',
+                                                    marginRight: '0.75rem',
+                                                    padding: 0,
+                                                    border: '1px solid black',
+                                                }}
+                                            ></div>
+                                            Los sensores de Purple Air se
+                                            representan con un cuadrado
+                                        </div>
                                     </Popover.Content>
                                 </Popover>
                             }
