@@ -70,8 +70,8 @@ function Registro() {
                     p === '' ? `locations=${c}` : `${p}&locations=${c}`,
                     ''
                 );
-
-        let queryStr = `${locations}&gas=${ind.current.value}&start_date=${desde}&end_date=${hasta}`;
+                
+        let queryStr = `${locations}&gas=${ind.current.value}&start_date=${moment.utc(desde).format('MM/DD/YYYY')}&end_date=${moment.utc(hasta).format('MM/DD/YYYY')}`;
 
         console.log("querystr");
         console.log(queryStr);
