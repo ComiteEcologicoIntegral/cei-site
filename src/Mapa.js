@@ -8,6 +8,8 @@ import { gases, mapBlacklist } from './constants.js';
 import { getStatus } from './handlers/statusCriteria.js';
 import useSensorData from './hooks/useSensorData.js';
 import { Spinner, OverlayTrigger, Popover, Button } from 'react-bootstrap';
+import moment from 'moment';
+
 const mapDefaultProps = {
     center: [25.67, -100.25],
     zoom: 11,
@@ -66,7 +68,7 @@ function Mapa() {
                     status: value !== 'ND' ? getStatus(gasName, value) : 99,
                     ref: '#',
                 },
-                lastUpdate: new Date(data.Dia),
+                lastUpdate: moment.utc(data.Dia).local(),
                 locationStr: data.Zona?.length > 0 ? data.Zona : 'ND',
                 provider: {
                     name: data.Sistema,
