@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 
 import { Marker, Popup } from 'react-leaflet';
 import { Button } from 'react-bootstrap';
+import moment from 'moment';
 
 const renderMarker = (label, status, shape = 'round') => {
     return (
@@ -107,7 +108,7 @@ function Marcador({
                             Última actualización
                         </small>
                         <br />
-                        <time>{new Date(lastUpdate).toLocaleString()}</time>
+                        <time>{moment(lastUpdate).format("ddd, MMMM D YYYY, h:mm:ss a")}</time>
                     </div>
                     <div className="data-label">
                         <small className="text-muted">Tiempo Real</small>
