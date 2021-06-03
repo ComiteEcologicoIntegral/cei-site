@@ -31,7 +31,7 @@ function Registro() {
                     .then((response) => response.json())
                     .then((json) => {
                         setData(json.plot);
-                        setSummaryData(json.summary)
+                        setSummaryData(json.summary);
                         setLoading(false);
                     });
             } else {
