@@ -7,19 +7,24 @@ import { fetchSummaryData } from '../handlers/data';
 import { setSensorData } from '../redux/reducers';
 
 const indicadores = [
-    {value: 'PM25', label: 'PM2.5'},
-    {value: 'PM10', label: 'PM10'},
-    {value: 'O3', label: 'O3'},
-    {value: 'CO', label: 'CO'},
-    {value: 'NO2', label: 'NO2'},
-    {value: 'SO2', label: 'SO2'}
-]
+    { value: 'PM25', label: 'PM2.5' },
+    { value: 'PM10', label: 'PM10' },
+    { value: 'O3', label: 'O3' },
+    { value: 'CO', label: 'CO' },
+    { value: 'NO2', label: 'NO2' },
+    { value: 'SO2', label: 'SO2' },
+];
 
-function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue, updateMainFiltros}) {
-
+function RHFiltros({
+    createQueryGraph,
+    createQueryCal,
+    radioValue,
+    setRadioValue,
+    updateMainFiltros,
+}) {
     const radios = [
         { name: 'Grafica', value: '1' },
-        { name: 'Calendario', value: '2' }
+        { name: 'Calendario', value: '2' },
     ];
 
     const dispatch = useDispatch();
@@ -47,14 +52,14 @@ function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue,
     }, []);
 
     if (sensRaw) {
-        sensRaw.forEach(element => {
-            sensores.push({value: element.Sensor_id, label: element.Zona});
+        sensRaw.forEach((element) => {
+            sensores.push({ value: element.Sensor_id, label: element.Zona });
         });
     }
-    
+
     const ubicacion = useRef(null);
     const indicador = useRef(indicadores[0]);
-
+    console.log(indicador.current);
     function createQuery() {
         updateMainFiltros(ubicacion.current, indicador.current);
         if (radioValue == '1') {
@@ -72,48 +77,53 @@ function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue,
             </div>
             <Form>
                 <Form.Row className="mb-3">
-                        <Col xs={12}>
-                            <Select 
-                            isMulti 
+                    <Col xs={12}>
+                        <Select
+                            isMulti
                             options={sensores}
                             placeholder={'Ubicación'}
                             onChange={(value) => {
                                 ubicacion.current = value;
                             }}
-                            />
-                        </Col>
+                        />
+                    </Col>
                 </Form.Row>
                 <Form.Row>
                     <Col>
                         <ButtonGroup toggle>
                             {radios.map((radio, idx) => (
-                            <ToggleButton
-                                className="toggle-vista"
-                                key={idx}
-                                type="radio"
-                                variant="light"
-                                name="radio"
-                                value={radio.value}
-                                checked={radioValue === radio.value}
-                                onChange={(e) => setRadioValue(e.currentTarget.value)}
-                            >
-                                {radio.name}
-                            </ToggleButton>
-                            ))}      
+                                <ToggleButton
+                                    className="toggle-vista"
+                                    key={idx}
+                                    type="radio"
+                                    variant="light"
+                                    name="radio"
+                                    value={radio.value}
+                                    checked={radioValue === radio.value}
+                                    onChange={(e) =>
+                                        setRadioValue(e.currentTarget.value)
+                                    }
+                                >
+                                    {radio.name}
+                                </ToggleButton>
+                            ))}
                         </ButtonGroup>
                     </Col>
                     <Col className="mb-3">
                         <Select
-                        options={indicadores}
-                        placeholder={'Indicador'}
-                        onChange={(value) => {
-                            indicador.current = value.value;
-                        }}
-                        defaultValue={indicadores[0]}
+                            options={indicadores}
+                            placeholder={'Indicador'}
+                            onChange={(value) => {
+                                indicador.current = value;
+                            }}
+                            defaultValue={indicadores[0]}
                         />
                     </Col>
                     <Col xs={12} sm={3} className="mb-3">
-                        <Button className="btn-aplicar" variant="primary" block
+                        <Button
+                            className="btn-aplicar"
+                            variant="primary"
+                            block
                             onClick={() => createQuery()}
                         >
                             Aplicar
@@ -121,9 +131,9 @@ function RHFiltros({createQueryGraph, createQueryCal, radioValue, setRadioValue,
                     </Col>
                 </Form.Row>
             </Form>
-            <hr className="mt-2 mb-4"/>
+            <hr className="mt-2 mb-4" />
         </div>
-    )
+    );
 }
 
-export default RHFiltros
+export default RHFiltros;
