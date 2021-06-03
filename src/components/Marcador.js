@@ -15,9 +15,20 @@ import { Marker, Popup } from 'react-leaflet';
 import { Button } from 'react-bootstrap';
 import moment from 'moment';
 
+
+const showLabel = (label) => {
+    if (typeof label != 'number') return label; 
+    const fixed = label.toFixed(2);
+    if (parseInt(fixed) === label) return label
+    return fixed;
+};
+
 const renderMarker = (label, status, shape = 'round') => {
     return (
-        <div className="marker-wrapper" style={{zIndex: shape === 'round' ? -1 : -10}}>
+        <div
+            className="marker-wrapper"
+            style={{ zIndex: shape === 'round' ? -1 : -10 }}
+        >
             <div
                 className={`marker-${status} marker-base marker-shape-${shape}`}
             ></div>
@@ -25,7 +36,7 @@ const renderMarker = (label, status, shape = 'round') => {
                 className={`marker-${status}`}
                 style={{ backgroundColor: 'transparent' }}
             >
-                {label}
+                {showLabel(label)}
             </span>
         </div>
     );
@@ -59,7 +70,9 @@ function Marcador({
             setIcon(
                 divIcon({
                     html: marker,
-                    className: `sensor-icon ${shape === 'round' ? '' : 'behind'}`,
+                    className: `sensor-icon ${
+                        shape === 'round' ? '' : 'behind'
+                    }`,
                     popupAnchor: [7, 0],
                 })
             );
@@ -108,7 +121,11 @@ function Marcador({
                             Última actualización
                         </small>
                         <br />
-                        <time>{moment(lastUpdate).format("ddd, MMMM D YYYY, h:mm:ss a")}</time>
+                        <time>
+                            {moment(lastUpdate).format(
+                                'ddd, MMMM D YYYY, h:mm:ss a'
+                            )}
+                        </time>
                     </div>
                     <div className="data-label">
                         <small className="text-muted">Tiempo Real</small>
