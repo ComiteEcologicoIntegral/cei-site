@@ -11,6 +11,7 @@ moment.locale('es');
 
 function Registro() {
     const [data, setData] = useState(null);
+    const [summaryData, setSummaryData] = useState(null);
     const [radioValue, setRadioValue] = useState('1');
     const [q, setQ] = useState(null);
 
@@ -29,11 +30,11 @@ function Registro() {
                 fetch(`${apiUrl}/get-graph?${q}`)
                     .then((response) => response.json())
                     .then((json) => {
-                        setData(json);
+                        setData(json.plot);
+                        setSummaryData(json.summary)
                         setLoading(false);
                     });
-            } 
-            else {
+            } else {
                 fetch(`${apiUrl}/datos-fecha?${q}`)
                     .then((response) => response.json())
                     .then((json) => setData(json));
@@ -56,7 +57,7 @@ function Registro() {
             alert('Selecciona una ubicación.');
             return;
         }
-        if ((!desde || !hasta)) {
+        if (!desde || !hasta) {
             alert('Selecciona las fechas.');
             return;
         }
@@ -66,14 +67,17 @@ function Registro() {
         const locations = ubic.current
             .map((u) => u.label)
             .reduce(
-                (p, c) =>
-                    p === '' ? `locations=${c}` : `${p}&locations=${c}`,
-                    ''
-                );
-                
-        let queryStr = `${locations}&gas=${ind.current.value}&start_date=${moment.utc(desde).format('MM/DD/YYYY')}&end_date=${moment.utc(hasta).format('MM/DD/YYYY')}`;
+                (p, c) => (p === '' ? `locations=${c}` : `${p}&locations=${c}`),
+                ''
+            );
 
-        console.log("querystr");
+        let queryStr = `${locations}&gas=${
+            ind.current.value
+        }&start_date=${moment.utc(desde).format('MM/DD/YYYY')}&end_date=${moment
+            .utc(hasta)
+            .format('MM/DD/YYYY')}`;
+
+        console.log('querystr');
         console.log(queryStr);
 
         setIndi(ind.current.value);
@@ -89,7 +93,7 @@ function Registro() {
             return;
         }
 
-        if ((!d || !h)) {
+        if (!d || !h) {
             d = desde;
             h = hasta;
         }
@@ -109,7 +113,7 @@ function Registro() {
             '&fin=' +
             h.format('YYYY-MM-DD');
 
-        console.log("querystr: " + queryStr);
+        console.log('querystr: ' + queryStr);
 
         setIndi(ind.current.value);
         setQ(queryStr);
@@ -174,23 +178,41 @@ function Registro() {
                 updateMainFiltros={updateMainFiltros}
             />
             {radioValue === '1' && (
-                <Grafica setDesde={setDesde} setHasta={setHasta} downloadFile={downloadFile} {...data} />
-            )}
-            {radioValue === '2' && (
-                <>
-                <Calendario
-                    q={q}
-                    create={createQueryCal}
-                    data={data}
-                    indi={indi}
+                <Grafica
                     setDesde={setDesde}
                     setHasta={setHasta}
                     downloadFile={downloadFile}
+                    summary={summaryData}
+                    {...data}
                 />
-                <HeatMap q={q} fecha={desde} ubic={ubic.current} ind={ind.current.value}/>
+            )}
+            {radioValue === '2' && (
+                <>
+                    <Calendario
+                        q={q}
+                        create={createQueryCal}
+                        data={data}
+                        indi={indi}
+                        setDesde={setDesde}
+                        setHasta={setHasta}
+                        downloadFile={downloadFile}
+                    />
+                    <HeatMap
+                        q={q}
+                        fecha={desde}
+                        ubic={ubic.current}
+                        ind={ind.current.value}
+                    />
                 </>
             )}
-            <div><img src="loading.gif" alt="Cargando..." className="loading" style={loading ? {}: {display: "none"}}/></div>
+            <div>
+                <img
+                    src="loading.gif"
+                    alt="Cargando..."
+                    className="loading"
+                    style={loading ? {} : { display: 'none' }}
+                />
+            </div>
         </div>
     );
 }
