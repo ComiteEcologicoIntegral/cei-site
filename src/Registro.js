@@ -12,13 +12,13 @@ moment.locale('es');
 function Registro() {
     const [data, setData] = useState(null);
     const [summaryData, setSummaryData] = useState(null);
-    const [radioValue, setRadioValue] = useState('1');
-    const [q, setQ] = useState(null);
+    const [radioValue, setRadioValue] = useState('1'); // sección seleccionada (Gráfica/Calendario)
+    const [q, setQ] = useState(null); // string del query
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false); // gif
 
     // Datos de los filtros:
-    const [indi, setIndi] = useState('PM25');
+    //const [indi, setIndi] = useState('PM25');
     const [desde, setDesde] = useState(null);
     const [hasta, setHasta] = useState(null);
     const ind = useRef({ value: 'PM25' });
@@ -26,7 +26,7 @@ function Registro() {
 
     useEffect(() => {
         if (q) {
-            if (radioValue === '1') {
+            if (radioValue === '1') { // Sección gráfica
                 fetch(`${apiUrl}/get-graph?${q}`)
                     .then((response) => response.json())
                     .then((json) => {
@@ -34,24 +34,25 @@ function Registro() {
                         setSummaryData(json.summary);
                         setLoading(false);
                     });
-            } else {
+            } else { // Sección calendario
                 fetch(`${apiUrl}/datos-fecha?${q}`)
                     .then((response) => response.json())
                     .then((json) => setData(json));
             }
         }
-    }, [q]);
+    }, [q]); // Cada que cambia el string del query creado, hacemos un request al api
 
     useEffect(() => {
         setData(null);
-    }, [radioValue]);
+    }, [radioValue]); // Cuando cambiamos entre Gráfica y Calendario, borramos los datos
 
+    // Esta función es llamada por un componente hijo para actualizar los valores cada que cambian en los filtros
     function updateMainFiltros(u, i) {
-        console.log(loading);
         ubic.current = u;
         ind.current = i;
     }
 
+    // Crea el string del query para la gráfica
     function createQueryGraph() {
         if (!ubic) {
             alert('Selecciona una ubicación.');
@@ -62,7 +63,7 @@ function Registro() {
             return;
         }
 
-        setLoading(true);
+        setLoading(true); // Muestra gif de loading
 
         const locations = ubic.current
             .map((u) => u.label)
@@ -77,13 +78,13 @@ function Registro() {
             .utc(hasta)
             .format('MM/DD/YYYY')}`;
 
-        console.log('querystr');
         console.log(queryStr);
 
-        setIndi(ind.current.value);
+        //setIndi(ind.current.value);
         setQ(queryStr);
     }
 
+    // Crea el string del query para el calendario
     function createQueryCal(d, h) {
         // Ejemplo:
         // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
@@ -113,9 +114,9 @@ function Registro() {
             '&fin=' +
             h.format('YYYY-MM-DD');
 
-        console.log('querystr: ' + queryStr);
+        console.log(queryStr);
 
-        setIndi(ind.current.value);
+        //setIndi(ind.current.value);
         setQ(queryStr);
     }
 
@@ -128,7 +129,7 @@ function Registro() {
             queryStr = queryStr.slice(0, -1);
 
             if (radioValue === '2') {
-                // para el calendario se descarga todo el mes
+                // Para el calendario se descarga todo el mes
                 queryStr +=
                     '&ind=' +
                     ind.current.value +
@@ -137,6 +138,7 @@ function Registro() {
                     '&fin=' +
                     hasta.endOf('month').format('YYYY-MM-DD');
             } else {
+                // Para la sección de la gráfica se descarga según las fechas seleccionadas
                 queryStr +=
                     '&ind=' +
                     ind.current.value +
@@ -192,7 +194,7 @@ function Registro() {
                         q={q}
                         create={createQueryCal}
                         data={data}
-                        indi={indi}
+                        indi={ind.current.value}
                         setDesde={setDesde}
                         setHasta={setHasta}
                         downloadFile={downloadFile}

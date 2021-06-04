@@ -2,6 +2,7 @@ import React, {useRef, useImperativeHandle} from 'react'
 import { Form, Button, Col, Row } from 'react-bootstrap'
 import Select from 'react-select';
 
+// Opciones del dropdown de gases:
 const indicadores = [
     {value: 'PM25', label: 'PM2.5'},
     {value: 'PM10', label: 'PM10'},
@@ -11,15 +12,18 @@ const indicadores = [
     {value: 'SO2', label: 'SO2'}
 ]
 
+// Componente para la página de Compara Datos
 const ComparaFiltros = (props) => {
-    const id = useRef(props.id);
-    let sensores = props.sensores;
+    const id = useRef(props.id); // ID para el componente, pues se pueden agregar varios
+    let sensores = props.sensores; // Opciones del dropdown de sensores
     
-    const ubic = useRef(sensores[0].value);
+    // Datos de cada input:
+    const ubic = useRef(sensores[0].value ? sensores[0].value : null);
     const ind = useRef(indicadores[0].value);
     const desde = useRef(null);
     const hasta = useRef(null);
 
+    // Cada que cambie uno de los inputs, se mandan al componente padre porque allá se crea el query
     function updateData() {
         let formData = {
             ubic: ubic.current,

@@ -5,6 +5,7 @@ import { fetchSummaryData } from './handlers/data';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSensorData } from './redux/reducers';
 import moment from 'moment';
+import 'moment/locale/es';
 import { apiUrl } from './constants';
 import Plot from 'react-plotly.js';
 
@@ -33,6 +34,7 @@ function Compara() {
         }
     }, []);
 
+    // Crear valores para el dropdown:
     if (sensRaw) {
         sensRaw.forEach(element => {
             sensores.push({value: element.Sensor_id, label: element.Zona});
@@ -46,6 +48,8 @@ function Compara() {
 
     const [data, setData] = useState(null);
 
+    // Esta función es llamada por los cada componente hijo (CompraFiltros) cuando se modifican los valores seleccionados
+    // Todos los valores de los filtros se guardan en un solo arreglo 
     function modifyData(data, index) {
         filterData.current[index] = data;
     }
@@ -57,6 +61,7 @@ function Compara() {
         }
     }
 
+    // Elimina el último filtro
     function deleteFiltro() {
         if (numFiltros.current != -1) {
             let filtroDiv = document.getElementById(`filtro-${numFiltros.current}`).parentNode;
@@ -75,15 +80,13 @@ function Compara() {
         let fechas_inicio = "";
         let fechas_fin = "";
 
-        console.log(numFiltros.current);
-        console.log(filterData.current);
-
         for (let i=0; i<=numFiltros.current ; i++) {
-            if (!filterData.current[i] || !filterData.current[i]["desde"] || !filterData.current[i]["hasta"]) {
+            if (!filterData.current[i] || !filterData.current[i]["desde"] || !filterData.current[i]["hasta"]) { // A alguno le falta seleccionar fechas
                 alert("Llena todos los campos");
                 return;
             }
             else {
+                // Unir con comas
                 ubicaciones += filterData.current[i]["ubic"] + ",";
                 gases += filterData.current[i]["ind"] + ",";
                 fechas_inicio += filterData.current[i]["desde"] + ",";
@@ -91,6 +94,7 @@ function Compara() {
             }
         }
 
+        // Quitar última coma
         ubicaciones = ubicaciones.slice(0, -1);
         gases = gases.slice(0, -1);
         fechas_inicio = fechas_inicio.slice(0, -1);
@@ -118,10 +122,10 @@ function Compara() {
         width: 1000,
         height: 500
     };
-    //let graphData = [];
+
     const [graphData, setGraphData] = useState([]);
 
-    let colors = ['red', 'green', 'blue', 'orange'];
+    let colors = ['red', 'green', 'blue', 'orange']; // Opciones de color de las líneas
 
     function createGraph() {
         let graph = [];
@@ -134,9 +138,10 @@ function Compara() {
                 data[i].type = "scatter";
                 data[i].mode = "lines+markers";
                 data[i].marker = { color: colors[i] };
-                data[i].text = data[i].dia.map(function(d) { return new Date(d).toLocaleString('es-MX', { timeZone: 'America/Mexico_City'}) } )
+                
+                data[i].text = data[i].dia.map(function(d) { return moment.utc(new Date(d)).local() } );
 
-                data[i].hovertemplate = '<i>Medida</i>: %{y:.4f}' +'<br><b>%{text}</b>';
+                data[i].hovertemplate = '<i>Medida</i>: %{y:.4f}' +'<br><b>%{text}</b>'; // Tooltip
 
                 graph.push(data[i]);
             }

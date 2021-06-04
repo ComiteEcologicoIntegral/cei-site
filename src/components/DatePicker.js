@@ -3,8 +3,16 @@ import buildCalendar from './buildCalendar';
 import { Col, Row } from 'react-bootstrap';
 import { v4 } from 'uuid';
 
+// Componente para el calendario en la página de Registro Histórico
 const DatePicker = ({value, onChange}) => {
+    /* 
+        Se siguió este tutorial : https://youtu.be/5jRrVqRWqsM
 
+        Parámetros:
+            - value: día seleccionado
+            - onChange: función para cambiar el State de value
+    */
+   
     const [calendar, setCalendar] = useState([]);
 
     // build calendar
