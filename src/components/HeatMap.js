@@ -4,7 +4,16 @@ import { apiUrl } from '../constants';
 import { criteria } from '../handlers/statusCriteria';
 import { unidad } from '../constants';
 
+// Componente para la página Registro Histórico, sección del calendario
 function HeatMap ({q, fecha, ubic, ind}) {
+    /* 
+        Parámetros:
+            - q : query que proviene de RHFiltros
+            - fecha : dia seleccionada en el calendario
+            - ubic : sensores seleccionados en los filtros
+            - ind : gas seleccionado en los filtros
+    */
+
     const [mes, setMes] = useState(null); 
     const [dataHM, setDataHM] = useState(null);
 
@@ -14,6 +23,7 @@ function HeatMap ({q, fecha, ubic, ind}) {
 
     useEffect(() => {
         if (fecha) {
+            // Cuando cambia la fecha seleccionada en el calendario, solo cambiamos el State del mes si sí cambió el mes
             if (!mes || !mes.isSame(fecha.clone().startOf('month'))) {
                 mesAnt.current = mes;
                 setMes(fecha.clone().startOf('month'));
@@ -22,18 +32,17 @@ function HeatMap ({q, fecha, ubic, ind}) {
     }, [fecha]);
 
     useEffect(() => {
-        // solo cambia el heatmap cuando cambia el query de RHFiltros o el mes de la fecha seleccionada
         let newq = "";
         if (q) {
-            newq = q.substring(0, q.indexOf("&inicio"));
+            newq = q.substring(0, q.indexOf("&inicio")); // solo nos interesa saber las ubicaciones y gases seleccionados
         }
 
-        if (!queryAnt.current || queryAnt.current !== newq || mesAnt.current != mes) {
+        if (!queryAnt.current || queryAnt.current !== newq || mesAnt.current != mes) { // Cambió la ubicación y gases seleccionados o el mes seleccionado
             if (queryAnt.current !== q) queryAnt.current = newq;
             if (mesAnt.current != mes) mesAnt.current = mes;
 
             if (ubic && mes) {
-                // create query 
+                // Creamos query, sacando los datos de todo el mes
                 queryStr = 'ubic=';
 
                 ubic.forEach((element) => {
@@ -57,17 +66,18 @@ function HeatMap ({q, fecha, ubic, ind}) {
         }
     }, [q, mes]);
 
-    var options = {};
-    var series = [];
+    // Creación del Heatmap:
+    var options = {}; // Configuración
+    var series = []; // Datos
 
     if (q && dataHM && dataHM.length > 0) {
-        /* EJEMPLO
+        /* EJEMPLO DEL FORMATO
         series:[
             {
                 name: dataHM[i]["zona"]
                 data: [
                     {
-                        x: category[i%7],
+                        x: número del día,
                         y: dataHM[i][ind],
                         fecha: dataHM[i][fecha].format("DD-MM-YYYY")
                     }
@@ -77,7 +87,7 @@ function HeatMap ({q, fecha, ubic, ind}) {
         let index = 0;
         let dataItem = {};
 
-        for (let u = 0; u < ubic.length && dataHM[index]; u++) { // por cada ubicacion seleccionada
+        for (let u = 0; u < ubic.length && dataHM[index]; u++) { // Por cada ubicacion seleccionada se crea una fila del heatmap
             let currUbic = dataHM[index]["zona"];
             let primerDia = new Date(dataHM[index].fecha.replace(/-/g, '\/').replace(/T.+/, '')); // primer día registrado de los datos de una ubicacion
             let currDia = 1;
@@ -87,7 +97,7 @@ function HeatMap ({q, fecha, ubic, ind}) {
                 data: []
             };
             
-            // llenar primeros días vacíos
+            // llenar primeros días vacíos si es que los datos del mes no empiezan en el primer día
             while (primerDia.getDate() !== currDia) {
                 dataItem.x = currDia;
                 dataItem.y = -1;
@@ -100,10 +110,9 @@ function HeatMap ({q, fecha, ubic, ind}) {
             while (index < dataHM.length && dataHM[index]["zona"] === currUbic) {
                 dataItem.x = currDia;
 
-                // revisa que haya datos de ese dia
+                // revisa que sí haya un registro de ese dia checando si coincide el número de día
                 if (currDia == parseInt(dataHM[index]["fecha"].substring(8))) {
                     if (dataHM[index]["prom"] !== "") {
-                        console.log(dataHM[index]["prom"] !== "");
                         dataItem.y = dataHM[index]["prom"];
                         dataItem.fecha = dataHM[index]["fecha"];
                     } else {
@@ -147,31 +156,31 @@ function HeatMap ({q, fecha, ubic, ind}) {
                         from: 0,
                         to: criteria['Aire y Salud'][ind][0],
                         name: 'Buena',
-                        color: '#95BF39'
+                        color: '#00E400'
                     },
                     {
                         from: criteria['Aire y Salud'][ind][0],
                         to: criteria['Aire y Salud'][ind][1],
                         name: 'Aceptable',
-                        color: '#F2E313'
+                        color: '#FFFF00'
                     },
                     {
                         from: criteria['Aire y Salud'][ind][1],
                         to: criteria['Aire y Salud'][ind][2],
                         name: 'Mala',
-                        color: '#F2811D'
+                        color: '#FF7E00'
                     },
                     {
                         from: criteria['Aire y Salud'][ind][2],
                         to: criteria['Aire y Salud'][ind][3],
                         name: 'Muy mala',
-                        color: '#F22233'
+                        color: '#FF0000'
                     },
                     {
                         from: criteria['Aire y Salud'][ind][3],
                         to: criteria['Aire y Salud'][ind][3] * 1.5,
                         name: 'Extremadamente mala',
-                        color: '#73022C'
+                        color: '#8F3F97'
                     }
                   ]
                 }

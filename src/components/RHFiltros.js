@@ -6,6 +6,7 @@ import Select from 'react-select';
 import { fetchSummaryData } from '../handlers/data';
 import { setSensorData } from '../redux/reducers';
 
+// Opciones del dropdown de gases:
 const indicadores = [
     { value: 'PM25', label: 'PM2.5' },
     { value: 'PM10', label: 'PM10' },
@@ -15,6 +16,7 @@ const indicadores = [
     { value: 'SO2', label: 'SO2' },
 ];
 
+// Componente para la página de Registro Histórico
 function RHFiltros({
     createQueryGraph,
     createQueryCal,
@@ -22,6 +24,15 @@ function RHFiltros({
     setRadioValue,
     updateMainFiltros,
 }) {
+    /* 
+        Parámetros:
+            - createQueryGraph: función para crear query de la gráfica
+            - createQueryCal: función para crear query del calendario
+            - radioValue: sección seleccionada
+            - setRadioValue: función para cambiar el radioValue
+            - updateMainFiltros: función para updatear en el componente padre los inputs seleccionados
+    */
+
     const radios = [
         { name: 'Grafica', value: '1' },
         { name: 'Calendario', value: '2' },
@@ -51,6 +62,7 @@ function RHFiltros({
         }
     }, []);
 
+    // Crear valores para el dropdown:
     if (sensRaw) {
         sensRaw.forEach((element) => {
             sensores.push({ value: element.Sensor_id, label: element.Zona });
@@ -59,9 +71,10 @@ function RHFiltros({
 
     const ubicacion = useRef(null);
     const indicador = useRef(indicadores[0]);
-    console.log(indicador.current);
+    
+    // Función general para crear el query
     function createQuery() {
-        updateMainFiltros(ubicacion.current, indicador.current);
+        updateMainFiltros(ubicacion.current, indicador.current); // Actualiza los valores de los filtros en el componente padre
         if (radioValue == '1') {
             createQueryGraph();
         } else {
