@@ -72,7 +72,15 @@ function Mapa() {
                 locationStr: data.Zona?.length > 0 ? data.Zona : 'ND',
                 provider: {
                     name: data.Sistema,
-                    ref: '#',
+                    ref: (() => {
+                        if (data.Sistema === 'PurpleAir')
+                            return 'https://www.purpleair.com/map?mylocation';
+                        if (data.Sistema === 'AireNuevoLeon')
+                            return 'http://aire.nl.gob.mx/';
+                        if (data.Sistema === 'Sinaica')
+                            return 'https://sinaica.inecc.gob.mx/';
+                        return '#';
+                    })(),
                 },
                 isPurpleAir: data.Sistema === 'PurpleAir',
                 labels: gases.map(({ name, label, units }) => {
