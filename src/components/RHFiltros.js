@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import { fetchSummaryData } from '../handlers/data';
 import { setSensorData } from '../redux/reducers';
+import { systemOptions } from '../constants'
 
 // Opciones del dropdown de gases:
 const indicadores = [
@@ -62,13 +63,17 @@ function RHFiltros({
         }
     }, []);
 
+    const sistema = useRef(systemOptions[0])
+
     // Crear valores para el dropdown:
     if (sensRaw) {
         sensRaw.forEach((element) => {
-            sensores.push({ value: element.Sensor_id, label: element.Zona });
+            if(element.Sistema === sistema.current.value) {
+                sensores.push({ value: element.Sensor_id, label: element.Zona });
+            }
         });
     }
-
+    
     const ubicacion = useRef(null);
     const indicador = useRef(indicadores[0]);
     
@@ -90,7 +95,16 @@ function RHFiltros({
             </div>
             <Form>
                 <Form.Row className="mb-3">
-                    <Col xs={12}>
+                    <Col xs={6}>
+                        <Select
+                            options={systemOptions}
+                            placeholder={'Sistema'}
+                            onChange={(value) => {
+                                sistema.current = value;
+                            }}
+                        />
+                    </Col>
+                    <Col xs={6}>
                         <Select
                             isMulti
                             options={sensores}
