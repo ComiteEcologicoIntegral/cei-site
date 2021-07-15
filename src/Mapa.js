@@ -192,7 +192,7 @@ function Mapa() {
                                             <div
                                                 style={{
                                                     boxSizing: 'border-box',
-                                                    width: '28px',
+                                                    width: '35px',
                                                     height: '20px',
                                                     marginRight: '0.75rem',
                                                     padding: 0,
