@@ -26,6 +26,12 @@ export const gases = [
     },
 ];
 
+export const systemOptions = [
+    {value: "PurpleAir", label: 'PurpleAir'},
+    {value: "Sinaica", label: 'Sinaica'},
+    {value: "AireNuevoLeon", label: 'AireNuevoLeon'}
+]
+
 export const unidad = {
     PM25: 'µg/m3',
     PM10: 'µg/m3',

@@ -109,7 +109,7 @@ function Mapa() {
             <MapaFiltros
                 onApply={({ gas, location }) => {
                     if (location) {
-                        // encuentra sensor al que le corresponde la ubicación de los filtros
+                        // Encuentra sensor al que le corresponde la ubicación de los filtros
                         const fSensor = sensorData.find(
                             (record) => record.Sensor_id === location.value
                         );

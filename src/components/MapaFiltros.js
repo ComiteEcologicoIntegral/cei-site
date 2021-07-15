@@ -11,6 +11,7 @@ import {
 import { BsInfoCircle } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
+import { systemOptions } from '../constants'
 
 const indicadores = [
     {value: 'PM25', label: 'PM2.5'},
@@ -32,18 +33,20 @@ const intervalos =  [
 
 const MapaFiltros = ({ onApply }) => {
     const { sensorData } = useSelector((state) => state);
+    const [systemChosen, setSystemChosen] = useState("");
     const locationOptions = useMemo(() => {
         return sensorData
             .filter(
                 (sensor) =>
                     typeof sensor.Longitud === 'number' &&
-                    typeof sensor.Latitud === 'number'
+                    typeof sensor.Latitud === 'number' && 
+                    sensor.Sistema === systemChosen.label
             )
             .map((record) => ({
                 value: record.Sensor_id,
                 label: record.Zona,
             }));
-    }, [sensorData]);
+    }, [sensorData, systemChosen]);
 
     const [show, setShow] = useState(false);
     const [location, setLocation] = useState(null);
@@ -58,6 +61,12 @@ const MapaFiltros = ({ onApply }) => {
             <Form>
                 <Form.Row className="mapa-filtros">
                     <Col className="mb-3" xs={12} lg={4}>
+                        <Select
+                            placeholder="Sistema"
+                            value={systemChosen}
+                            onChange={setSystemChosen}
+                            options={systemOptions}
+                        />
                         <Select
                             placeholder="Ubicación"
                             value={location}

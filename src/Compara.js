@@ -34,10 +34,10 @@ function Compara() {
         }
     }, []);
 
-    // Crear valores para el dropdown:
+    // Crear valores para mandar al componente ComparaFiltros:
     if (sensRaw) {
         sensRaw.forEach(element => {
-            sensores.push({value: element.Sensor_id, label: element.Zona});
+            sensores.push({sensor_id: element.Sensor_id, zona: element.Zona, sistema: element.Sistema});
         });
     }
 
