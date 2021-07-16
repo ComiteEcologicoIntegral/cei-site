@@ -63,20 +63,24 @@ function RHFiltros({
         }
     }, []);
 
-    const sistema = useRef(systemOptions[0])
+    const [sistemas, setSistemas] = useState("")
 
     // Crear valores para el dropdown:
     if (sensRaw) {
         sensRaw.forEach((element) => {
-            if(element.Sistema === sistema.current.value) {
-                sensores.push({ value: element.Sensor_id, label: element.Zona });
-            }
+            sistemas.forEach((value) => {
+                if(value.value === element.Sistema) {
+                    sensores.push({ value: element.Sensor_id, label: element.Zona });
+                }
+            });
         });
     }
     
     const ubicacion = useRef(null);
     const indicador = useRef(indicadores[0]);
-    
+    console.log(sistemas)
+    console.log(sensores)
+
     // Función general para crear el query
     function createQuery() {
         updateMainFiltros(ubicacion.current, indicador.current); // Actualiza los valores de los filtros en el componente padre
@@ -97,10 +101,11 @@ function RHFiltros({
                 <Form.Row className="mb-3">
                     <Col xs={6}>
                         <Select
+                            isMulti
                             options={systemOptions}
                             placeholder={'Sistema'}
                             onChange={(value) => {
-                                sistema.current = value;
+                                setSistemas(value)
                             }}
                         />
                     </Col>
