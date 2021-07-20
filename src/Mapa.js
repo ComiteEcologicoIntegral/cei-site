@@ -117,6 +117,9 @@ function Mapa() {
                         if (fSensor) {
                             setCenter([fSensor.Latitud, fSensor.Longitud]);
                         }
+                    } else {
+                        alert("Selecciona una ubicación")
+                        return;
                     }
 
                     if (gas) {
