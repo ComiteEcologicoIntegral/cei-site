@@ -63,12 +63,12 @@ function RHFiltros({
         }
     }, []);
 
-    const [sistemas, setSistemas] = useState("")
+    const [sistemas, setSistemas] = useState([])
 
     // Crear valores para el dropdown:
     if (sensRaw) {
         sensRaw.forEach((element) => {
-            sistemas.forEach((value) => {
+            sistemas.forEach(value => {
                 if(value.value === element.Sistema) {
                     sensores.push({ value: element.Sensor_id, label: element.Zona });
                 }
@@ -78,8 +78,6 @@ function RHFiltros({
     
     const ubicacion = useRef(null);
     const indicador = useRef(indicadores[0]);
-    console.log(sistemas)
-    console.log(sensores)
 
     // Función general para crear el query
     function createQuery() {
