@@ -1,6 +1,7 @@
 import React, {useRef, useImperativeHandle, useMemo, useState} from 'react'
 import { Form, Button, Col, Row } from 'react-bootstrap'
 import Select from 'react-select';
+import { systemOptions } from '../constants';
 
 // Opciones del dropdown de gases:
 const indicadores = [
@@ -15,16 +16,11 @@ const indicadores = [
 // Componente para la página de Compara Datos
 const ComparaFiltros = (props) => {
     const id = useRef(props.id); // ID para el componente, pues se pueden agregar varios
-    const sistemas = [
-        {value: "PurpleAir", label: 'PurpleAir'},
-        {value: "Sinaica", label: 'Sinaica'},
-        {value: "AireNuevoLeon", label: 'AireNuevoLeon'}
-    ];
     let sensores = props.sensores; // Opciones del dropdown de sensores
     
     // Datos de cada input:
     const [system, setSystem] = useState("PurpleAir");
-    const ubic = useRef(sensores[0].value ? sensores[0].value : null);
+    const ubic = useRef(sensores[0].zona ? sensores[0].zona : null);
     const ind = useRef(indicadores[0].value);
     const desde = useRef(null);
     const hasta = useRef(null);
@@ -49,7 +45,7 @@ const ComparaFiltros = (props) => {
             desde: desde.current,
             hasta: hasta.current
         }
-        console.log(formData)
+        console.log(ubic.current)
         props.modifyData(formData, id.current);
     }
 
@@ -64,8 +60,8 @@ const ComparaFiltros = (props) => {
                             <Row>
                                 <Col sm={6}>
                                     <Select 
-                                    options={sistemas} 
-                                    defaultValue={sistemas[0]}
+                                    options={systemOptions} 
+                                    defaultValue={systemOptions[0]}
                                     className="mb-2"
                                     onChange={(value) => {
                                         setSystem(value.value)}}
@@ -75,7 +71,8 @@ const ComparaFiltros = (props) => {
                                     defaultValue={sensorOptions[0]}
                                     className="mb-2"
                                     onChange={(value) => {
-                                        ubic.current = value.value;
+                                        console.log(value)
+                                        ubic.current = value;
                                         updateData()}}
                                     />
                                 </Col>
