@@ -6,6 +6,7 @@ import HeatMap from './components/HeatMap';
 import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
+import { Modal } from 'react-bootstrap';
 
 moment.locale('es');
 
@@ -16,6 +17,7 @@ function Registro() {
     const [q, setQ] = useState(null); // string del query
 
     const [loading, setLoading] = useState(false); // gif
+    const [noData, setNoData] = useState(false); // Desplegar mensaje si no se encontraron datos en la BD
 
     // Datos de los filtros:
     //const [indi, setIndi] = useState('PM25');
@@ -30,6 +32,7 @@ function Registro() {
                 fetch(`${apiUrl}/get-graph?${q}`)
                     .then((response) => response.json())
                     .then((json) => {
+                        if(json.hasOwnProperty('message')) setNoData(true);
                         setData(json.plot);
                         setSummaryData(json.summary);
                         setLoading(false);
@@ -54,7 +57,7 @@ function Registro() {
 
     // Crea el string del query para la gráfica
     function createQueryGraph() {
-        if (!ubic) {
+        if (!ubic.current) {
             alert('Selecciona una ubicación.');
             return;
         }
@@ -77,8 +80,6 @@ function Registro() {
         }&start_date=${moment.utc(desde).format('MM/DD/YYYY')}&end_date=${moment
             .utc(hasta)
             .format('MM/DD/YYYY')}`;
-
-        console.log(queryStr);
 
         //setIndi(ind.current.value);
         setQ(queryStr);
@@ -113,8 +114,6 @@ function Registro() {
             d.format('YYYY-MM-DD') +
             '&fin=' +
             h.format('YYYY-MM-DD');
-
-        console.log(queryStr);
 
         //setIndi(ind.current.value);
         setQ(queryStr);
@@ -172,6 +171,20 @@ function Registro() {
 
     return (
         <div className="container mb-10">
+            {/* Sería bueno refactorear esto a un componente */}
+            <Modal 
+                show={noData} 
+                onHide={() => setNoData(false)} 
+                aria-labelledby="contained-modal-title-vcenter" 
+                centered
+                >
+                <Modal.Header closeButton>
+                    <h5>Datos no encontrados</h5>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Revise los parametros e intente de nuevo.</p>
+                </Modal.Body>
+            </Modal>
             <RHFiltros
                 createQueryGraph={createQueryGraph}
                 createQueryCal={createQueryCal}
@@ -179,6 +192,14 @@ function Registro() {
                 setRadioValue={setRadioValue}
                 updateMainFiltros={updateMainFiltros}
             />
+            <div className="text-center">
+                <img
+                    src="loading.gif"
+                    alt="Cargando..."
+                    className="loading"
+                    style={loading ? {} : { display: 'none' }}
+                />
+            </div>
             {radioValue === '1' && (
                 <Grafica
                     setDesde={setDesde}
@@ -207,14 +228,6 @@ function Registro() {
                     />
                 </>
             )}
-            <div>
-                <img
-                    src="loading.gif"
-                    alt="Cargando..."
-                    className="loading"
-                    style={loading ? {} : { display: 'none' }}
-                />
-            </div>
         </div>
     );
 }
