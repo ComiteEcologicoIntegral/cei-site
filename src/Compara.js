@@ -47,6 +47,7 @@ function Compara() {
     const filterData = useRef([]);
 
     const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     // Esta función es llamada por los cada componente hijo (CompraFiltros) cuando se modifican los valores seleccionados
     // Todos los valores de los filtros se guardan en un solo arreglo 
@@ -74,18 +75,16 @@ function Compara() {
         if (numFiltros.current < 0) {
             return;
         }
-
         let ubicaciones = "";
         let gases = "";
         let fechas_inicio = "";
         let fechas_fin = "";
 
         for (let i=0; i<=numFiltros.current ; i++) {
-            if (!filterData.current[i] || !filterData.current[i]["desde"] || !filterData.current[i]["hasta"]) { // A alguno le falta seleccionar fechas
-                alert("Llena todos los campos");
+            if (!filterData.current[i]|| !filterData.current[i]["desde"] || !filterData.current[i]["hasta"]) { // A alguno le falta seleccionar fechas
+                alert("Selecciona las fechas");
                 return;
-            }
-            else {
+            } else {
                 // Unir con comas
                 ubicaciones += filterData.current[i]["ubic"] + ",";
                 gases += filterData.current[i]["ind"] + ",";
@@ -102,11 +101,12 @@ function Compara() {
 
         let query = `ubic=${ubicaciones}&ind=${gases}&inicio=${fechas_inicio}&fin=${fechas_fin}`;
 
-        console.log(query);
+        setLoading(true); // Muestra gif de loading
 
         fetch(`${apiUrl}/compare?${query}`)
             .then((response) => response.json())
             .then((json) => {
+                setLoading(false);
                 setData(json)
             });
 
@@ -146,7 +146,6 @@ function Compara() {
                 graph.push(data[i]);
             }
 
-            console.log(graph);
             setGraphData(graph);
         }
     }
@@ -170,6 +169,14 @@ function Compara() {
             </Row>
             <Row>
             <Col sm={12}>
+                <div className="text-center">
+                    <img
+                        src="loading.gif"
+                        alt="Cargando..."
+                        className="loading"
+                        style={loading ? {} : { display: 'none' }}
+                    />
+                </div>
                 <div class="grafico mt-5">
                     <Plot
                         data={graphData}
