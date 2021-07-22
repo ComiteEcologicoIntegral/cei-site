@@ -25,11 +25,12 @@ function Registro() {
     const [hasta, setHasta] = useState(null);
     const ind = useRef({ value: 'PM25' });
     const ubic = useRef(null);
+    const syst = useRef(null);
 
     useEffect(() => {
         if (q) {
             if (radioValue === '1') { // Sección gráfica
-                fetch(`${apiUrl}/get-graph?${q}`)
+                fetch(`${apiUrl}/get-graph-opt?${q}`)
                     .then((response) => response.json())
                     .then((json) => {
                         if(json.hasOwnProperty('message')) setNoData(true);
@@ -50,7 +51,8 @@ function Registro() {
     }, [radioValue]); // Cuando cambiamos entre Gráfica y Calendario, borramos los datos
 
     // Esta función es llamada por un componente hijo para actualizar los valores cada que cambian en los filtros
-    function updateMainFiltros(u, i) {
+    function updateMainFiltros(u, i, s) {
+        syst.current = s
         ubic.current = u;
         ind.current = i;
     }
@@ -68,20 +70,22 @@ function Registro() {
 
         setLoading(true); // Muestra gif de loading
 
-        const locations = ubic.current
-            .map((u) => u.label)
-            .reduce(
-                (p, c) => (p === '' ? `locations=${c}` : `${p}&locations=${c}`),
-                ''
-            );
-
-        let queryStr = `${locations}&gas=${
+        // const locations = ubic.current
+        //     .map((u) => u.label)
+        //     .reduce(
+        //         (p, c) => (p === '' ? `locations=${c}` : `${p}&locations=${c}`),
+        //         ''
+        //     );
+        console.log(ubic)
+        console.log(syst)
+        let queryStr = `location=${ubic.current[0].label}&gas=${
             ind.current.value
-        }&start_date=${moment.utc(desde).format('MM/DD/YYYY')}&end_date=${moment
+        }&system=${syst.current[0].opt}&start_date=${moment.utc(desde).format('MM/DD/YYYY')}&end_date=${moment
             .utc(hasta)
             .format('MM/DD/YYYY')}`;
 
         //setIndi(ind.current.value);
+        console.log(queryStr)
         setQ(queryStr);
     }
 
