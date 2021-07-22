@@ -27,9 +27,9 @@ export const gases = [
 ];
 
 export const systemOptions = [
-    {value: "PurpleAir", label: 'PurpleAir'},
-    {value: "Sinaica", label: 'Sinaica'},
-    {value: "AireNuevoLeon", label: 'AireNuevoLeon'}
+    {value: "PurpleAir", label: 'PurpleAir', opt: 'P'},
+    {value: "Sinaica", label: 'Sinaica', opt: 'G'},
+    {value: "AireNuevoLeon", label: 'AireNuevoLeon', opt: 'G'}
 ]
 
 export const unidad = {

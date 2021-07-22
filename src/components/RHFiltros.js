@@ -76,12 +76,13 @@ function RHFiltros({
         });
     }
     
+    const sistema = useRef(null);
     const ubicacion = useRef(null);
     const indicador = useRef(indicadores[0]);
 
     // Función general para crear el query
     function createQuery() {
-        updateMainFiltros(ubicacion.current, indicador.current); // Actualiza los valores de los filtros en el componente padre
+        updateMainFiltros(ubicacion.current, indicador.current, sistema.current); // Actualiza los valores de los filtros en el componente padre
         if (radioValue == '1') {
             createQueryGraph();
         } else {
@@ -103,6 +104,7 @@ function RHFiltros({
                             options={systemOptions}
                             placeholder={'Sistema'}
                             onChange={(value) => {
+                                sistema.current = value
                                 setSistemas(value)
                             }}
                         />
