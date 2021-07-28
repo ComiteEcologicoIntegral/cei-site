@@ -86,7 +86,7 @@ function Compara() {
                 return;
             } else {
                 // Unir con comas
-                ubicaciones += filterData.current[i]["ubic"] + ",";
+                ubicaciones += filterData.current[i]["ubic"].value + ",";
                 gases += filterData.current[i]["ind"] + ",";
                 fechas_inicio += filterData.current[i]["desde"] + ",";
                 fechas_fin += filterData.current[i]["hasta"] + ",";
@@ -131,7 +131,7 @@ function Compara() {
         let graph = [];
         if (data) {
             for (let i = 0; i < data.length; i++) {
-                let ubicacion = sensores.find(sensor => sensor.value === filterData.current[i]["ubic"]).label;
+                let ubicacion = sensores.find(sensor => sensor.sensor_id === filterData.current[i]["ubic"].value).label;
                 let gas = filterData.current[i]["ind"] == "PM25" ? "PM2.5" : filterData.current[i]["ind"];
 
                 data[i].name = `${ubicacion} (${gas})`; 
