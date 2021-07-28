@@ -5,17 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import { fetchSummaryData } from '../handlers/data';
 import { setSensorData } from '../redux/reducers';
-import { systemOptions } from '../constants'
+import { indicadores } from '../constants'
 
-// Opciones del dropdown de gases:
-const indicadores = [
-    { value: 'PM25', label: 'PM2.5' },
-    { value: 'PM10', label: 'PM10' },
-    { value: 'O3', label: 'O3' },
-    { value: 'CO', label: 'CO' },
-    { value: 'NO2', label: 'NO2' },
-    { value: 'SO2', label: 'SO2' },
-];
+// Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
+const systemOptions = [
+    {value: "PurpleAir", label: 'PurpleAir', opt: 'P'},
+    {value: "AireNuevoLeon", label: 'AireNuevoLeon/Sinaica', opt: 'G'}
+]
 
 // Componente para la página de Registro Histórico
 function RHFiltros({
@@ -33,6 +29,7 @@ function RHFiltros({
             - setRadioValue: función para cambiar el radioValue
             - updateMainFiltros: función para updatear en el componente padre los inputs seleccionados
     */
+
 
     const radios = [
         { name: 'Grafica', value: '1' },
@@ -63,22 +60,26 @@ function RHFiltros({
         }
     }, []);
 
-    const [sistemas, setSistemas] = useState([])
-
-    // Crear valores para el dropdown:
-    if (sensRaw) {
-        sensRaw.forEach((element) => {
-            sistemas.forEach(value => {
-                if(value.value === element.Sistema) {
-                    sensores.push({ value: element.Sensor_id, label: element.Zona });
-                }
-            });
-        });
-    }
+    const [system, setSystem] = useState("")
+    const [indOptions, setIndOptions] = useState(indicadores);
+    const [location, setLocation] = useState(null)
     
     const sistema = useRef(null);
     const ubicacion = useRef(null);
     const indicador = useRef(indicadores[0]);
+
+    useEffect(() => {
+        system.value === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores)
+    }, [system]); // Updatea los gases disponibles cuando cambia la variable sistemas
+
+    // Crear valores para el dropdown:
+    if (sensRaw) {
+        sensRaw.forEach((element) => {
+            if(system.value === element.Sistema) {
+                sensores.push({ value: element.Sensor_id, label: element.Zona });
+            }
+        });
+    }
 
     // Función general para crear el query
     function createQuery() {
@@ -89,7 +90,6 @@ function RHFiltros({
             createQueryCal();
         }
     }
-
     return (
         <div className="mt-5">
             <div className="ta-center mb-5">
@@ -100,21 +100,23 @@ function RHFiltros({
                 <Form.Row className="mb-3">
                     <Col xs={6}>
                         <Select
-                            isMulti
                             options={systemOptions}
                             placeholder={'Sistema'}
                             onChange={(value) => {
+                                setLocation(null)
+                                ubicacion.current = null
                                 sistema.current = value
-                                setSistemas(value)
+                                setSystem(value)
                             }}
                         />
                     </Col>
                     <Col xs={6}>
                         <Select
-                            isMulti
                             options={sensores}
+                            value={location}
                             placeholder={'Ubicación'}
                             onChange={(value) => {
+                                setLocation(value)
                                 ubicacion.current = value;
                             }}
                         />
@@ -143,7 +145,7 @@ function RHFiltros({
                     </Col>
                     <Col className="mb-3">
                         <Select
-                            options={indicadores}
+                            options={indOptions}
                             placeholder={'Indicador'}
                             onChange={(value) => {
                                 indicador.current = value;
