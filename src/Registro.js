@@ -104,11 +104,13 @@ function Registro() {
 
         let queryStr = 'ubic=';
 
-        ubic.current.forEach((element) => {
-            queryStr += element.value + ',';
-        });
+        // ubic.current.forEach((element) => {
+        //     queryStr += element.value + ',';
+        // });
 
-        queryStr = queryStr.slice(0, -1);
+        queryStr += ubic.current.value
+
+        // queryStr = queryStr.slice(0, -1);
         queryStr +=
             '&ind=' +
             ind.current.value +

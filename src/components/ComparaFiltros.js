@@ -41,7 +41,7 @@ const ComparaFiltros = (props) => {
             desde: desde.current,
             hasta: hasta.current
         }
-        console.log(ubic.current)
+        // console.log(ubic.current)
         props.modifyData(formData, id.current);
     }
     

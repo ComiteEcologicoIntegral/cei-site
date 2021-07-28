@@ -131,8 +131,12 @@ function Compara() {
         let graph = [];
         if (data) {
             for (let i = 0; i < data.length; i++) {
-                let ubicacion = sensores.find(sensor => sensor.sensor_id === filterData.current[i]["ubic"].value).label;
+                console.log(filterData.current[i]["ubic"].value)
+                console.log(sensores)
+                let ubicacion = sensores.find(sensor => sensor.sensor_id === filterData.current[i]["ubic"].value).zona;
                 let gas = filterData.current[i]["ind"] == "PM25" ? "PM2.5" : filterData.current[i]["ind"];
+
+                console.log(ubicacion)
 
                 data[i].name = `${ubicacion} (${gas})`; 
                 data[i].type = "scatter";
