@@ -45,11 +45,13 @@ function HeatMap ({q, fecha, ubic, ind}) {
                 // Creamos query, sacando los datos de todo el mes
                 queryStr = 'ubic=';
 
-                ubic.forEach((element) => {
-                    queryStr += element.value + ',';
-                });
+                // ubic.forEach((element) => {
+                //     queryStr += element.value + ',';
+                // });
 
-                queryStr = queryStr.slice(0, -1);
+                queryStr += ubic.value
+
+                // queryStr = queryStr.slice(0, -1);
                 queryStr +=
                     '&ind=' + ind +
                     '&inicio=' + mes.clone().format("YYYY-MM-DD") +
@@ -87,7 +89,10 @@ function HeatMap ({q, fecha, ubic, ind}) {
         let index = 0;
         let dataItem = {};
 
-        for (let u = 0; u < ubic.length && dataHM[index]; u++) { // Por cada ubicacion seleccionada se crea una fila del heatmap
+        // Este codigo de abajo se cambio porque ya no era un array de ubicaciones se cambio solo a una ubicación
+
+        // for (let u = 0; u < ubic.length && dataHM[index]; u++) { // Por cada ubicacion seleccionada se crea una fila del heatmap
+            // let currUbic = dataHM[index]["zona"];
             let currUbic = dataHM[index]["zona"];
             let primerDia = new Date(dataHM[index].fecha.replace(/-/g, '\/').replace(/T.+/, '')); // primer día registrado de los datos de una ubicacion
             let currDia = 1;
@@ -128,7 +133,7 @@ function HeatMap ({q, fecha, ubic, ind}) {
             }
 
             series.push({...seriesItem});
-        }
+        // }
 
         //console.log(series);
 
