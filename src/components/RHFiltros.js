@@ -5,17 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import { fetchSummaryData } from '../handlers/data';
 import { setSensorData } from '../redux/reducers';
-import { systemOptions } from '../constants'
-
-// Opciones del dropdown de gases:
-const indicadores = [
-    { value: 'PM25', label: 'PM2.5' },
-    { value: 'PM10', label: 'PM10' },
-    { value: 'O3', label: 'O3' },
-    { value: 'CO', label: 'CO' },
-    { value: 'NO2', label: 'NO2' },
-    { value: 'SO2', label: 'SO2' },
-];
+import { systemOptions, indicadores } from '../constants'
 
 // Componente para la página de Registro Histórico
 function RHFiltros({
@@ -33,6 +23,7 @@ function RHFiltros({
             - setRadioValue: función para cambiar el radioValue
             - updateMainFiltros: función para updatear en el componente padre los inputs seleccionados
     */
+
 
     const radios = [
         { name: 'Grafica', value: '1' },
@@ -64,6 +55,19 @@ function RHFiltros({
     }, []);
 
     const [sistemas, setSistemas] = useState([])
+    const [indOptions, setIndOptions] = useState(indicadores);
+    const [location, setLocation] = useState(null)
+
+    useEffect(() => {
+        sistemas.every(value => {
+            if(value.value === "PurpleAir") {
+                setIndOptions([indicadores[0]])
+                return false;
+             }
+             setIndOptions(indicadores)
+             return true;
+        })
+    }, [sistemas]); // Updatea los gases disponibles cuando cambia la variable sistemas
 
     // Crear valores para el dropdown:
     if (sensRaw) {
@@ -89,7 +93,6 @@ function RHFiltros({
             createQueryCal();
         }
     }
-
     return (
         <div className="mt-5">
             <div className="ta-center mb-5">
@@ -104,6 +107,8 @@ function RHFiltros({
                             options={systemOptions}
                             placeholder={'Sistema'}
                             onChange={(value) => {
+                                setLocation(null)
+                                ubicacion.current = null
                                 sistema.current = value
                                 setSistemas(value)
                             }}
@@ -111,10 +116,11 @@ function RHFiltros({
                     </Col>
                     <Col xs={6}>
                         <Select
-                            isMulti
                             options={sensores}
+                            value={location}
                             placeholder={'Ubicación'}
                             onChange={(value) => {
+                                setLocation(value)
                                 ubicacion.current = value;
                             }}
                         />
@@ -143,7 +149,7 @@ function RHFiltros({
                     </Col>
                     <Col className="mb-3">
                         <Select
-                            options={indicadores}
+                            options={indOptions}
                             placeholder={'Indicador'}
                             onChange={(value) => {
                                 indicador.current = value;
