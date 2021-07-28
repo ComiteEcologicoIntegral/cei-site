@@ -5,7 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import { fetchSummaryData } from '../handlers/data';
 import { setSensorData } from '../redux/reducers';
-import { systemOptions, indicadores } from '../constants'
+import { indicadores } from '../constants'
+
+// Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
+const systemOptions = [
+    {value: "PurpleAir", label: 'PurpleAir', opt: 'P'},
+    {value: "AireNuevoLeon", label: 'AireNuevoLeon/Sinaica', opt: 'G'}
+]
 
 // Componente para la página de Registro Histórico
 function RHFiltros({
@@ -54,35 +60,26 @@ function RHFiltros({
         }
     }, []);
 
-    const [sistemas, setSistemas] = useState([])
+    const [system, setSystem] = useState("")
     const [indOptions, setIndOptions] = useState(indicadores);
     const [location, setLocation] = useState(null)
-
-    useEffect(() => {
-        sistemas.every(value => {
-            if(value.value === "PurpleAir") {
-                setIndOptions([indicadores[0]])
-                return false;
-             }
-             setIndOptions(indicadores)
-             return true;
-        })
-    }, [sistemas]); // Updatea los gases disponibles cuando cambia la variable sistemas
-
-    // Crear valores para el dropdown:
-    if (sensRaw) {
-        sensRaw.forEach((element) => {
-            sistemas.forEach(value => {
-                if(value.value === element.Sistema) {
-                    sensores.push({ value: element.Sensor_id, label: element.Zona });
-                }
-            });
-        });
-    }
     
     const sistema = useRef(null);
     const ubicacion = useRef(null);
     const indicador = useRef(indicadores[0]);
+
+    useEffect(() => {
+        system.value === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores)
+    }, [system]); // Updatea los gases disponibles cuando cambia la variable sistemas
+
+    // Crear valores para el dropdown:
+    if (sensRaw) {
+        sensRaw.forEach((element) => {
+            if(system.value === element.Sistema) {
+                sensores.push({ value: element.Sensor_id, label: element.Zona });
+            }
+        });
+    }
 
     // Función general para crear el query
     function createQuery() {
@@ -103,14 +100,13 @@ function RHFiltros({
                 <Form.Row className="mb-3">
                     <Col xs={6}>
                         <Select
-                            isMulti
                             options={systemOptions}
                             placeholder={'Sistema'}
                             onChange={(value) => {
                                 setLocation(null)
                                 ubicacion.current = null
                                 sistema.current = value
-                                setSistemas(value)
+                                setSystem(value)
                             }}
                         />
                     </Col>

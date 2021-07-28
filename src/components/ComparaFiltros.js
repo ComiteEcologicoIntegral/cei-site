@@ -1,17 +1,7 @@
-import React, {useRef, useImperativeHandle, useMemo, useState} from 'react'
+import React, {useRef, useImperativeHandle, useMemo, useState, useEffect} from 'react'
 import { Form, Button, Col, Row } from 'react-bootstrap'
 import Select from 'react-select';
-import { systemOptions } from '../constants';
-
-// Opciones del dropdown de gases:
-const indicadores = [
-    {value: 'PM25', label: 'PM2.5'},
-    {value: 'PM10', label: 'PM10'},
-    {value: 'O3', label: 'O3'},
-    {value: 'CO', label: 'CO'},
-    {value: 'NO2', label: 'NO2'},
-    {value: 'SO2', label: 'SO2'}
-]
+import { systemOptions, indicadores } from '../constants';
 
 // Componente para la página de Compara Datos
 const ComparaFiltros = (props) => {
@@ -20,10 +10,16 @@ const ComparaFiltros = (props) => {
     
     // Datos de cada input:
     const [system, setSystem] = useState("PurpleAir");
+    const [indOptions, setIndOptions] = useState(indicadores)
+    const [location, setLocation] = useState(null)
     const ubic = useRef(sensores[0].zona ? sensores[0].zona : null);
     const ind = useRef(indicadores[0].value);
     const desde = useRef(null);
     const hasta = useRef(null);
+
+    useEffect(() => {
+        system === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores)
+    }, [system]);
 
     const sensorOptions = useMemo(() => {
         return sensores
@@ -48,8 +44,6 @@ const ComparaFiltros = (props) => {
         console.log(ubic.current)
         props.modifyData(formData, id.current);
     }
-
-   
     
     return (
         <Col sm={6}>
@@ -61,28 +55,33 @@ const ComparaFiltros = (props) => {
                                 <Col sm={6}>
                                     <Select 
                                     options={systemOptions} 
-                                    defaultValue={systemOptions[0]}
+                                    placeholder={'Sistema'}
                                     className="mb-2"
                                     onChange={(value) => {
-                                        setSystem(value.value)}}
+                                        setSystem(value.value)
+                                        setLocation(null)
+                                        ubic.current = null
+                                        updateData()
+                                    }}
                                     />
                                     <Select 
                                     options={sensorOptions} 
-                                    defaultValue={sensorOptions[0]}
+                                    value={location}
+                                    placeholder={'Ubicación'}
                                     className="mb-2"
                                     onChange={(value) => {
-                                        console.log(value)
+                                        setLocation(value)
                                         ubic.current = value;
                                         updateData()}}
                                     />
                                 </Col>
                                 <Col sm={6}>
                                     <Select 
-                                    options={indicadores} 
+                                    options={indOptions} 
                                     defaultValue={indicadores[0]}
                                     onChange={(value) => {
-                                    ind.current = value.value;
-                                    updateData()}}
+                                        ind.current = value.value;
+                                        updateData()}}
                                 />
                                 </Col>
                             </Row>
