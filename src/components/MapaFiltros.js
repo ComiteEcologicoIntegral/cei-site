@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
     Form,
     Modal,
@@ -11,15 +11,11 @@ import {
 import { BsInfoCircle } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
-import { systemOptions } from '../constants'
+import { indicadores } from '../constants'
 
-const indicadores = [
-    {value: 'PM25', label: 'PM2.5'},
-    {value: 'PM10', label: 'PM10'},
-    {value: 'O3', label: 'O3'},
-    {value: 'CO', label: 'CO'},
-    {value: 'NO2', label: 'NO2'},
-    {value: 'SO2', label: 'SO2'}
+const systemOptions = [
+    {value: "PurpleAir", label: 'PurpleAir', opt: 'P'},
+    {value: "AireNuevoLeon", label: 'AireNuevoLeon', opt: 'G'}
 ]
 
 const intervalos =  [
@@ -48,6 +44,12 @@ const MapaFiltros = ({ onApply }) => {
             }));
     }, [sensorData, systemChosen]);
 
+    const [indOptions, setIndOptions] = useState(indicadores);
+
+    useEffect(() => {
+        systemChosen.label === 'PurpleAir' ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores)
+    }, [systemChosen]); // Updatea los gases disponibles cuando cambia la variable sistemas
+
     const [show, setShow] = useState(false);
     const [location, setLocation] = useState(null);
     const [interval, setInterval_] = useState(intervalos[0]);
@@ -59,12 +61,16 @@ const MapaFiltros = ({ onApply }) => {
     return (
         <div className="container mt-5">
             <Form>
-                <Form.Row className="mapa-filtros">
+                <p style={{ fontSize: "0.9em" }}>*Recuerda que el sistema PurpleAir solo tiene disponible el gas PM2.5</p>
+                <Form.Row className="mapa-filtros"> 
                     <Col className="mb-3" xs={12} lg={4}>
                         <Select
                             placeholder="Sistema"
                             value={systemChosen}
-                            onChange={setSystemChosen}
+                            onChange={(value) => {
+                                setSystemChosen(value)
+                                setLocation(null)
+                            }}
                             options={systemOptions}
                         />
                         <Select
@@ -86,7 +92,7 @@ const MapaFiltros = ({ onApply }) => {
                         <Row>
                             <Col xs={10}>
                                 <Select
-                                    options={indicadores}
+                                    options={indOptions}
                                     value={gas}
                                     onChange={setGas}
                                 />

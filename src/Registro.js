@@ -76,16 +76,14 @@ function Registro() {
         //         (p, c) => (p === '' ? `locations=${c}` : `${p}&locations=${c}`),
         //         ''
         //     );
-        console.log(ubic)
-        console.log(syst)
-        let queryStr = `location=${ubic.current[0].label}&gas=${
+        console.log(ubic.current)
+        let queryStr = `location=${ubic.current.label}&gas=${
             ind.current.value
         }&system=${syst.current[0].opt}&start_date=${moment.utc(desde).format('MM/DD/YYYY')}&end_date=${moment
             .utc(hasta)
             .format('MM/DD/YYYY')}`;
 
         //setIndi(ind.current.value);
-        console.log(queryStr)
         setQ(queryStr);
     }
 
