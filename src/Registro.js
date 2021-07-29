@@ -34,6 +34,16 @@ function Registro() {
                     .then((response) => response.json())
                     .then((json) => {
                         if(json.hasOwnProperty('message')) setNoData(true);
+                        // Hacer cambio de horario por la zona horaria
+                        let fechasArray = []
+                        if(json.plot.data) {
+                            json.plot.data[0].x.forEach(fecha => {
+                                let time = moment.duration("05:00:00");
+                                fecha = moment(fecha).subtract(time).format()
+                                fechasArray.push(fecha.split('-05:00')[0])
+                            });
+                        }
+                        json.plot.data[0].x = fechasArray
                         setData(json.plot);
                         setSummaryData(json.summary);
                         setLoading(false);
