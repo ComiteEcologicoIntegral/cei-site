@@ -61,7 +61,7 @@ const MapaFiltros = ({ onApply }) => {
     return (
         <div className="container mt-5">
             <Form>
-                <p style={{ fontSize: "0.9em" }}>*Recuerda que el sistema PurpleAir solo tiene disponible el gas PM2.5</p>
+                <p style={{ fontSize: "0.9em" }}>*Recuerda que el sistema PurpleAir solo tiene disponible el contaminante PM2.5</p>
                 <Form.Row className="mapa-filtros"> 
                     <Col className="mb-3" xs={12} lg={4}>
                         <Select
