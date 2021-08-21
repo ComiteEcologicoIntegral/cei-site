@@ -5,7 +5,7 @@ import Marcador from './components/Marcador.js';
 import Wrapper from './components/WrapperMapa.js';
 
 import { gases, mapBlacklist } from './constants.js';
-import { getStatus } from './handlers/statusCriteria.js';
+import { getStatus, airQualityTags } from './handlers/statusCriteria.js';
 import useSensorData from './hooks/useSensorData.js';
 import { Spinner, OverlayTrigger, Popover, Button } from 'react-bootstrap';
 import moment from 'moment';
@@ -25,7 +25,7 @@ function Mapa() {
     } = useSensorData({});
 
     const [map, setMap] = useState(null);
-    // const [lastCenter, setLastCenter] = useState(null);
+    const [airQualityIndex, setAirQualityIndex] = useState(0);
 
     const setCenter = useCallback(
         (pos) => {
@@ -59,6 +59,10 @@ function Mapa() {
 
             const value = typeof preValue === 'number' ? preValue : 'ND';
 
+            if (getStatus(gasName, value) > airQualityIndex) {
+                setAirQualityIndex(getStatus(gasName, value));
+            }
+            
             return {
                 position: [data.Latitud, data.Longitud],
                 current: {
@@ -232,7 +236,7 @@ function Mapa() {
                         ))}
                 </Wrapper>
             </div>
-            <Recomendaciones />
+            <Recomendaciones selected={airQualityTags[airQualityIndex]} />
         </div>
     );
 }
