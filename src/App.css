@@ -286,6 +286,16 @@ button, button:focus {
   min-height: 300px;
 }
 
+.grafico-compara {
+  margin-top:15px;
+  width: 100%;
+  margin:auto;
+  height: 100%;
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+}
+
 /****** CUADRITOS min, max, avg *****/
 .dato-calculado {
   border-radius: 5px;
