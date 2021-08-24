@@ -117,11 +117,159 @@ function Compara() {
     }, [data])
 
     let graphLayout = {
-        title: 'Compara datos',
+        title: {
+            text: 'Compara datos',
+        },
+        showlegend: true,
         hovermode: 'closest',
         width: 1000,
-        height: 500
+        height: 700,
+        // shapes: [
+        //     // Nivel 1
+        //     {
+        //         type: 'rect',
+        //         xref: 'paper',
+        //         x0: 0,
+        //         y0: 0,
+        //         x1: 1,
+        //         y1: 50,
+        //         fillcolor: 'rgb(0, 228, 0)',
+        //         opacity: 0.3,
+        //         line: {
+        //             width: 0
+        //         }
+        //     }, 
+        //     // Nivel 2
+        //     {
+        //         type: 'rect',
+        //         xref: 'paper',
+        //         x0: 0,
+        //         y0: 50,
+        //         x1: 1,
+        //         y1: 75,
+        //         fillcolor: 'rgb(255, 255, 0)',
+        //         opacity: 0.3,
+        //         line: {
+        //             width: 0
+        //         }
+        //     }, 
+        //     // Nivel 3
+        //     {
+        //         type: 'rect',
+        //         xref: 'paper',
+        //         x0: 0,
+        //         y0: 75,
+        //         x1: 1,
+        //         y1: 155,
+        //         fillcolor: 'rgb(255, 126, 0)',
+        //         opacity: 0.3,
+        //         line: {
+        //             width: 0
+        //         }
+        //     }, 
+        //     // Nivel 4
+        //     {
+        //         type: 'rect',
+        //         xref: 'paper',
+        //         x0: 0,
+        //         y0: 155,
+        //         x1: 1,
+        //         y1: 235,
+        //         fillcolor: 'rgb(255, 0, 0)',
+        //         opacity: 0.3,
+        //         line: {
+        //             width: 0
+        //         }
+        //     }, 
+        //     // Nivel 5
+        //     {
+        //         type: 'rect',
+        //         xref: 'paper',
+        //         x0: 0,
+        //         y0: 235,
+        //         x1: 1,
+        //         y1: 255,
+        //         fillcolor: 'rgb(143, 63, 151)',
+        //         opacity: 0.3,
+        //         line: {
+        //             width: 0
+        //         }
+        //     }, 
+        // ]
     };
+
+    let shapes = [
+        // Nivel 1
+        {
+            type: 'rect',
+            xref: 'paper',
+            x0: 0,
+            y0: 0,
+            x1: 1,
+            y1: 50,
+            fillcolor: 'rgb(0, 228, 0)',
+            opacity: 0.3,
+            line: {
+                width: 0
+            }
+        }, 
+        // Nivel 2
+        {
+            type: 'rect',
+            xref: 'paper',
+            x0: 0,
+            y0: 50,
+            x1: 1,
+            y1: 75,
+            fillcolor: 'rgb(255, 255, 0)',
+            opacity: 0.3,
+            line: {
+                width: 0
+            }
+        }, 
+        // Nivel 3
+        {
+            type: 'rect',
+            xref: 'paper',
+            x0: 0,
+            y0: 75,
+            x1: 1,
+            y1: 155,
+            fillcolor: 'rgb(255, 126, 0)',
+            opacity: 0.3,
+            line: {
+                width: 0
+            }
+        }, 
+        // Nivel 4
+        {
+            type: 'rect',
+            xref: 'paper',
+            x0: 0,
+            y0: 155,
+            x1: 1,
+            y1: 235,
+            fillcolor: 'rgb(255, 0, 0)',
+            opacity: 0.3,
+            line: {
+                width: 0
+            }
+        }, 
+        // Nivel 5
+        {
+            type: 'rect',
+            xref: 'paper',
+            x0: 0,
+            y0: 235,
+            x1: 1,
+            y1: 255,
+            fillcolor: 'rgb(143, 63, 151)',
+            opacity: 0.3,
+            line: {
+                width: 0
+            }
+        }, 
+    ];
 
     const [graphData, setGraphData] = useState([]);
 
@@ -140,7 +288,7 @@ function Compara() {
 
                 data[i].name = `${ubicacion} (${gas})`; 
                 data[i].type = "scatter";
-                data[i].mode = "lines+markers";
+                data[i].mode = "lines";
                 data[i].marker = { color: colors[i] };
                 
                 data[i].text = data[i].dia.map(function(d) { return moment.utc(new Date(d)).local() } );
@@ -181,10 +329,10 @@ function Compara() {
                         style={loading ? {} : { display: 'none' }}
                     />
                 </div>
-                <div class="grafico mt-5">
+                <div class="grafico-compara mt-5">
                     <Plot
                         data={graphData}
-                        layout={graphLayout}
+                        layout={ data ? {...graphLayout, shapes: shapes} : {...graphLayout}}
                     />
                 </div>
             </Col>
