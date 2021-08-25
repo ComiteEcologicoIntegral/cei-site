@@ -17,6 +17,8 @@ export const criteria = {
     },
 };
 
+export const airQualityTags = ["buena", "acept", "mala", "muy", "ext"];
+
 export const getStatus = (gas, value, norm = 'Aire y Salud') => {
     const breakpoints = criteria[norm][gas];
 
