@@ -124,6 +124,33 @@ function Grafica({ setDesde, setHasta, data, layout, summary }) {
                                 </Col>
                             </Row>
                         </Col>
+                        <Col sm={5} lg={12}>
+                            <Row className="dato-calculado">
+                                <Col sm={6}
+                                className="d-flex flex-column align-items-center justify-content-center">
+                                    <p className="tipo text-center">Datos Válidos</p>
+                                    <p className="numero bueno text-center">{summary ? summary.porcentajes.buenos + '%' : '-'}</p>
+                                </Col>
+                                <Col sm={6}
+                                className="d-flex flex-column align-items-center justify-content-center">
+                                    <p className="tipo text-center">Datos Nulos</p>
+                                    <p className="numero muymala text-center">{summary ? summary.porcentajes.nulos + '%' : '-'}</p>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col sm={5} lg={12}>
+                            <Row className="dato-calculado">
+                                <Col sm={8}
+                                className="d-flex align-items-center justify-content-center">
+                                    <p className="tipo text-center">Datos Arriba de límite</p>
+                                </Col>
+                                <Col sm={4}
+                                className="d-flex align-items-center justify-content-center">
+                                    {/* <p className="numero mala text-center">{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p> */}
+                                    <p className={`numero text-center ${summary.porcentajes.arribaLimite == 0 ? "bueno" : summary.porcentajes.arribaLimite > 25 ? "muymala" : "mala"}`}>{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p>
+                                </Col>
+                            </Row>
+                        </Col>
                     </Row>
                 </Col>
 
