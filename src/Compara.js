@@ -124,154 +124,179 @@ function Compara() {
         hovermode: 'closest',
         width: 1000,
         height: 700,
-        // shapes: [
-        //     // Nivel 1
-        //     {
-        //         type: 'rect',
-        //         xref: 'paper',
-        //         x0: 0,
-        //         y0: 0,
-        //         x1: 1,
-        //         y1: 50,
-        //         fillcolor: 'rgb(0, 228, 0)',
-        //         opacity: 0.3,
-        //         line: {
-        //             width: 0
-        //         }
-        //     }, 
-        //     // Nivel 2
-        //     {
-        //         type: 'rect',
-        //         xref: 'paper',
-        //         x0: 0,
-        //         y0: 50,
-        //         x1: 1,
-        //         y1: 75,
-        //         fillcolor: 'rgb(255, 255, 0)',
-        //         opacity: 0.3,
-        //         line: {
-        //             width: 0
-        //         }
-        //     }, 
-        //     // Nivel 3
-        //     {
-        //         type: 'rect',
-        //         xref: 'paper',
-        //         x0: 0,
-        //         y0: 75,
-        //         x1: 1,
-        //         y1: 155,
-        //         fillcolor: 'rgb(255, 126, 0)',
-        //         opacity: 0.3,
-        //         line: {
-        //             width: 0
-        //         }
-        //     }, 
-        //     // Nivel 4
-        //     {
-        //         type: 'rect',
-        //         xref: 'paper',
-        //         x0: 0,
-        //         y0: 155,
-        //         x1: 1,
-        //         y1: 235,
-        //         fillcolor: 'rgb(255, 0, 0)',
-        //         opacity: 0.3,
-        //         line: {
-        //             width: 0
-        //         }
-        //     }, 
-        //     // Nivel 5
-        //     {
-        //         type: 'rect',
-        //         xref: 'paper',
-        //         x0: 0,
-        //         y0: 235,
-        //         x1: 1,
-        //         y1: 255,
-        //         fillcolor: 'rgb(143, 63, 151)',
-        //         opacity: 0.3,
-        //         line: {
-        //             width: 0
-        //         }
-        //     }, 
-        // ]
     };
 
-    let shapes = [
-        // Nivel 1
-        {
-            type: 'rect',
-            xref: 'paper',
-            x0: 0,
-            y0: 0,
-            x1: 1,
-            y1: 50,
-            fillcolor: 'rgb(0, 228, 0)',
-            opacity: 0.3,
-            line: {
-                width: 0
-            }
-        }, 
-        // Nivel 2
-        {
-            type: 'rect',
-            xref: 'paper',
-            x0: 0,
-            y0: 50,
-            x1: 1,
-            y1: 75,
-            fillcolor: 'rgb(255, 255, 0)',
-            opacity: 0.3,
-            line: {
-                width: 0
-            }
-        }, 
-        // Nivel 3
-        {
-            type: 'rect',
-            xref: 'paper',
-            x0: 0,
-            y0: 75,
-            x1: 1,
-            y1: 155,
-            fillcolor: 'rgb(255, 126, 0)',
-            opacity: 0.3,
-            line: {
-                width: 0
-            }
-        }, 
-        // Nivel 4
-        {
-            type: 'rect',
-            xref: 'paper',
-            x0: 0,
-            y0: 155,
-            x1: 1,
-            y1: 235,
-            fillcolor: 'rgb(255, 0, 0)',
-            opacity: 0.3,
-            line: {
-                width: 0
-            }
-        }, 
-        // Nivel 5
-        {
-            type: 'rect',
-            xref: 'paper',
-            x0: 0,
-            y0: 235,
-            x1: 1,
-            y1: 255,
-            fillcolor: 'rgb(143, 63, 151)',
-            opacity: 0.3,
-            line: {
-                width: 0
-            }
-        }, 
-    ];
+    let getShapes = () => {
+        console.log(gas)
+
+        let min1, max1, min2, max2, min3, max3, min4, max4, min5, max5;
+
+        switch(gas) {
+            case 'PM2.5':
+                min1 = 0;
+                max1 = 25;
+                min2 = 25;
+                max2 = 45;
+                min3 = 45;
+                max3 = 79;
+                min4 = 79;
+                max4 = 147;
+                min5 = 147;
+                max5 = 172;
+                break;
+            case 'PM10':
+                min1 = 0;
+                max1 = 50;
+                min2 = 50;
+                max2 = 75;
+                min3 = 75;
+                max3 = 155;
+                min4 = 155;
+                max4 = 235;
+                min5 = 235;
+                max5 = 255;
+                break;
+            case 'O3':
+                min1 = 0;
+                max1 = 0.051;
+                min2 = 0.051;
+                max2 = 0.070;
+                min3 = 0.070;
+                max3 = 0.092;
+                min4 = 0.092;
+                max4 = 0.114;
+                min5 = 0.114;
+                max5 = 0.139;
+                break;
+            case 'CO':
+                min1 = 0;
+                max1 = 8.75;
+                min2 = 8.75;
+                max2 = 11;
+                min3 = 11;
+                max3 = 13.3;
+                min4 = 13.3;
+                max4 = 15.5;
+                min5 = 15.5;
+                max5 = 17.5;
+                break;
+            case 'NO2':
+                min1 = 0;
+                max1 = 0.107;
+                min2 = 0.107;
+                max2 = 0.210;
+                min3 = 0.210;
+                max3 = 0.230;
+                min4 = 0.230;
+                max4 = 0.250;
+                min5 = 0.250;
+                max5 = 0.275;
+                break;
+            case 'SO2':
+                min1 = 0;
+                max1 = 0.008;
+                min2 = 0.008;
+                max2 = 0.110;
+                min3 = 0.110;
+                max3 = 0.165;
+                min4 = 0.165;
+                max4 = 0.220;
+                min5 = 0.220;
+                max5 = 0.255;
+                break;
+            default:
+                min1 = 0;
+                max1 = 25;
+                min2 = 25;
+                max2 = 45;
+                min3 = 45;
+                max3 = 79;
+                min4 = 79;
+                max4 = 147;
+                min5 = 147;
+                max5 = 172;
+                break;
+        }
+
+        let shapes = [
+            // Nivel 1
+            {
+                type: 'rect',
+                xref: 'paper',
+                x0: 0,
+                y0: min1,
+                x1: 1,
+                y1: max1,
+                fillcolor: 'rgb(0, 228, 0)',
+                opacity: 0.3,
+                line: {
+                    width: 0
+                }
+            }, 
+            // Nivel 2
+            {
+                type: 'rect',
+                xref: 'paper',
+                x0: 0,
+                y0: min2,
+                x1: 1,
+                y1: max2,
+                fillcolor: 'rgb(255, 255, 0)',
+                opacity: 0.3,
+                line: {
+                    width: 0
+                }
+            }, 
+            // Nivel 3
+            {
+                type: 'rect',
+                xref: 'paper',
+                x0: 0,
+                y0: min3,
+                x1: 1,
+                y1: max3,
+                fillcolor: 'rgb(255, 126, 0)',
+                opacity: 0.3,
+                line: {
+                    width: 0
+                }
+            }, 
+            // Nivel 4
+            {
+                type: 'rect',
+                xref: 'paper',
+                x0: 0,
+                y0: min4,
+                x1: 1,
+                y1: max4,
+                fillcolor: 'rgb(255, 0, 0)',
+                opacity: 0.3,
+                line: {
+                    width: 0
+                }
+            }, 
+            // Nivel 5
+            {
+                type: 'rect',
+                xref: 'paper',
+                x0: 0,
+                y0: min5,
+                x1: 1,
+                y1: max5,
+                fillcolor: 'rgb(143, 63, 151)',
+                opacity: 0.3,
+                line: {
+                    width: 0
+                }
+            }, 
+        ];
+        
+        return shapes
+    }
+
 
     const [graphData, setGraphData] = useState([]);
+    const [gas, setGas] = useState(null);
 
     let colors = ['red', 'green', 'blue', 'orange']; // Opciones de color de las líneas
 
@@ -279,12 +304,13 @@ function Compara() {
         let graph = [];
         if (data) {
             for (let i = 0; i < data.length; i++) {
-                console.log(filterData.current[i]["ubic"].value)
-                console.log(sensores)
+                // console.log(filterData.current[i]["ubic"].value)
+                // console.log(sensores)
                 let ubicacion = sensores.find(sensor => sensor.sensor_id === filterData.current[i]["ubic"].value).zona;
                 let gas = filterData.current[i]["ind"] == "PM25" ? "PM2.5" : filterData.current[i]["ind"];
+                setGas(gas);
 
-                console.log(ubicacion)
+                // console.log(ubicacion)
 
                 data[i].name = `${ubicacion} (${gas})`; 
                 data[i].type = "scatter";
@@ -332,7 +358,7 @@ function Compara() {
                 <div class="grafico-compara mt-5">
                     <Plot
                         data={graphData}
-                        layout={ data ? {...graphLayout, shapes: shapes} : {...graphLayout}}
+                        layout={ data ? {...graphLayout, shapes: getShapes()} : {...graphLayout}}
                     />
                 </div>
             </Col>
