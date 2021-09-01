@@ -147,7 +147,7 @@ function Grafica({ setDesde, setHasta, data, layout, summary }) {
                                 <Col sm={4}
                                 className="d-flex align-items-center justify-content-center">
                                     {/* <p className="numero mala text-center">{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p> */}
-                                    <p className={`numero text-center ${summary.porcentajes.arribaLimite == 0 ? "bueno" : summary.porcentajes.arribaLimite > 25 ? "muymala" : "mala"}`}>{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p>
+                                    <p className={`numero text-center ${summary ? (summary.porcentajes.arribaLimite == 0 ? "bueno" : summary.porcentajes.arribaLimite > 25 ? "muymala" : "mala") : null}`}>{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p>
                                 </Col>
                             </Row>
                         </Col>
