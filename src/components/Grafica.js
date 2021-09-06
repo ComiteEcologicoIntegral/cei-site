@@ -142,7 +142,7 @@ function Grafica({ setDesde, setHasta, data, layout, summary }) {
                             <Row className="dato-calculado">
                                 <Col sm={8}
                                 className="d-flex align-items-center justify-content-center">
-                                    <p className="tipo text-center">Datos Arriba de límite</p>
+                                    <p className="tipo text-center">Datos arriba de límite de la norma</p>
                                 </Col>
                                 <Col sm={4}
                                 className="d-flex align-items-center justify-content-center">
