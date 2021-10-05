@@ -23,6 +23,8 @@ function Registro() {
     //const [indi, setIndi] = useState('PM25');
     const [desde, setDesde] = useState(null);
     const [hasta, setHasta] = useState(null);
+    const [desdeHora, setDesdeHora] = useState('00:00:00');
+    const [hastaHora, setHastaHora] = useState('00:00:00');
     const ind = useRef({ value: 'PM25' });
     const ubic = useRef(null);
     const syst = useRef(null);
@@ -44,6 +46,9 @@ function Registro() {
                             });
                         }
                         json.plot.data[0].x = fechasArray
+
+                        console.log(json.plot)
+                        console.log(json.summary)
                         setData(json.plot);
                         setSummaryData(json.summary);
                         setLoading(false);
@@ -89,10 +94,11 @@ function Registro() {
 
         let queryStr = `location=${ubic.current.label}&gas=${
             ind.current.value
-        }&system=${syst.current.opt}&start_date=${moment.utc(desde).format('MM/DD/YYYY')}&end_date=${moment
+        }&system=${syst.current.opt}&start_date=${moment.utc(desde).format('MM/DD/YYYY')}${'/'}${desdeHora}&end_date=${moment
             .utc(hasta)
-            .format('MM/DD/YYYY')}`;
-
+            .format('MM/DD/YYYY')}${'/'}${hastaHora}`;
+        
+        console.log(queryStr)
         //setIndi(ind.current.value);
         setQ(queryStr);
     }
@@ -218,6 +224,8 @@ function Registro() {
                 <Grafica
                     setDesde={setDesde}
                     setHasta={setHasta}
+                    setDesdeHora={setDesdeHora}
+                    setHastaHora={setHastaHora}
                     downloadFile={downloadFile}
                     summary={summaryData}
                     {...data}
