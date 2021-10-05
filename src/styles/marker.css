@@ -20,6 +20,7 @@
 .rt-data-row > div {
     width: 12ch;
     border-color: transparent;
+    columns: 3;
 }
 
 .leaflet-container {
@@ -58,27 +59,27 @@
 }
 
 .marker-0 {
-    background-color: var(--color-buena-b);
+    background-color: var(--color-buena);
     color: var(--color-buena-d);
 }
 
 .marker-1 {
-    background-color: var(--color-acept-b);
+    background-color: var(--color-acept);
     color: var(--color-acept-d);
 }
 
 .marker-2 {
-    background-color: var(--color-mala-b);
+    background-color: var(--color-mala);
     color: var(--color-mala-d);
 }
 
 .marker-3 {
-    background-color: var(--color-muymala-b);
+    background-color: var(--color-muymala);
     color: var(--color-muymala-d);
 }
 
 .marker-4 {
-    background-color: var(--color-extmala-b);
+    background-color: var(--color-extmala);
     color: var(--color-extmala-d);
 }
 
