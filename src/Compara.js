@@ -49,6 +49,7 @@ function Compara() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
 
+
     // Esta función es llamada por los cada componente hijo (CompraFiltros) cuando se modifican los valores seleccionados
     // Todos los valores de los filtros se guardan en un solo arreglo 
     function modifyData(data, index) {
@@ -88,8 +89,8 @@ function Compara() {
                 // Unir con comas
                 ubicaciones += filterData.current[i]["ubic"].value + ",";
                 gases += filterData.current[i]["ind"] + ",";
-                fechas_inicio += filterData.current[i]["desde"] + ",";
-                fechas_fin += filterData.current[i]["hasta"] + ",";
+                fechas_inicio += filterData.current[i]["desde"] + "/" + filterData.current[i]["desdeHora"] + ",";
+                fechas_fin += filterData.current[i]["hasta"] + "/" + filterData.current[i]["hastaHora"] + ",";
             }
         }
 
@@ -116,6 +117,8 @@ function Compara() {
         createGraph();
     }, [data])
 
+    const [limiteOMS, setLimiteOMS] = useState(null);
+
     let graphLayout = {
         title: {
             text: 'Compara datos',
@@ -123,12 +126,28 @@ function Compara() {
         showlegend: true,
         hovermode: 'closest',
         width: 1000,
-        height: 700,
+        height: 700
     };
 
-    let getShapes = () => {
-        console.log(gas)
+    let getAnnotations = () => [
+        {
+            xref: 'paper',
+            x: 1.01,
+            y: (limiteOMS),
+            xanchor: 'left',
+            yanchor: 'middle',
+            text: 'Límite recomendado <br>por la OMS 24h',
+            showarrow: false,
+            font: {
+                family: 'Arial',
+                size: 12,
+                color: 'white'
+            },
+            bgcolor: '#4682b4',
+        }
+    ];
 
+    let getShapes = () => {
         let min1, max1, min2, max2, min3, max3, min4, max4, min5, max5;
 
         switch(gas) {
@@ -288,7 +307,20 @@ function Compara() {
                 line: {
                     width: 0
                 }
-            }, 
+            },
+            {
+                type: 'line',
+                xref: 'paper',
+                x0: 0,
+                y0: limiteOMS,
+                x1: 1,
+                y1: limiteOMS,
+                line:{
+                    color: '#4682b4',
+                    width: 2,
+                    dash:'dash'
+                }
+            } 
         ];
         
         return shapes
@@ -311,13 +343,33 @@ function Compara() {
                 setGas(gas);
 
                 // console.log(ubicacion)
+                switch(gas) {
+                    case 'PM2.5':
+                        setLimiteOMS(15);
+                        break;
+                    case 'PM10':
+                        setLimiteOMS(45);
+                        break;
+                    case 'O3':
+                        setLimiteOMS(0.051);
+                        break;
+                    case 'NO2':
+                        setLimiteOMS(0.013);
+                        break;
+                    case 'SO2':
+                        setLimiteOMS(0.015);
+                        break;
+                    default:
+                        setLimiteOMS(null);
+                        break;
+                }
 
                 data[i].name = `${ubicacion} (${gas})`; 
                 data[i].type = "scatter";
                 data[i].mode = "lines";
                 data[i].marker = { color: colors[i] };
                 
-                data[i].text = data[i].dia.map(function(d) { return moment.utc(new Date(d)).local() } );
+                data[i].text = data[i].dia.map(function(d) { return moment.utc(new Date(d)).format('DD-MM-YYYY HH:mm:ss') } );
 
                 data[i].hovertemplate = '<i>Medida</i>: %{y:.4f}' +'<br><b>%{text}</b>'; // Tooltip
 
@@ -326,6 +378,7 @@ function Compara() {
 
             setGraphData(graph);
         }
+
     }
     
     return (
@@ -358,7 +411,7 @@ function Compara() {
                 <div class="grafico-compara mt-5">
                     <Plot
                         data={graphData}
-                        layout={ data ? {...graphLayout, shapes: getShapes()} : {...graphLayout}}
+                        layout={ data ? {...graphLayout, shapes: getShapes(), annotations: getAnnotations()} : {...graphLayout}}
                     />
                 </div>
             </Col>

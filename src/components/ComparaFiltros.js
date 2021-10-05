@@ -16,6 +16,8 @@ const ComparaFiltros = (props) => {
     const ind = useRef(indicadores[0].value);
     const desde = useRef(null);
     const hasta = useRef(null);
+    const desdeHora = useRef('00:00:00');
+    const hastaHora = useRef('00:00:00');
 
     useEffect(() => {
         system === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores)
@@ -39,7 +41,9 @@ const ComparaFiltros = (props) => {
             ubic: ubic.current,
             ind: ind.current,
             desde: desde.current,
-            hasta: hasta.current
+            hasta: hasta.current,
+            desdeHora: desdeHora.current,
+            hastaHora: hastaHora.current
         }
         // console.log(ubic.current)
         props.modifyData(formData, id.current);
@@ -105,6 +109,18 @@ const ComparaFiltros = (props) => {
                                         </Form.Control>
                                         </Col>
                                     </Row>
+                                    <Row>
+                                        <Col sm={3}></Col>
+                                        <Col sm={9}>
+                                            <Form.Control 
+                                            onChange={(event) => {
+                                                desdeHora.current = event.target.value + ':00';
+                                                updateData()
+                                            }}
+                                            type="time">
+                                            </Form.Control>
+                                        </Col>
+                                    </Row>
                                 </Col>
                                 <Col sm={6}>
                                     <Row>
@@ -119,6 +135,17 @@ const ComparaFiltros = (props) => {
                                             hasta.current = event.target.value;
                                             updateData()}}>
                                         </Form.Control>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col sm={3}></Col>
+                                        <Col sm={9}>
+                                            <Form.Control
+                                            onChange={(event) => {
+                                                hastaHora.current = event.target.value + ':00';
+                                                updateData()
+                                            }}                                            
+                                            type="time"></Form.Control>
                                         </Col>
                                     </Row>
                                 </Col>
