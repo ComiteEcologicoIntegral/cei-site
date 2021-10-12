@@ -8,7 +8,7 @@ import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
 import Plot from 'react-plotly.js';
-
+import sma from 'sma';
 
 function Compara() {
 
@@ -107,6 +107,7 @@ function Compara() {
         fetch(`${apiUrl}/compare?${query}`)
             .then((response) => response.json())
             .then((json) => {
+                console.log(json)
                 setLoading(false);
                 setData(json)
             });
@@ -331,9 +332,12 @@ function Compara() {
     const [gas, setGas] = useState(null);
 
     let colors = ['red', 'green', 'blue', 'orange']; // Opciones de color de las líneas
+    let colors2 = ['purple', 'pink', 'black', 'cyan']; // Opciones de color de las líneas
+    let colors3 = ['orange', 'brown', 'grey', 'maroon']; // Opciones de color de las líneas
 
     function createGraph() {
         let graph = [];
+        // console.log(data)
         if (data) {
             for (let i = 0; i < data.length; i++) {
                 // console.log(filterData.current[i]["ubic"].value)
@@ -342,7 +346,6 @@ function Compara() {
                 let gas = filterData.current[i]["ind"] == "PM25" ? "PM2.5" : filterData.current[i]["ind"];
                 setGas(gas);
 
-                // console.log(ubicacion)
                 switch(gas) {
                     case 'PM2.5':
                         setLimiteOMS(15);
@@ -374,6 +377,50 @@ function Compara() {
                 data[i].hovertemplate = '<i>Medida</i>: %{y:.4f}' +'<br><b>%{text}</b>'; // Tooltip
 
                 graph.push(data[i]);
+
+                if(gas == 'PM2.5' || gas == 'PM10') {
+                    // Agregar promedio movil 24h
+                    const dataPromMovil = { ...data[i] }
+                    dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 24h`
+                    dataPromMovil.marker = { color: colors2[i] }
+                    // for(let i=0;i<23;i++) {
+                    //     moving_average.unshift(null)
+                    // }
+                    dataPromMovil.y = dataPromMovil.moving_average;
+                    graph.push(dataPromMovil)
+                    
+                    // Agregar Indice aire y salud
+                    const dataICAR = { ...data[i] }
+                    dataICAR.name = `${ubicacion} (${gas}) Indice Aire y Salud`
+                    dataICAR.marker = { color: colors3[i] }
+                    // for(let i=0;i<23;i++) {
+                    //     moving_average.unshift(null)
+                    // }
+                    dataICAR.y = dataICAR.ICAR;
+                    graph.push(dataICAR)
+
+                } else if (gas == 'SO2') {
+                    // Agregar promedio movil 24h
+                    const dataPromMovil = { ...data[i] }
+                    dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 24h`
+                    dataPromMovil.marker = { color: colors2[i] }
+                    // for(let i=0;i<23;i++) {
+                    //     moving_average.unshift(null)
+                    // }
+                    dataPromMovil.y = dataPromMovil.moving_average;
+                    graph.push(dataPromMovil)
+                    
+                } else if (gas == 'CO') {
+                    // Agregar promedio movil 8h
+                    const dataPromMovil = { ...data[i] }
+                    dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 8h`
+                    dataPromMovil.marker = { color: colors2[i] }
+                    // for(let i=0;i<7;i++) {
+                    //     moving_average.unshift(null)
+                    // }
+                    dataPromMovil.y = dataPromMovil.moving_average;
+                    graph.push(dataPromMovil)
+                }
             }
 
             setGraphData(graph);
