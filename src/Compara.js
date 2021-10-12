@@ -8,7 +8,6 @@ import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
 import Plot from 'react-plotly.js';
-import sma from 'sma';
 
 function Compara() {
 
