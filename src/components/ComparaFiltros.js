@@ -1,7 +1,7 @@
 import React, {useRef, useImperativeHandle, useMemo, useState, useEffect} from 'react'
 import { Form, Button, Col, Row } from 'react-bootstrap'
 import Select from 'react-select';
-import { systemOptions, indicadores } from '../constants';
+import { systemOptions, indicadores, idBlacklistpriv } from '../constants';
 
 // Componente para la página de Compara Datos
 const ComparaFiltros = (props) => {
@@ -27,7 +27,8 @@ const ComparaFiltros = (props) => {
         return sensores
             .filter(
                 (sensor) =>
-                    sensor.sistema === system
+                    sensor.sistema === system &&
+                    !idBlacklistpriv.includes(sensor.Sistema)
             )
             .map((record) => ({
                 value: record.sensor_id,

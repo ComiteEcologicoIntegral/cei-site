@@ -51,8 +51,31 @@ export const unidad = {
     NO2: 'ppm',
     SO2: 'ppm',
 };
+export const idBlacklist = [
+    'P36757',
+    'P47305',
+    'P39499',
+    'P46239',
+    'P50855',
+    'P35099',
+    'P39709',
+    'P39497',
+    'P39285',
+    'P39355',
+    'P37643'
 
-export const mapBlacklist = ['Sinaica'];
+
+];
+export const idBlacklistpriv = [
+    'P39497',
+    'P39285',
+    'P39355'
+
+];
+export const mapBlacklist = [
+    'Sinaica', 
+
+];
 
 export const apiUrl =
     process.env.NODE_ENV === 'production'

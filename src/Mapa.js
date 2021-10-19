@@ -4,7 +4,7 @@ import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
 
-import { gases, mapBlacklist } from "./constants.js";
+import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 import { Spinner, OverlayTrigger, Popover, Button } from "react-bootstrap";
@@ -46,7 +46,8 @@ function Mapa() {
       (sensor) =>
         typeof sensor.Longitud === "number" &&
         typeof sensor.Latitud === "number" &&
-        !mapBlacklist.includes(sensor.Sistema)
+        !mapBlacklist.includes(sensor.Sistema)&&
+        !idBlacklist.includes(sensor.Sensor_id)
     );
 
     const resultingData = filteredSensors.map((data) => {
@@ -106,8 +107,7 @@ function Mapa() {
     });
 
     setAirQualityIndex(highestAirQualityIndex);
-    
-    return resultingData;
+        return resultingData;
   }, [sensorData, currentGas, setAirQualityIndex]);
 
   return (

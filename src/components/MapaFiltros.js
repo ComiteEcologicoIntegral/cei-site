@@ -11,7 +11,7 @@ import {
 import { BsInfoCircle } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
-import { indicadores } from '../constants'
+import { indicadores, mapBlacklist, idBlacklist, idBlacklistpriv } from '../constants'
 
 const systemOptions = [
     {value: "PurpleAir", label: 'PurpleAir', opt: 'P'},
@@ -36,7 +36,9 @@ const MapaFiltros = ({ onApply }) => {
                 (sensor) =>
                     typeof sensor.Longitud === 'number' &&
                     typeof sensor.Latitud === 'number' && 
-                    sensor.Sistema === systemChosen.label
+                    sensor.Sistema === systemChosen.label &&
+                    !idBlacklist.includes(sensor.Sensor_id) &&
+                    !idBlacklistpriv.includes(sensor.Sensor_id)
             )
             .map((record) => ({
                 value: record.Sensor_id,
@@ -57,6 +59,8 @@ const MapaFiltros = ({ onApply }) => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+   
+
 
     return (
         <div className="container mt-5">
