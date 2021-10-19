@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import { fetchSummaryData } from '../handlers/data';
 import { setSensorData } from '../redux/reducers';
-import { indicadores } from '../constants'
+import { indicadores, mapBlacklist, idBlacklistpriv  } from '../constants'
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
@@ -75,7 +75,8 @@ function RHFiltros({
     // Crear valores para el dropdown:
     if (sensRaw) {
         sensRaw.forEach((element) => {
-            if(system.value === element.Sistema) {
+            if(system.value === element.Sistema &&
+               !idBlacklistpriv.includes(element.Sensor_id)) {
                 sensores.push({ value: element.Sensor_id, label: element.Zona });
             }
         });
@@ -151,7 +152,7 @@ function RHFiltros({
                                 indicador.current = value;
                             }}
                             defaultValue={indicadores[0]}
-                        />
+                        />  
                     </Col>
                     <Col xs={12} sm={3} className="mb-3">
                         <Button
