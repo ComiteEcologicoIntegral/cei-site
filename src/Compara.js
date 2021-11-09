@@ -86,7 +86,7 @@ function Compara() {
                 return;
             } else {
                 // Unir con comas
-                ubicaciones += filterData.current[i]["ubic"].value + ",";
+                ubicaciones += filterData.current[i]["ubic"].label + ",";
                 gases += filterData.current[i]["ind"] + ",";
                 fechas_inicio += filterData.current[i]["desde"] + "/" + filterData.current[i]["desdeHora"] + ",";
                 fechas_fin += filterData.current[i]["hasta"] + "/" + filterData.current[i]["hastaHora"] + ",";
