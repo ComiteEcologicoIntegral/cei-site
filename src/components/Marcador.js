@@ -12,7 +12,7 @@ import 'leaflet/dist/leaflet.css';
 import { Link } from 'react-router-dom';
 
 import { Marker, Popup } from 'react-leaflet';
-import { Button } from 'react-bootstrap';
+import { Button,Form,Row,Col, Container } from 'react-bootstrap';
 import moment from 'moment';
 
 
@@ -87,6 +87,7 @@ function Marcador({
     if (!icon) return null;
 
     return (
+        
         <Marker position={position} icon={icon} {...props}>
             <Popup
                 ref={popupRef}
@@ -100,6 +101,7 @@ function Marcador({
                     ></button>
                 )}
             >
+                
                 <div className="px-3 py-2">
                     <div
                         className={`rounded marker-${current.status}`}
@@ -111,11 +113,14 @@ function Marcador({
                     >
                         {current.indicator}: {current.label} {current.units}
                     </div>
+                 
                     <div className="data-label">
                         <small className="text-muted">Ubicación</small>
                         <br />
-                        <data>{locationStr}</data>
+                        <data>{locationStr}</data>     
                     </div>
+                   
+                   
                     <div className="data-label">
                         <small className="text-muted">
                             Última actualización
@@ -130,29 +135,47 @@ function Marcador({
                     <div className="data-label">
                         <small className="text-muted">Tiempo Real</small>
                     </div>
-                    <div>
+                    
+                    <Form >
                         {labels.map(({ label, status, value, units }, idx) => (
-                            <div
+                           
+                            <Form.Row 
+    
                                 key={idx}
-                                className="d-flex justify-content-between rt-data-row mb-1"
+                                className="d-flex justify-content-between  mb-1 "
                             >
+                                <Col xs = {3}>
                                 <Link
                                     to={{
                                         pathname: 'registro',
                                         search: `?gas=${label}`,
                                     }}
+                                    
                                 >
                                     {label}
                                 </Link>
-                                <div
-                                    className={`d-inline-flex justify-content-between px-1 rounded marker-${status}`}
-                                >
+                                </Col>
+                                <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={5}>
+                               
+                                
                                     <span>{value}</span>
                                     <span>{units}</span>
-                                </div>
-                            </div>
+                                
+                               
+                                </Col>
+                                <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={3}>
+                               
+                                
+                               <span>{"value"}</span>
+                               
+                           
+                          
+                           </Col>
+                                </Form.Row>
+                               
+                           
                         ))}
-                    </div>
+                    </Form>
                 </div>
 
                 <div className="py-2 px-3 border-top text-center">
