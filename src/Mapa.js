@@ -7,6 +7,7 @@ import Wrapper from "./components/WrapperMapa.js";
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
+import { apiUrl } from './constants';
 import { Spinner, OverlayTrigger, Popover, Button } from "react-bootstrap";
 import moment from "moment";
 
@@ -50,6 +51,23 @@ function Mapa() {
         !idBlacklist.includes(sensor.Sensor_id)
     );
 
+    console.log(filteredSensors)
+
+    // let sensores = ''
+    // console.log(filteredSensors);
+    // filteredSensors.forEach(sensor => {
+    //   sensores += sensor.Sensor_id + ',';
+    // });
+    // sensores = sensores.slice(0, -1);
+
+    // fetch(`${apiUrl}/get_air_indeces?locations=` + sensores)
+    // .then(res => res.json())
+    // .then(data => {
+    //   console.log(data)
+    //   console.log(sensores);
+
+    // })
+
     const resultingData = filteredSensors.map((data) => {
       const { name: gasName, units: gasUnits } = currentGas;
 
@@ -68,6 +86,7 @@ function Mapa() {
       }
 
       return {
+        ICAR: +data.ICAR,
         position: [data.Latitud, data.Longitud],
         current: {
           indicator: currentGas.label ? currentGas.label : gasName,
@@ -107,7 +126,7 @@ function Mapa() {
     });
 
     setAirQualityIndex(highestAirQualityIndex);
-        return resultingData;
+    return resultingData;
   }, [sensorData, currentGas, setAirQualityIndex]);
 
   return (

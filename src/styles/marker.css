@@ -16,6 +16,12 @@
     padding: 5px 0;
 }
 
+.data-label2 {
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
 /* Etiqueta del valor del indicador */
 .rt-data-row > div {
     width: 12ch;
