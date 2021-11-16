@@ -47,6 +47,7 @@ const renderMarker = (label, status, shape = 'round') => {
  * @augments {Component<Props, State>}
  */
 function Marcador({
+    ICAR,
     label,
     status,
     position,
@@ -132,8 +133,9 @@ function Marcador({
                             )}
                         </time>
                     </div>
-                    <div className="data-label">
+                    <div className="data-label2">
                         <small className="text-muted">Tiempo Real</small>
+                        <small className="text-muted ml-5">Indice Calidad Aire</small>
                     </div>
                     
                     <Form >
@@ -165,10 +167,18 @@ function Marcador({
                                 </Col>
                                 <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={3}>
                                
-                                
-                               <span>{"value"}</span>
-                               
-                           
+                               {
+                                    label === 'PM2.5' ?
+                                    ICAR == '-1.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    ICAR == '0.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    <span>{ICAR.toFixed(2)}</span>
+                                    :
+                                    <span>{'ND'}</span>
+                               } 
                           
                            </Col>
                                 </Form.Row>
