@@ -7,7 +7,7 @@ import Wrapper from "./components/WrapperMapa.js";
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
-import { apiUrl } from './constants';
+import { apiUrl } from "./constants";
 import { Spinner, OverlayTrigger, Popover, Button } from "react-bootstrap";
 import moment from "moment";
 
@@ -25,6 +25,7 @@ function Mapa() {
     error: errorSensorData,
   } = useSensorData({});
 
+  const [rerender, setRerender] = useState(false);
   const [map, setMap] = useState(null);
   const [airQualityIndex, setAirQualityIndex] = useState(0);
 
@@ -40,18 +41,55 @@ function Mapa() {
     [map]
   );
 
-  const markers = useMemo(() => {
-    let highestAirQualityIndex = 0;
+  const getWorstAirQualityIndex = useMemo(
+    (data) => {
+      if (sensorData == null) {
+        console.log("No data yet");
+        return 0;
+      }
 
+      let highestAirQualityIndex = 0;
+
+      const filteredSensors = sensorData.filter(
+        (sensor) =>
+          typeof sensor.Longitud === "number" &&
+          typeof sensor.Latitud === "number" &&
+          !mapBlacklist.includes(sensor.Sistema) &&
+          !idBlacklist.includes(sensor.Sensor_id)
+      );
+
+      const resultingData = filteredSensors.map((data) => {
+        const { name: gasName, units: gasUnits } = currentGas;
+
+        let preValue =
+          gasName === "PM25"
+            ? data.Sistema === "PurpleAir"
+              ? data["PM25_Promedio"]
+              : data[gasName]
+            : data[gasName];
+
+        const value = typeof preValue === "number" ? preValue : "ND";
+
+        const gasStatus = getStatus(gasName, value);
+        if (gasStatus > highestAirQualityIndex) {
+          highestAirQualityIndex = gasStatus;
+        }
+      });
+
+      console.log(highestAirQualityIndex);
+      setAirQualityIndex(highestAirQualityIndex);
+    },
+    []
+  );
+
+  const markers = useMemo(() => {
     const filteredSensors = sensorData.filter(
       (sensor) =>
         typeof sensor.Longitud === "number" &&
         typeof sensor.Latitud === "number" &&
-        !mapBlacklist.includes(sensor.Sistema)&&
+        !mapBlacklist.includes(sensor.Sistema) &&
         !idBlacklist.includes(sensor.Sensor_id)
     );
-
-    console.log(filteredSensors)
 
     // let sensores = ''
     // console.log(filteredSensors);
@@ -79,11 +117,6 @@ function Mapa() {
           : data[gasName];
 
       const value = typeof preValue === "number" ? preValue : "ND";
-
-      const gasStatus = getStatus(gasName, value);
-      if (gasStatus > highestAirQualityIndex) {
-        highestAirQualityIndex = gasStatus;
-      }
 
       return {
         ICAR: +data.ICAR,
@@ -125,9 +158,8 @@ function Mapa() {
       };
     });
 
-    setAirQualityIndex(highestAirQualityIndex);
     return resultingData;
-  }, [sensorData, currentGas, setAirQualityIndex]);
+  }, [sensorData, currentGas]);
 
   return (
     <div>
@@ -236,7 +268,7 @@ function Mapa() {
         </div>
         <Wrapper whenCreated={setMap} {...mapDefaultProps}>
           {!loadingSensorData &&
-            markers.map((markerProps, idx) => {
+            markers.map((markerProps, idx) => { 
               return (
                 <Marcador
                   map={map}
