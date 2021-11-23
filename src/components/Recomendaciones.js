@@ -7,7 +7,7 @@ const Recomendaciones = (props) => {
                 <h3>Concentración horaria</h3>
                 <p>Conoce las recomendaciones según el índice de calidad del aire</p>
             </div>
-            <Tab.Container fill defaultActiveKey={props.selected ?? "buena"} className="recomendaciones h-100">
+            <Tab.Container fill activeKey={props.selected ?? "buena"} className="recomendaciones h-100">
                 <Nav fill>
                     <Nav.Item>
                     <NavLink eventKey="buena" className="nav-buena">Buena</NavLink>
