@@ -25,9 +25,7 @@ function Mapa() {
     error: errorSensorData,
   } = useSensorData({});
 
-  const [rerender, setRerender] = useState(false);
   const [map, setMap] = useState(null);
-  const [airQualityIndex, setAirQualityIndex] = useState(0);
 
   const setCenter = useCallback(
     (pos) => {
@@ -41,8 +39,8 @@ function Mapa() {
     [map]
   );
 
-  const getWorstAirQualityIndex = useMemo(
-    (data) => {
+  const airQualityIndex = useMemo(
+    () => {
       if (sensorData == null) {
         console.log("No data yet");
         return 0;
@@ -58,7 +56,7 @@ function Mapa() {
           !idBlacklist.includes(sensor.Sensor_id)
       );
 
-      const resultingData = filteredSensors.map((data) => {
+      filteredSensors.map((data) => {
         const { name: gasName, units: gasUnits } = currentGas;
 
         let preValue =
@@ -76,10 +74,9 @@ function Mapa() {
         }
       });
 
-      console.log(highestAirQualityIndex);
-      setAirQualityIndex(highestAirQualityIndex);
-    },
-    []
+      return highestAirQualityIndex;
+    },  
+    [sensorData]
   );
 
   const markers = useMemo(() => {
