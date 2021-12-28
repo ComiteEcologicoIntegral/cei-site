@@ -4,7 +4,7 @@ import { Col, Row } from 'react-bootstrap';
 import { v4 } from 'uuid';
 
 // Componente para el calendario en la página de Registro Histórico
-const DatePicker = ({value, onChange}) => {
+const DatePicker = ({ value, onChange }) => {
     /* 
         Se siguió este tutorial : https://youtu.be/5jRrVqRWqsM
 
@@ -12,15 +12,15 @@ const DatePicker = ({value, onChange}) => {
             - value: día seleccionado
             - onChange: función para cambiar el State de value
     */
-   
+
     const [calendar, setCalendar] = useState([]);
 
     // build calendar
 
     useEffect(() => {
-         setCalendar(buildCalendar(value));
+        setCalendar(buildCalendar(value));
     }, [value]);
-    
+
     function isSelected(day) {
         return value.isSame(day, "day");
     }
@@ -66,46 +66,46 @@ const DatePicker = ({value, onChange}) => {
     }
 
     function isFirstMonthRegistered() {
-        return value.isSame(new Date("01-01-2018"), "month") 
+        return value.isSame(new Date("01-01-2018"), "month")
     }
 
     return (
         <div className="calendar mt-5">
             <div className="cal-header">
-            <Row>
-                <Col sm={3} className="previous" onClick={() => !isFirstMonthRegistered() && onChange(prevMonth)}>
-                    {!isFirstMonthRegistered() ? String.fromCharCode(171) : null}
-                </Col>
-                <Col sm={6} className="current">
-                    {currMonthName()}, {currYear()}
-                </Col>
-                <Col  sm={3} className="next" onClick={() => !currMonth() && onChange(nextMonth)}>
-                    {!currMonth() ? String.fromCharCode(187) : null}
-                </Col>
-            </Row>
+                <Row>
+                    <Col sm={3} className="previous" onClick={() => !isFirstMonthRegistered() && onChange(prevMonth)}>
+                        {!isFirstMonthRegistered() ? String.fromCharCode(171) : null}
+                    </Col>
+                    <Col sm={6} className="current">
+                        {currMonthName()}, {currYear()}
+                    </Col>
+                    <Col sm={3} className="next" onClick={() => !currMonth() && onChange(nextMonth)}>
+                        {!currMonth() ? String.fromCharCode(187) : null}
+                    </Col>
+                </Row>
             </div>
             <div className="body">
                 <div className="day-names">
                     {
-                        ["D", "L", "M" , "M" , "J", "V" , "S"].map((d,i) => 
-                                <div className="weekday" key={i}>{d}</div>
-                            )
-                    }
-                </div>
-                { 
-                calendar.map((week, w) => 
-                <div key={w}>
-                    {
-                        week.map((day, i) => <div className="day"
-                            onClick={() => !afterToday(day) && onChange(day)}>
-                            <div className={dayStyles(day)} key={v4()}>
-                                { day.format("D") }
-                            </div>
-                            </div>
+                        ["D", "L", "M", "M", "J", "V", "S"].map((d, i) =>
+                            <div className="weekday" key={i}>{d}</div>
                         )
                     }
-                    
-                </div>) 
+                </div>
+                {
+                    calendar.map((week, w) =>
+                        <div key={w}>
+                            {
+                                week.map((day, i) => <div className="day"
+                                    onClick={() => !afterToday(day) && onChange(day)}>
+                                    <div className={dayStyles(day)} key={v4()}>
+                                        {day.format("D")}
+                                    </div>
+                                </div>
+                                )
+                            }
+
+                        </div>)
                 }
             </div>
         </div>
