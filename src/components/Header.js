@@ -24,10 +24,10 @@ const Header = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
-                <NavLink  onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" exact to="/">Mapa</NavLink>
-                <NavLink  onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/registro">Registro histórico</NavLink>
-                <NavLink  onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/compara">Compara datos</NavLink>
-                <NavLink  onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/">Acerca de</NavLink>
+                    <NavLink onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" exact to="/">Mapa</NavLink>
+                    <NavLink onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/registro">Registro histórico</NavLink>
+                    <NavLink onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/compara">Compara datos</NavLink>
+                    <NavLink onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/">Acerca de</NavLink>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

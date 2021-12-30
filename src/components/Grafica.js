@@ -33,8 +33,8 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
 
                             <Col xs={5}>
                                 <Form.Control
-                                onChange={(event) => setDesdeHora(event.target.value + ':00')}                                
-                                type="time"></Form.Control>
+                                    onChange={(event) => setDesdeHora(event.target.value + ':00')}
+                                    type="time"></Form.Control>
                             </Col>
                         </Row>
                     </Col>
@@ -58,8 +58,8 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
 
                             <Col xs={5}>
                                 <Form.Control
-                                onChange={(event) => setHastaHora(event.target.value + ':00')}        
-                                type="time"></Form.Control>
+                                    onChange={(event) => setHastaHora(event.target.value + ':00')}
+                                    type="time"></Form.Control>
                             </Col>
                         </Row>
                     </Col>
@@ -131,11 +131,11 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                         <Col xs={6} sm={5} lg={12}>
                             <Row className="dato-calculado d-flex align-items-center justify-content-center">
                                 <Row sm={12}
-                                className="d-flex align-items-center justify-content-center">
+                                    className="d-flex align-items-center justify-content-center">
                                     <p className="tipo text-center">Arriba de la norma</p>
                                 </Row>
                                 <Row sm={12}
-                                className="d-flex align-items-center justify-content-center">
+                                    className="d-flex align-items-center justify-content-center">
                                     {/* <p className="numero mala text-center">{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p> */}
                                     <p className={`numero text-center ${summary ? (summary.porcentajes.arribaLimite == 0 ? "bueno" : summary.porcentajes.arribaLimite > 25 ? "muymala" : "mala") : null}`}>{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p>
                                 </Row>
@@ -144,12 +144,12 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                         <Col xs={12} sm={5} lg={12}>
                             <Row className="dato-calculado">
                                 <Col xs={6} sm={6}
-                                className="d-flex flex-column align-items-center justify-content-center">
+                                    className="d-flex flex-column align-items-center justify-content-center">
                                     <p className="tipo text-center">Datos Válidos</p>
                                     <p className="numero bueno text-center">{summary ? summary.porcentajes.buenos + '%' : '-'}</p>
                                 </Col>
                                 <Col xs={6} sm={6}
-                                className="d-flex flex-column align-items-center justify-content-center">
+                                    className="d-flex flex-column align-items-center justify-content-center">
                                     <p className="tipo text-center">Datos Nulos</p>
                                     <p className="numero muymala text-center">{summary ? summary.porcentajes.nulos + '%' : '-'}</p>
                                 </Col>
@@ -160,7 +160,7 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
 
                 <Col sm={12} lg={8} xl={10}>
                     <div className="grafico mb-4">
-                        <Plot className="grafico-resize" data={data} layout={layout} config={{responsive: true}} />
+                        <Plot className="grafico-resize" data={data} layout={layout} config={{ responsive: true }} />
                     </div>
                 </Col>
                 <Row className="d-block d-sm-none w-100" xs={11}>
