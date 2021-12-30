@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Recomendaciones from "./components/Recomendaciones.js";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
@@ -7,7 +7,6 @@ import Wrapper from "./components/WrapperMapa.js";
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
-import { apiUrl } from "./constants";
 import { Spinner, OverlayTrigger, Popover, Button } from "react-bootstrap";
 import moment from "moment";
 
