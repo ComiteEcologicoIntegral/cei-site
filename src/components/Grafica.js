@@ -10,7 +10,8 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
         setDesdeHora('00:00:00')
         setHastaHora('00:00:00')
     }, []);
-
+    console.log("here")
+    console.log(typeof data === "undefined")
     return (
         <div>
             <Form className="mt-4 mb-4">
@@ -161,7 +162,12 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
 
                 <Col sm={12} lg={8} xl={10}>
                     <div className="grafico mb-4">
-                        <Plot className="grafico-resize" data={data} layout={layout} config={{ responsive: true }} />
+                        {data && (
+                            <Plot className="grafico-resize" data={data} layout={layout} config={{ responsive: true }} />
+                        )}
+                        {typeof data == 'undefined' && (
+                            <div>Seleccionar un sensor, contaminante y fechas para ver sus datos</div>
+                        )}
                     </div>
                 </Col>
                 <Row className="d-block d-sm-none w-100" xs={11}>
