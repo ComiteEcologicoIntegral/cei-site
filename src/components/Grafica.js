@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
 
-function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout, summary }) {
+function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout, downloadFile, summary}) {
     useEffect(() => {
         setDesde(null);
         setHasta(null);
@@ -69,7 +69,10 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
             <Row className="mb-5">
                 <Col xs={12} lg={4} xl={2}>
                     <Row xs={12}>
-                        <Button className="btn btn-light mb-4" block>
+                        <Button className="btn btn-light mb-4" block
+                                onClick = {() => {
+                                    downloadFile()
+                                }}>
                             Descargar datos
                         </Button>
                     </Row>
