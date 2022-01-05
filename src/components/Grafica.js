@@ -138,7 +138,7 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                                 </Row>
                                 <Row sm={12}
                                     className="d-flex align-items-center justify-content-center">
-                                    <p className={`numero text-center ${summary ? (summary.porcentajes.arribaLimite == 0 ? "bueno" : summary.porcentajes.arribaLimite > 25 ? "muymala" : "mala") : null}`}>{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p>
+                                    <p className={`numero text-center ${summary ? (summary.porcentajes.arribaLimite === 0 ? "bueno" : summary.porcentajes.arribaLimite > 25 ? "muymala" : "mala") : null}`}>{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p>
                                 </Row>
                             </Row>
                         </Col>

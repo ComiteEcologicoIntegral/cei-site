@@ -109,7 +109,7 @@ function HeatMap({ q, fecha, ubic, ind }) {
             dataItem.x = currDia;
 
             // revisa que sí haya un registro de ese dia checando si coincide el número de día
-            if (currDia == parseInt(dataHM[index]["fecha"].substring(8))) {
+            if (currDia === parseInt(dataHM[index]["fecha"].substring(8))) {
                 if (dataHM[index]["prom"] !== "") {
                     dataItem.y = dataHM[index]["prom"];
                     dataItem.fecha = dataHM[index]["fecha"];

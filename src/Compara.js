@@ -338,7 +338,7 @@ function Compara() {
         if (data) {
             for (let i = 0; i < data.length; i++) {
                 let ubicacion = sensores.find(sensor => sensor.sensor_id === filterData.current[i]["ubic"].value).zona;
-                let gas = filterData.current[i]["ind"] == "PM25" ? "PM2.5" : filterData.current[i]["ind"];
+                let gas = filterData.current[i]["ind"] === "PM25" ? "PM2.5" : filterData.current[i]["ind"];
                 setGas(gas);
 
                 switch(gas) {
@@ -373,7 +373,7 @@ function Compara() {
 
                 graph.push(data[i]);
 
-                if(gas == 'PM2.5' || gas == 'PM10') {
+                if(gas === 'PM2.5' || gas === 'PM10') {
                     // Agregar promedio movil 24h
                     const dataPromMovil = { ...data[i] }
                     dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 24h`
@@ -394,7 +394,7 @@ function Compara() {
                     dataICAR.y = dataICAR.ICAR;
                     graph.push(dataICAR)
 
-                } else if (gas == 'SO2') {
+                } else if (gas === 'SO2') {
                     // Agregar promedio movil 24h
                     const dataPromMovil = { ...data[i] }
                     dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 24h`
@@ -405,7 +405,7 @@ function Compara() {
                     dataPromMovil.y = dataPromMovil.moving_average;
                     graph.push(dataPromMovil)
                     
-                } else if (gas == 'CO') {
+                } else if (gas === 'CO') {
                     // Agregar promedio movil 8h
                     const dataPromMovil = { ...data[i] }
                     dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 8h`

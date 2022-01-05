@@ -168,10 +168,10 @@ function Marcador({
 
                                     {
                                         label === 'PM2.5' ?
-                                            ICAR == '-1.00' ?
+                                            ICAR === '-1.00' ?
                                                 <span>{'ND'}</span>
                                                 :
-                                                ICAR == '0.00' ?
+                                                ICAR === '0.00' ?
                                                     <span>{'ND'}</span>
                                                     :
                                                     <span>{ICAR.toFixed(2)}</span>

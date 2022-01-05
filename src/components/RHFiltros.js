@@ -85,7 +85,7 @@ function RHFiltros({
     // Función general para crear el query
     function createQuery() {
         updateMainFiltros(ubicacion.current, indicador.current, sistema.current); // Actualiza los valores de los filtros en el componente padre
-        if (radioValue == '1') {
+        if (radioValue === '1') {
             createQueryGraph();
         } else {
             createQueryCal();
