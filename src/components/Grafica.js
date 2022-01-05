@@ -10,8 +10,6 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
         setDesdeHora('00:00:00')
         setHastaHora('00:00:00')
     }, []);
-    console.log("here")
-    console.log(typeof data === "undefined")
     return (
         <div>
             <Form className="mt-4 mb-4">
