@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
 import RHFiltros from "./components/RHFiltros";
 import Grafica from "./components/Grafica";
-import Calendario from "./components/Calendario"; // TODO: Lazy load
-import HeatMap from "./components/HeatMap"; // TODO: Lazy load
 import moment from "moment";
 import "moment/locale/es";
 import { apiUrl } from "./constants";
 import { Modal } from "react-bootstrap";
 
 moment.locale("es");
+
+const Calendario = lazy(() => import("./components/Calendario")) 
+const HeatMap  = lazy(() => import("./components/HeatMap"));
 
 function Registro() {
   const [data, setData] = useState(null);
@@ -48,8 +49,6 @@ function Registro() {
             }
             json.plot.data[0].x = fechasArray;
 
-            console.log(json.plot);
-            console.log(json.summary);
             setData(json.plot);
             setSummaryData(json.summary);
             setLoading(false);
@@ -228,21 +227,23 @@ function Registro() {
       )}
       {radioValue === "2" && (
         <>
-          <Calendario
-            q={queryString}
-            create={createQueryCal}
-            data={data}
-            indi={ind.current.value}
-            setDesde={setDesde}
-            setHasta={setHasta}
-            downloadFile={downloadFile}
-          />
-          <HeatMap
-            q={queryString}
-            fecha={desde}
-            ubic={ubicacion.current}
-            ind={ind.current.value}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Calendario
+              q={queryString}
+              create={createQueryCal}
+              data={data}
+              indi={ind.current.value}
+              setDesde={setDesde}
+              setHasta={setHasta}
+              downloadFile={downloadFile}
+            />
+            <HeatMap
+              q={queryString}
+              fecha={desde}
+              ubic={ubicacion.current}
+              ind={ind.current.value}
+            />
+          </Suspense>
         </>
       )}
     </div>
