@@ -106,7 +106,6 @@ function Compara() {
         fetch(`${apiUrl}/compare?${query}`)
             .then((response) => response.json())
             .then((json) => {
-                console.log(json)
                 setLoading(false);
                 setData(json)
             });
@@ -336,11 +335,8 @@ function Compara() {
 
     function createGraph() {
         let graph = [];
-        // console.log(data)
         if (data) {
             for (let i = 0; i < data.length; i++) {
-                // console.log(filterData.current[i]["ubic"].value)
-                // console.log(sensores)
                 let ubicacion = sensores.find(sensor => sensor.sensor_id === filterData.current[i]["ubic"].value).zona;
                 let gas = filterData.current[i]["ind"] == "PM25" ? "PM2.5" : filterData.current[i]["ind"];
                 setGas(gas);

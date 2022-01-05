@@ -117,7 +117,6 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                             <Row className="dato-calculado d-flex align-items-center justify-content-center">
                                 <Row sm={12}>
                                     <p className="tipo text-center">Promedio</p>
-                                    {/* <p className="desc">{summary && summary?.avg.da`Registrado el 00-00-000`}</p> */}
                                 </Row>
                                 <Row
                                     sm={12}
@@ -139,7 +138,6 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                                 </Row>
                                 <Row sm={12}
                                     className="d-flex align-items-center justify-content-center">
-                                    {/* <p className="numero mala text-center">{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p> */}
                                     <p className={`numero text-center ${summary ? (summary.porcentajes.arribaLimite == 0 ? "bueno" : summary.porcentajes.arribaLimite > 25 ? "muymala" : "mala") : null}`}>{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p>
                                 </Row>
                             </Row>

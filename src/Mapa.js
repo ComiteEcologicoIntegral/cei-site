@@ -86,22 +86,7 @@ function Mapa() {
         !mapBlacklist.includes(sensor.Sistema) &&
         !idBlacklist.includes(sensor.Sensor_id)
     );
-
-    // let sensores = ''
-    // console.log(filteredSensors);
-    // filteredSensors.forEach(sensor => {
-    //   sensores += sensor.Sensor_id + ',';
-    // });
-    // sensores = sensores.slice(0, -1);
-
-    // fetch(`${apiUrl}/get_air_indeces?locations=` + sensores)
-    // .then(res => res.json())
-    // .then(data => {
-    //   console.log(data)
-    //   console.log(sensores);
-
-    // })
-
+    
     const resultingData = filteredSensors.map((data) => {
       const { name: gasName, units: gasUnits } = currentGas;
 

@@ -44,21 +44,14 @@ function HeatMap({ q, fecha, ubic, ind }) {
             if (ubic && mes) {
                 // Creamos query, sacando los datos de todo el mes
                 queryStr = 'ubic=';
-
-                // ubic.forEach((element) => {
-                //     queryStr += element.value + ',';
-                // });
-
                 queryStr += ubic.value
 
-                // queryStr = queryStr.slice(0, -1);
                 queryStr +=
                     '&ind=' + ind +
                     '&inicio=' + mes.clone().format("YYYY-MM-DD") +
                     '&fin=' + mes.clone().endOf('month').format('YYYY-MM-DD');
 
 
-                console.log("Query HM: " + queryStr);
                 fetch(`${apiUrl}/prom-data?${queryStr}`)
                     .then(response => response.json())
                     .then((json) => setDataHM(json))
@@ -133,9 +126,6 @@ function HeatMap({ q, fecha, ubic, ind }) {
         }
 
         series.push({ ...seriesItem });
-        // }
-
-        //console.log(series);
 
         options = {
             chart: {
@@ -218,7 +208,6 @@ function HeatMap({ q, fecha, ubic, ind }) {
             }
         };
 
-        //console.log("done");
     }
 
 
