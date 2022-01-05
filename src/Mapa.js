@@ -40,7 +40,7 @@ function Mapa() {
 
   const airQualityIndex = useMemo(
     () => {
-      if (sensorData == null) {
+      if (sensorData === null) {
         console.log("No data yet");
         return 0;
       }
