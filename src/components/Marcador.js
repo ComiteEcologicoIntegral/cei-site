@@ -47,7 +47,13 @@ const renderMarker = (label, status, shape = 'round') => {
  * @augments {Component<Props, State>}
  */
 function Marcador({
-    ICAR,
+    ICAR_PM25,
+    ICAR_PM10,
+    ICAR_O3,
+    ICAR_CO,
+    ICAR_NO2,
+    ICAR_SO2,
+    sensor_id,
     label,
     status,
     position,
@@ -139,9 +145,98 @@ function Marcador({
 
                     <Form >
                         {labels.map(({ label, status, value, units }, idx) => (
-
-                            <Form.Row
-
+                           sensor_id[0] === 'P' ?
+                            label === 'PM2.5' ?
+                                <Form.Row 
+        
+                                    key={idx}
+                                    className="d-flex justify-content-between  mb-1 "
+                                >
+                                    <Col xs = {3}>
+                                    <Link
+                                        to={{
+                                            pathname: 'registro',
+                                            search: `?gas=${label}`,
+                                        }}
+                                        
+                                    >
+                                        {label}
+                                    </Link>
+                                    </Col>
+                                    <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={5}>
+                                
+                                    
+                                        <span>{value}</span>
+                                        <span>{units}</span>
+                                    
+                                
+                                    </Col>
+                                    <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={3}>
+                                
+                                {
+                                        label === 'PM2.5' ?
+                                        ICAR_PM25 == '-1.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        ICAR_PM25 == '0.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        <span>{ICAR_PM25.toFixed(2)}</span>
+                                        :
+                                        label === 'PM10' ?
+                                        ICAR_PM10 == '-1.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        ICAR_PM10 == '0.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        <span>{ICAR_PM10.toFixed(0)}</span>
+                                        :
+                                        label === 'O3' ?
+                                        ICAR_O3 == '-1.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        ICAR_O3 == '0.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        <span>{ICAR_O3.toFixed(3)}</span>
+                                        :
+                                        label === 'CO' ?
+                                        ICAR_CO == '-1.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        ICAR_CO == '0.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        <span>{ICAR_CO.toFixed(2)}</span>
+                                        :
+                                        label === 'NO2' ?
+                                        ICAR_NO2 == '-1.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        ICAR_NO2 == '0.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        <span>{ICAR_NO2.toFixed(4)}</span>
+                                        :
+                                        label === 'SO2' ?
+                                        ICAR_SO2 == '-1.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        ICAR_SO2 == '0.00' ?
+                                        <span>{'ND'}</span>
+                                        :
+                                        <span>{ICAR_SO2.toFixed(4)}</span>
+                                        :
+                                        <span>{'ND'}</span>
+                                } 
+                            
+                            </Col>
+                            </Form.Row>
+                            :
+                            null 
+                        :
+                        <Form.Row 
                                 key={idx}
                                 className="d-flex justify-content-between  mb-1 "
                             >
@@ -156,33 +251,75 @@ function Marcador({
                                         {label}
                                     </Link>
                                 </Col>
-                                <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={5}>
-
-
+                                <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={5}>                         
+                              
                                     <span>{value}</span>
                                     <span>{units}</span>
-
-
+                                
+                            
                                 </Col>
                                 <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={3}>
+                            
+                            {
+                                    label === 'PM2.5' ?
+                                    ICAR_PM25 == '-1.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    ICAR_PM25 == '0.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    <span>{ICAR_PM25.toFixed(2)}</span>
+                                    :
+                                    label === 'PM10' ?
+                                    ICAR_PM10 == '-1.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    ICAR_PM10 == '0.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    <span>{ICAR_PM10.toFixed(0)}</span>
+                                    :
+                                    label === 'O3' ?
+                                    ICAR_O3 == '-1.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    ICAR_O3 == '0.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    <span>{ICAR_O3.toFixed(3)}</span>
+                                    :
+                                    label === 'CO' ?
+                                    ICAR_CO == '-1.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    ICAR_CO == '0.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    <span>{ICAR_CO.toFixed(2)}</span>
+                                    :
+                                    label === 'NO2' ?
+                                    ICAR_NO2 == '-1.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    ICAR_NO2 == '0.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    <span>{ICAR_NO2.toFixed(4)}</span>
+                                    :
+                                    label === 'SO2' ?
+                                    ICAR_SO2 == '-1.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    ICAR_SO2 == '0.00' ?
+                                    <span>{'ND'}</span>
+                                    :
+                                    <span>{ICAR_SO2.toFixed(4)}</span>
+                                    :
+                                    <span>{'ND'}</span>
+                            } 
 
-                                    {
-                                        label === 'PM2.5' ?
-                                            ICAR === '-1.00' ?
-                                                <span>{'ND'}</span>
-                                                :
-                                                ICAR === '0.00' ?
-                                                    <span>{'ND'}</span>
-                                                    :
-                                                    <span>{ICAR.toFixed(2)}</span>
-                                            :
-                                            <span>{'ND'}</span>
-                                    }
-
-                                </Col>
-                            </Form.Row>
-
-
+                        </Col>
+                        </Form.Row>
                         ))}
                     </Form>
                 </div>
