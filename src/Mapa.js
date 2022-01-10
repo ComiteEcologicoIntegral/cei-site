@@ -99,10 +99,10 @@ function Mapa() {
 
       const value = typeof preValue === "number" ? preValue : "ND";
 
-      const gasStatus = getStatus(gasName, value);
-      if (gasStatus > highestAirQualityIndex) {
-        highestAirQualityIndex = gasStatus;
-      }
+      // const gasStatus = getStatus(gasName, value);
+      // if (gasStatus > highestAirQualityIndex) {
+      //   highestAirQualityIndex = gasStatus;
+      // }
 
       return {
         ICAR_PM25: +data.ICAR_PM25,
