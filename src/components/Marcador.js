@@ -12,12 +12,12 @@ import 'leaflet/dist/leaflet.css';
 import { Link } from 'react-router-dom';
 
 import { Marker, Popup } from 'react-leaflet';
-import { Button,Form,Row,Col, Container } from 'react-bootstrap';
+import { Button, Form, Col } from 'react-bootstrap';
 import moment from 'moment';
 
 
 const showLabel = (label) => {
-    if (typeof label != 'number') return label; 
+    if (typeof label != 'number') return label;
     const fixed = label.toFixed(2);
     if (parseInt(fixed) === label) return label
     return fixed;
@@ -77,9 +77,8 @@ function Marcador({
             setIcon(
                 divIcon({
                     html: marker,
-                    className: `sensor-icon ${
-                        shape === 'round' ? '' : 'behind'
-                    }`,
+                    className: `sensor-icon ${shape === 'round' ? '' : 'behind'
+                        }`,
                     popupAnchor: [7, 0],
                 })
             );
@@ -94,7 +93,7 @@ function Marcador({
     if (!icon) return null;
 
     return (
-        
+
         <Marker position={position} icon={icon} {...props}>
             <Popup
                 ref={popupRef}
@@ -108,7 +107,7 @@ function Marcador({
                     ></button>
                 )}
             >
-                
+
                 <div className="px-3 py-2">
                     <div
                         className={`rounded marker-${current.status}`}
@@ -120,14 +119,14 @@ function Marcador({
                     >
                         {current.indicator}: {current.label} {current.units}
                     </div>
-                 
+
                     <div className="data-label">
                         <small className="text-muted">Ubicación</small>
                         <br />
-                        <data>{locationStr}</data>     
+                        <data>{locationStr}</data>
                     </div>
-                   
-                   
+
+
                     <div className="data-label">
                         <small className="text-muted">
                             Última actualización
@@ -143,7 +142,7 @@ function Marcador({
                         <small className="text-muted">Tiempo Real</small>
                         <small className="text-muted ml-5">Indice Calidad Aire</small>
                     </div>
-                    
+
                     <Form >
                         {labels.map(({ label, status, value, units }, idx) => (
                            sensor_id[0] === 'P' ?
@@ -238,24 +237,22 @@ function Marcador({
                             null 
                         :
                         <Form.Row 
-                                
                                 key={idx}
                                 className="d-flex justify-content-between  mb-1 "
                             >
-                                <Col xs = {3}>
-                                <Link
-                                    to={{
-                                        pathname: 'registro',
-                                        search: `?gas=${label}`,
-                                    }}
-                                    
-                                >
-                                    {label}
-                                </Link>
+                                <Col xs={3}>
+                                    <Link
+                                        to={{
+                                            pathname: 'registro',
+                                            search: `?gas=${label}`,
+                                        }}
+
+                                    >
+                                        {label}
+                                    </Link>
                                 </Col>
-                                <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={5}>
-                            
-                                
+                                <Col className={`d-flex justify-content-between px-1 rounded marker-${status}`} xs={5}>                         
+                              
                                     <span>{value}</span>
                                     <span>{units}</span>
                                 

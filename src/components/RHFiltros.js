@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import { fetchSummaryData } from '../handlers/data';
 import { setSensorData } from '../redux/reducers';
-import { indicadores, mapBlacklist, idBlacklistpriv  } from '../constants'
+import { indicadores, idBlacklistpriv } from '../constants'
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
-    {value: "PurpleAir", label: 'PurpleAir', opt: 'P'},
-    {value: "AireNuevoLeon", label: 'AireNuevoLeon/Sinaica', opt: 'G'}
+    { value: "PurpleAir", label: 'PurpleAir', opt: 'P' },
+    { value: "AireNuevoLeon", label: 'AireNuevoLeon/Sinaica', opt: 'G' }
 ]
 
 // Componente para la página de Registro Histórico
@@ -63,7 +63,7 @@ function RHFiltros({
     const [system, setSystem] = useState("")
     const [indOptions, setIndOptions] = useState(indicadores);
     const [location, setLocation] = useState(null)
-    
+
     const sistema = useRef(null);
     const ubicacion = useRef(null);
     const indicador = useRef(indicadores[0]);
@@ -75,8 +75,8 @@ function RHFiltros({
     // Crear valores para el dropdown:
     if (sensRaw) {
         sensRaw.forEach((element) => {
-            if(system.value === element.Sistema &&
-               !idBlacklistpriv.includes(element.Sensor_id)) {
+            if (system.value === element.Sistema &&
+                !idBlacklistpriv.includes(element.Sensor_id)) {
                 sensores.push({ value: element.Sensor_id, label: element.Zona });
             }
         });
@@ -85,7 +85,7 @@ function RHFiltros({
     // Función general para crear el query
     function createQuery() {
         updateMainFiltros(ubicacion.current, indicador.current, sistema.current); // Actualiza los valores de los filtros en el componente padre
-        if (radioValue == '1') {
+        if (radioValue === '1') {
             createQueryGraph();
         } else {
             createQueryCal();
@@ -152,7 +152,7 @@ function RHFiltros({
                                 indicador.current = value;
                             }}
                             defaultValue={indicadores[0]}
-                        />  
+                        />
                     </Col>
                     <Col xs={12} sm={3} className="mb-3">
                         <Button

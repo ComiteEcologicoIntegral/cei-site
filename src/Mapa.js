@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Recomendaciones from "./components/Recomendaciones.js";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
@@ -7,7 +7,6 @@ import Wrapper from "./components/WrapperMapa.js";
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
-import { apiUrl } from './constants';
 import { Spinner, OverlayTrigger, Popover, Button } from "react-bootstrap";
 import moment from "moment";
 
@@ -26,7 +25,6 @@ function Mapa() {
   } = useSensorData({});
 
   const [map, setMap] = useState(null);
-  const [airQualityIndex, setAirQualityIndex] = useState(0);
 
   const setCenter = useCallback(
     (pos) => {
@@ -40,34 +38,55 @@ function Mapa() {
     [map]
   );
 
-  const markers = useMemo(() => {
-    let highestAirQualityIndex = 0;
+  const airQualityIndex = useMemo(
+    () => {
+      if (sensorData == null) {
+        console.log("No data yet");
+        return 0;
+      }
 
+      let highestAirQualityIndex = 0;
+
+      const filteredSensors = sensorData.filter(
+        (sensor) =>
+          typeof sensor.Longitud === "number" &&
+          typeof sensor.Latitud === "number" &&
+          !mapBlacklist.includes(sensor.Sistema) &&
+          !idBlacklist.includes(sensor.Sensor_id)
+      );
+
+      filteredSensors.map((data) => {
+        const { name: gasName, units: gasUnits } = currentGas;
+
+        let preValue =
+          gasName === "PM25"
+            ? data.Sistema === "PurpleAir"
+              ? data["PM25_Promedio"]
+              : data[gasName]
+            : data[gasName];
+
+        const value = typeof preValue === "number" ? preValue : "ND";
+
+        const gasStatus = getStatus(gasName, value);
+        if (gasStatus > highestAirQualityIndex) {
+          highestAirQualityIndex = gasStatus;
+        }
+      });
+
+      return highestAirQualityIndex;
+    },  
+    [sensorData]
+  );
+
+  const markers = useMemo(() => {
     const filteredSensors = sensorData.filter(
       (sensor) =>
         typeof sensor.Longitud === "number" &&
         typeof sensor.Latitud === "number" &&
-        !mapBlacklist.includes(sensor.Sistema)&&
+        !mapBlacklist.includes(sensor.Sistema) &&
         !idBlacklist.includes(sensor.Sensor_id)
     );
-
-    console.log(filteredSensors)
-
-    // let sensores = ''
-    // console.log(filteredSensors);
-    // filteredSensors.forEach(sensor => {
-    //   sensores += sensor.Sensor_id + ',';
-    // });
-    // sensores = sensores.slice(0, -1);
-
-    // fetch(`${apiUrl}/get_air_indeces?locations=` + sensores)
-    // .then(res => res.json())
-    // .then(data => {
-    //   console.log(data)
-    //   console.log(sensores);
-
-    // })
-
+    
     const resultingData = filteredSensors.map((data) => {
       const { name: gasName, units: gasUnits } = currentGas;
 
@@ -84,8 +103,6 @@ function Mapa() {
       if (gasStatus > highestAirQualityIndex) {
         highestAirQualityIndex = gasStatus;
       }
-
-      console.log(data)
 
       return {
         ICAR_PM25: +data.ICAR_PM25,
@@ -134,9 +151,8 @@ function Mapa() {
       };
     });
 
-    setAirQualityIndex(highestAirQualityIndex);
     return resultingData;
-  }, [sensorData, currentGas, setAirQualityIndex]);
+  }, [sensorData, currentGas]);
 
   return (
     <div>
@@ -245,7 +261,7 @@ function Mapa() {
         </div>
         <Wrapper whenCreated={setMap} {...mapDefaultProps}>
           {!loadingSensorData &&
-            markers.map((markerProps, idx) => {
+            markers.map((markerProps, idx) => { 
               return (
                 <Marcador
                   map={map}

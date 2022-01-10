@@ -16,7 +16,7 @@ const useSensorData = ({ cacheTime = 60, useCache = true }) => {
         // Llama a la api si los datos se guardaron hace menos de una hora
         const diff = sensorDataLastUpdate && useCache
             ? moment().diff(sensorDataLastUpdate, 'minutes')
-            : 999; // Caso sensorDataLastUpdate == null, se tienen que solicitar los datos
+            : 999; // Caso sensorDataLastUpdate === null, se tienen que solicitar los datos
 
         if (diff > cacheTime) {
             fetchSummaryData()

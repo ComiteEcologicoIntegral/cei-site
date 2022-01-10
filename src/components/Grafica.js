@@ -3,14 +3,13 @@ import React, { useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
 
-function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout, summary }) {
+function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout, downloadFile, summary}) {
     useEffect(() => {
         setDesde(null);
         setHasta(null);
         setDesdeHora('00:00:00')
         setHastaHora('00:00:00')
     }, []);
-
     return (
         <div>
             <Form className="mt-4 mb-4">
@@ -33,8 +32,8 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
 
                             <Col xs={5}>
                                 <Form.Control
-                                onChange={(event) => setDesdeHora(event.target.value + ':00')}                                
-                                type="time"></Form.Control>
+                                    onChange={(event) => setDesdeHora(event.target.value + ':00')}
+                                    type="time"></Form.Control>
                             </Col>
                         </Row>
                     </Col>
@@ -58,8 +57,8 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
 
                             <Col xs={5}>
                                 <Form.Control
-                                onChange={(event) => setHastaHora(event.target.value + ':00')}        
-                                type="time"></Form.Control>
+                                    onChange={(event) => setHastaHora(event.target.value + ':00')}
+                                    type="time"></Form.Control>
                             </Col>
                         </Row>
                     </Col>
@@ -69,7 +68,10 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
             <Row className="mb-5">
                 <Col xs={12} lg={4} xl={2}>
                     <Row xs={12}>
-                        <Button className="btn btn-light mb-4" block>
+                        <Button className="btn btn-light mb-4" block
+                                onClick = {() => {
+                                    downloadFile()
+                                }}>
                             Descargar datos
                         </Button>
                     </Row>
@@ -114,7 +116,6 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                             <Row className="dato-calculado d-flex align-items-center justify-content-center">
                                 <Row sm={12}>
                                     <p className="tipo text-center">Promedio</p>
-                                    {/* <p className="desc">{summary && summary?.avg.da`Registrado el 00-00-000`}</p> */}
                                 </Row>
                                 <Row
                                     sm={12}
@@ -131,25 +132,24 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                         <Col xs={6} sm={5} lg={12}>
                             <Row className="dato-calculado d-flex align-items-center justify-content-center">
                                 <Row sm={12}
-                                className="d-flex align-items-center justify-content-center">
+                                    className="d-flex align-items-center justify-content-center">
                                     <p className="tipo text-center">Arriba de la norma</p>
                                 </Row>
                                 <Row sm={12}
-                                className="d-flex align-items-center justify-content-center">
-                                    {/* <p className="numero mala text-center">{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p> */}
-                                    <p className={`numero text-center ${summary ? (summary.porcentajes.arribaLimite == 0 ? "bueno" : summary.porcentajes.arribaLimite > 25 ? "muymala" : "mala") : null}`}>{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p>
+                                    className="d-flex align-items-center justify-content-center">
+                                    <p className={`numero text-center ${summary ? (summary.porcentajes.arribaLimite === 0 ? "bueno" : summary.porcentajes.arribaLimite > 25 ? "muymala" : "mala") : null}`}>{summary ? summary.porcentajes.arribaLimite + '%' : '-'}</p>
                                 </Row>
                             </Row>
                         </Col>
                         <Col xs={12} sm={5} lg={12}>
                             <Row className="dato-calculado">
                                 <Col xs={6} sm={6}
-                                className="d-flex flex-column align-items-center justify-content-center">
+                                    className="d-flex flex-column align-items-center justify-content-center">
                                     <p className="tipo text-center">Datos Válidos</p>
                                     <p className="numero bueno text-center">{summary ? summary.porcentajes.buenos + '%' : '-'}</p>
                                 </Col>
                                 <Col xs={6} sm={6}
-                                className="d-flex flex-column align-items-center justify-content-center">
+                                    className="d-flex flex-column align-items-center justify-content-center">
                                     <p className="tipo text-center">Datos Nulos</p>
                                     <p className="numero muymala text-center">{summary ? summary.porcentajes.nulos + '%' : '-'}</p>
                                 </Col>
@@ -160,7 +160,12 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
 
                 <Col sm={12} lg={8} xl={10}>
                     <div className="grafico mb-4">
-                        <Plot className="grafico-resize" data={data} layout={layout} config={{responsive: true}} />
+                        {data && (
+                            <Plot className="grafico-resize" data={data} layout={layout} config={{ responsive: true }} />
+                        )}
+                        {typeof data == 'undefined' && (
+                            <div>Seleccionar un sensor, contaminante y fechas para ver sus datos</div>
+                        )}
                     </div>
                 </Col>
                 <Row className="d-block d-sm-none w-100" xs={11}>

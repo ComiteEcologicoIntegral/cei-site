@@ -5,7 +5,7 @@ import { criteria } from '../handlers/statusCriteria';
 import { unidad } from '../constants';
 
 // Componente para la página Registro Histórico, sección del calendario
-function HeatMap ({q, fecha, ubic, ind}) {
+function HeatMap({ q, fecha, ubic, ind }) {
     /* 
         Parámetros:
             - q : query que proviene de RHFiltros
@@ -14,7 +14,7 @@ function HeatMap ({q, fecha, ubic, ind}) {
             - ind : gas seleccionado en los filtros
     */
 
-    const [mes, setMes] = useState(null); 
+    const [mes, setMes] = useState(null);
     const [dataHM, setDataHM] = useState(null);
 
     const queryAnt = useRef(null);
@@ -44,21 +44,14 @@ function HeatMap ({q, fecha, ubic, ind}) {
             if (ubic && mes) {
                 // Creamos query, sacando los datos de todo el mes
                 queryStr = 'ubic=';
-
-                // ubic.forEach((element) => {
-                //     queryStr += element.value + ',';
-                // });
-
                 queryStr += ubic.value
 
-                // queryStr = queryStr.slice(0, -1);
                 queryStr +=
                     '&ind=' + ind +
                     '&inicio=' + mes.clone().format("YYYY-MM-DD") +
                     '&fin=' + mes.clone().endOf('month').format('YYYY-MM-DD');
 
-                    
-                console.log("Query HM: " + queryStr);
+
                 fetch(`${apiUrl}/prom-data?${queryStr}`)
                     .then(response => response.json())
                     .then((json) => setDataHM(json))
@@ -92,110 +85,107 @@ function HeatMap ({q, fecha, ubic, ind}) {
         // Este codigo de abajo se cambio porque ya no era un array de ubicaciones se cambio solo a una ubicación
 
         // for (let u = 0; u < ubic.length && dataHM[index]; u++) { // Por cada ubicacion seleccionada se crea una fila del heatmap
-            // let currUbic = dataHM[index]["zona"];
-            let currUbic = dataHM[index]["zona"];
-            let primerDia = new Date(dataHM[index].fecha.replace(/-/g, '\/').replace(/T.+/, '')); // primer día registrado de los datos de una ubicacion
-            let currDia = 1;
+        // let currUbic = dataHM[index]["zona"];
+        let currUbic = dataHM[index]["zona"];
+        let primerDia = new Date(dataHM[index].fecha.replace(/-/g, '\/').replace(/T.+/, '')); // primer día registrado de los datos de una ubicacion
+        let currDia = 1;
 
-            let seriesItem = {
-                name : currUbic,
-                data: []
-            };
-            
-            // llenar primeros días vacíos si es que los datos del mes no empiezan en el primer día
-            while (primerDia.getDate() !== currDia) {
-                dataItem.x = currDia;
-                dataItem.y = -1;
-                seriesItem.data.push({...dataItem});
-                currDia++;
-            }
-            
+        let seriesItem = {
+            name: currUbic,
+            data: []
+        };
 
-            // ahora sí hay datos
-            while (index < dataHM.length && dataHM[index]["zona"] === currUbic) {
-                dataItem.x = currDia;
+        // llenar primeros días vacíos si es que los datos del mes no empiezan en el primer día
+        while (primerDia.getDate() !== currDia) {
+            dataItem.x = currDia;
+            dataItem.y = -1;
+            seriesItem.data.push({ ...dataItem });
+            currDia++;
+        }
 
-                // revisa que sí haya un registro de ese dia checando si coincide el número de día
-                if (currDia == parseInt(dataHM[index]["fecha"].substring(8))) {
-                    if (dataHM[index]["prom"] !== "") {
-                        dataItem.y = dataHM[index]["prom"];
-                        dataItem.fecha = dataHM[index]["fecha"];
-                    } else {
-                        dataItem.y = -1;
-                    }
-                    index++;
+
+        // ahora sí hay datos
+        while (index < dataHM.length && dataHM[index]["zona"] === currUbic) {
+            dataItem.x = currDia;
+
+            // revisa que sí haya un registro de ese dia checando si coincide el número de día
+            if (currDia === parseInt(dataHM[index]["fecha"].substring(8))) {
+                if (dataHM[index]["prom"] !== "") {
+                    dataItem.y = dataHM[index]["prom"];
+                    dataItem.fecha = dataHM[index]["fecha"];
                 } else {
                     dataItem.y = -1;
                 }
-
-                seriesItem.data.push({...dataItem});
-                currDia++;
+                index++;
+            } else {
+                dataItem.y = -1;
             }
 
-            series.push({...seriesItem});
-        // }
+            seriesItem.data.push({ ...dataItem });
+            currDia++;
+        }
 
-        //console.log(series);
+        series.push({ ...seriesItem });
 
         options = {
             chart: {
-              type: 'heatmap',
-              toolbar: {
-                  show: false
-              }
+                type: 'heatmap',
+                toolbar: {
+                    show: false
+                }
             },
             plotOptions: {
-              heatmap: {
-                enableShades: false,
-                radius: 1,
-                useFillColorAsStroke: false,
-                colorScale: {
-                    ranges: [
-                    {
-                        from: -2,
-                        to: 0,
-                        name: 'No data',
-                        color: '#D3D3D3'
-                    },
-                    {
-                        from: 0,
-                        to: criteria['Aire y Salud'][ind][0],
-                        name: 'Buena',
-                        color: '#00E400'
-                    },
-                    {
-                        from: criteria['Aire y Salud'][ind][0],
-                        to: criteria['Aire y Salud'][ind][1],
-                        name: 'Aceptable',
-                        color: '#FFFF00'
-                    },
-                    {
-                        from: criteria['Aire y Salud'][ind][1],
-                        to: criteria['Aire y Salud'][ind][2],
-                        name: 'Mala',
-                        color: '#FF7E00'
-                    },
-                    {
-                        from: criteria['Aire y Salud'][ind][2],
-                        to: criteria['Aire y Salud'][ind][3],
-                        name: 'Muy mala',
-                        color: '#FF0000'
-                    },
-                    {
-                        from: criteria['Aire y Salud'][ind][3],
-                        to: criteria['Aire y Salud'][ind][3] * 1.5,
-                        name: 'Extremadamente mala',
-                        color: '#8F3F97'
+                heatmap: {
+                    enableShades: false,
+                    radius: 1,
+                    useFillColorAsStroke: false,
+                    colorScale: {
+                        ranges: [
+                            {
+                                from: -2,
+                                to: 0,
+                                name: 'No data',
+                                color: '#D3D3D3'
+                            },
+                            {
+                                from: 0,
+                                to: criteria['Aire y Salud'][ind][0],
+                                name: 'Buena',
+                                color: '#00E400'
+                            },
+                            {
+                                from: criteria['Aire y Salud'][ind][0],
+                                to: criteria['Aire y Salud'][ind][1],
+                                name: 'Aceptable',
+                                color: '#FFFF00'
+                            },
+                            {
+                                from: criteria['Aire y Salud'][ind][1],
+                                to: criteria['Aire y Salud'][ind][2],
+                                name: 'Mala',
+                                color: '#FF7E00'
+                            },
+                            {
+                                from: criteria['Aire y Salud'][ind][2],
+                                to: criteria['Aire y Salud'][ind][3],
+                                name: 'Muy mala',
+                                color: '#FF0000'
+                            },
+                            {
+                                from: criteria['Aire y Salud'][ind][3],
+                                to: criteria['Aire y Salud'][ind][3] * 1.5,
+                                name: 'Extremadamente mala',
+                                color: '#8F3F97'
+                            }
+                        ]
                     }
-                  ]
                 }
-              }
             },
             dataLabels: {
-              enabled: false
+                enabled: false
             },
             stroke: {
-              width: 1
+                width: 1
             },
             xaxis: {
                 position: "bottom"
@@ -205,27 +195,26 @@ function HeatMap ({q, fecha, ubic, ind}) {
                 showForSingleSeries: true
             },
             tooltip: {
-                custom: function({series, seriesIndex, dataPointIndex, w}) {
+                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                     if (series[seriesIndex][dataPointIndex] !== -1) {
                         return '<div class="arrow_box hmTooltip">' +
-                        '<p>' + w.globals.initialSeries[seriesIndex].data[dataPointIndex].fecha + '</p>' +
-                        '<p><b>' + series[seriesIndex][dataPointIndex].toFixed(4) + ' ' + 
-                        unidad[ind] + '</b></p>' +
-                        '</div>'
+                            '<p>' + w.globals.initialSeries[seriesIndex].data[dataPointIndex].fecha + '</p>' +
+                            '<p><b>' + series[seriesIndex][dataPointIndex].toFixed(4) + ' ' +
+                            unidad[ind] + '</b></p>' +
+                            '</div>'
                     }
                     return '<div style="display:none;">'
-                  }
+                }
             }
-          };
+        };
 
-        //console.log("done");
     }
 
 
     return (
         <div>
             <h3 className="mb-5">Promedios diarios del mes</h3>
-            {q && (<Chart options={options} series={series} type="heatmap" height={series.length * 100}/>)}
+            {q && (<Chart options={options} series={series} type="heatmap" height={series.length * 100} />)}
         </div>
     );
 }
