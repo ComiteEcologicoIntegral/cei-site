@@ -11,7 +11,7 @@ import {
 import { BsInfoCircle } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
-import { indicadores, mapBlacklist, idBlacklist, idBlacklistpriv } from '../constants'
+import { indicadores, idBlacklist, idBlacklistpriv } from '../constants'
 
 const systemOptions = [
     {value: "PurpleAir", label: 'PurpleAir', opt: 'P'},

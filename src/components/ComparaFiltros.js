@@ -1,5 +1,5 @@
-import React, {useRef, useImperativeHandle, useMemo, useState, useEffect} from 'react'
-import { Form, Button, Col, Row } from 'react-bootstrap'
+import React, {useRef, useMemo, useState, useEffect} from 'react'
+import { Form, Col, Row } from 'react-bootstrap'
 import Select from 'react-select';
 import { systemOptions, indicadores, idBlacklistpriv } from '../constants';
 
@@ -46,7 +46,6 @@ const ComparaFiltros = (props) => {
             desdeHora: desdeHora.current,
             hastaHora: hastaHora.current
         }
-        // console.log(ubic.current)
         props.modifyData(formData, id.current);
     }
     
