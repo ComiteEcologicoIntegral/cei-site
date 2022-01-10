@@ -85,8 +85,17 @@ function Mapa() {
         highestAirQualityIndex = gasStatus;
       }
 
+      console.log(data)
+
       return {
-        ICAR: +data.ICAR,
+        ICAR_PM25: +data.ICAR_PM25,
+        // ICAR_PM10: data.Sensor_id[0] != 'P' ? +data.ICAR_PM10 : 'ND',
+        ICAR_PM10: +data.ICAR_PM10,
+        ICAR_O3: +data.ICAR_O3,
+        ICAR_CO: +data.ICAR_CO,
+        ICAR_NO2: +data.ICAR_NO2,
+        ICAR_SO2: +data.ICAR_SO2,
+        sensor_id: data.Sensor_id,
         position: [data.Latitud, data.Longitud],
         current: {
           indicator: currentGas.label ? currentGas.label : gasName,
