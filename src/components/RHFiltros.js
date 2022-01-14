@@ -21,7 +21,7 @@ function RHFiltros({
     setRadioValue,
     updateMainFiltros,
 }) {
-    /* 
+    /*
         Parámetros:
             - createQueryGraph: función para crear query de la gráfica
             - createQueryCal: función para crear query del calendario
