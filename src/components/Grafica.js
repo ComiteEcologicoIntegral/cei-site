@@ -123,7 +123,7 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                                 >
                                     <p className="numero mala text-center">
                                         {summary && typeof summary?.avg.value === 'number'
-                                            ? summary.avg.value.toFixed(2)
+                                            ? summary.avg.value.toFixed(3)
                                             : '-'}
                                     </p>
                                 </Row>
