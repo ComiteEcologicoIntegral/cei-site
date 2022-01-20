@@ -43,6 +43,16 @@
     position: relative;
 }
 
+.marker-wrapper-selected {
+    font-size: 12px;
+    width: var(--marker-size-selected);
+    height: var(--marker-size-selected);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
 .marker-base {
     opacity: 0.9;
     position: absolute;
@@ -58,6 +68,10 @@
 
 .behind {
     z-index: -1 !important;
+}
+
+.top {
+    z-index: 300 !important;
 }
 
 .marker-shape-square {
