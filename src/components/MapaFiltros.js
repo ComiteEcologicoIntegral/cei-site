@@ -19,12 +19,13 @@ const systemOptions = [
 ]
 
 const intervalos =  [
-    {value: '1', label: 'Tiempo real'},
-    {value: '2', label: '12 horas'},
-    {value: '3', label: '24 horas'},
-    {value: '4', label: 'Última semana'},
-    {value: '5', label: 'Último mes'},
-    {value: '6', label: 'Último año'}
+    {value: 0, label: 'Indice Calidad Aire'},
+    {value: 1, label: 'Concentracion horaria'},
+    // {value: '2', label: '12 horas'},
+    // {value: '3', label: '24 horas'},
+    // {value: '4', label: 'Última semana'},
+    // {value: '5', label: 'Último mes'},
+    // {value: '6', label: 'Último año'}
 ]
 
 const MapaFiltros = ({ onApply }) => {
@@ -60,7 +61,20 @@ const MapaFiltros = ({ onApply }) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
    
+    useEffect(() => {
+        onApply({ gas, location, interval });
+    }, [gas, location, interval])
 
+    // Funcion para revisar si el contaminante seleccionado es valido en el sistema
+    const checkIfSystemValid = (value) => {
+        // Checar si selecciono Purple Air
+        if(value.label === 'PurpleAir'){
+            // Checar si esta seleccionado otro contaminante que no sea PM25
+            if(gas.value !== 'PM25'){
+                setGas(indicadores[0]);
+            }
+        }
+    }
 
     return (
         <div className="container mt-5">
@@ -72,6 +86,7 @@ const MapaFiltros = ({ onApply }) => {
                             placeholder="Sistema"
                             value={systemChosen}
                             onChange={(value) => {
+                                checkIfSystemValid(value)
                                 setSystemChosen(value)
                                 setLocation(null)
                             }}
@@ -86,7 +101,6 @@ const MapaFiltros = ({ onApply }) => {
                     </Col>
                     <Col className="mb-3" xs={6} lg={3}>
                         <Select
-                            isDisabled
                             options={intervalos}
                             onChange={setInterval_}
                             value={interval}
@@ -125,9 +139,7 @@ const MapaFiltros = ({ onApply }) => {
                             variant="primary"
                             block
                             onClick={() => {
-                                onApply({ gas, location, interval });
-                                setLocation(null);
-                                setInterval_(intervalos[0]);
+                                onApply({ gas, location, interval: interval });
                             }}
                         >
                             Aplicar
@@ -154,7 +166,7 @@ const MapaFiltros = ({ onApply }) => {
                     <p className="mod-desc">Mezcla Compleja de Partículas líquidas o sólidas que provienen principalmente de fuentes antropogénicas, poseen un tamaño aerodinámico menor a 2.5 micrómetros.</p>
                 </Row>
                 <Row>
-                    <h3 className="mod-sub"><span className="mod-ind morado">O2</span>&emsp; Ozono</h3>
+                    <h3 className="mod-sub"><span className="mod-ind morado">O3</span>&emsp; Ozono</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Gas compuesto por 3 átomos de oxigeno que se encuentra principalmente en la estratosfera, puede formarse a nivel superficial debido a condiciones de alta radiación y temperatura.</p>
