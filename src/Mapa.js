@@ -18,6 +18,8 @@ const mapDefaultProps = {
 
 function Mapa() {
   const [currentGas, setCurrentGas] = useState(gases[0]);
+  const [currentInterval, setCurrentInterval] = useState(0);
+  const [currentLocation, setCurrentLocation] = useState(null)
   const {
     data: sensorData,
     loading: loadingSensorData,
@@ -89,13 +91,43 @@ function Mapa() {
     
     const resultingData = filteredSensors.map((data) => {
       const { name: gasName, units: gasUnits } = currentGas;
+    
+      let preValue = null;
+      /* Current Interval === 0 -> Presenta el value del indicador de calidad del aire */
+      if(currentInterval === 0){
+        // Presenta el value del indicador de calidad del aire
+        const prefix = "ICAR_";
+        // Checar el mas alto de los O3
+        preValue = 
+          gasName === "O3"
+            ? data.Sistema === "AireNuevoLeon"
+              ? data[`${prefix}O3_1h`] >= data[`${prefix}O3_8h`]
+                ? data[`${prefix}O3_1h`]
+                : data[`${prefix}O3_8h`]
+              : data[`${prefix}${gasName}`]
+            : data[`${prefix}${gasName}`];
+        
+        // Si no hay ICAR desplegar la concentración
+        if(preValue === -1) {
+          preValue = null;
+        }
+      } else if(currentInterval === 1){ // Current Interval === 1 -> Presenta el value de la concentracion horaria
+        // Presenta el value de la concentracion (tiempo real)
+        preValue =
+          gasName === "PM25"
+            ? data.Sistema === "PurpleAir"
+              ? data["PM25_Promedio"]
+              : data[gasName]
+            : data[gasName];
+      }
 
-      let preValue =
-        gasName === "PM25"
-          ? data.Sistema === "PurpleAir"
-            ? data["PM25_Promedio"]
-            : data[gasName]
-          : data[gasName];
+      if(typeof preValue === "number") {
+        if(gasName === "NO2" || gasName === "SO2") {
+          preValue = +preValue.toFixed(4);
+        } else {
+          preValue = +preValue.toFixed(2);
+        }
+      }
 
       const value = typeof preValue === "number" ? preValue : "ND";
 
@@ -104,11 +136,14 @@ function Mapa() {
       //   highestAirQualityIndex = gasStatus;
       // }
 
+      console.log(currentLocation)
+
       return {
+        currentLocation,
         ICAR_PM25: +data.ICAR_PM25,
-        // ICAR_PM10: data.Sensor_id[0] != 'P' ? +data.ICAR_PM10 : 'ND',
         ICAR_PM10: +data.ICAR_PM10,
-        ICAR_O3: +data.ICAR_O3,
+        ICAR_O3_8h: +data.ICAR_O3_8h,
+        ICAR_O3_1h: +data.ICAR_O3_1h,
         ICAR_CO: +data.ICAR_CO,
         ICAR_NO2: +data.ICAR_NO2,
         ICAR_SO2: +data.ICAR_SO2,
@@ -152,12 +187,21 @@ function Mapa() {
     });
 
     return resultingData;
-  }, [sensorData, currentGas]);
+  }, [sensorData, currentGas, currentInterval, currentLocation]);
 
   return (
     <div>
       <MapaFiltros
-        onApply={({ gas, location }) => {
+        onApply={({ gas, location, interval }) => {
+          if(interval) {
+            setCurrentInterval(interval.value);
+          }
+
+          if (gas) {
+            const nGas = gases.find((gas_) => gas_.name === gas.value);
+            setCurrentGas(nGas ?? currentGas);
+          }
+
           if (location) {
             // Encuentra sensor al que le corresponde la ubicación de los filtros
             const fSensor = sensorData.find(
@@ -165,17 +209,11 @@ function Mapa() {
             );
 
             if (fSensor) {
+              setCurrentLocation(fSensor.Zona);
               setCenter([fSensor.Latitud, fSensor.Longitud]);
             }
-          } else {
-            alert("Selecciona una ubicación");
-            return;
           }
 
-          if (gas) {
-            const nGas = gases.find((gas_) => gas_.name === gas.value);
-            setCurrentGas(nGas ?? currentGas);
-          }
         }}
       />
       <div
@@ -214,8 +252,44 @@ function Mapa() {
           className="w-100 h-100 position-absolute p-2"
           style={{ zIndex: 99, pointerEvents: "none" }}
         >
-          <div className="position-absolute end-0">
-            <OverlayTrigger
+          <div className="position-absolute end-0 right-0 ">
+            <div className="leyenda-width">
+              <h6>Leyenda</h6>
+              <div className="leyenda-grid">
+      
+                  <div
+                    style={{
+                      boxSizing: "border-box",
+                      borderRadius: "100%",
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "0.75rem",
+                      padding: 0,
+                      border: "1px solid black",
+                    }}
+                    className="mb-2"
+                  ></div>
+                  <div className="mb-2">Los sensores del estado se representan con un círculo</div>
+                
+                  <div
+                    style={{
+                      boxSizing: "border-box",
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "0.75rem",
+                      padding: 0,
+                      border: "1px solid black",
+                    }}
+                    className="mb-2"
+                  ></div>
+                  <div className="mb-2">Los sensores de Purple Air se representan con un cuadrado</div>
+                
+                  <div className="">ND</div>
+                  <div>No dato</div>
+                
+              </div>
+            </div>
+            {/* <OverlayTrigger
               trigger="click"
               placement={"left"}
               overlay={
@@ -256,23 +330,40 @@ function Mapa() {
               <Button variant="link" className="pe-auto">
                 Leyenda
               </Button>
-            </OverlayTrigger>
+            </OverlayTrigger> */}
           </div>
         </div>
         <Wrapper whenCreated={setMap} {...mapDefaultProps}>
           {!loadingSensorData &&
             markers.map((markerProps, idx) => { 
-              return (
-                <Marcador
-                  map={map}
-                  key={idx}
-                  {...markerProps}
-                  label={markerProps.current.label}
-                  indicator={markerProps.current.indicator}
-                  status={markerProps.current.status}
-                  shape={markerProps.isPurpleAir ? "square" : "round"}
-                />
-              );
+              if (currentGas.name === 'PM25') {
+                return (
+                  <Marcador
+                    map={map}
+                    key={idx}
+                    {...markerProps}
+                    label={markerProps.current.label}
+                    indicator={markerProps.current.indicator}
+                    status={markerProps.current.status}
+                    shape={markerProps.isPurpleAir ? "square" : "round"}
+                  />
+                );
+              } else {
+                if(!markerProps.isPurpleAir) {
+                  return (
+                    <Marcador
+                      map={map}
+                      key={idx}
+                      {...markerProps}
+                      label={markerProps.current.label}
+                      indicator={markerProps.current.indicator}
+                      status={markerProps.current.status}
+                      shape={markerProps.isPurpleAir ? "square" : "round"}
+                    />
+                  );
+
+                }
+              }
             })}
         </Wrapper>
       </div>
