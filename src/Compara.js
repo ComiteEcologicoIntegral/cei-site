@@ -79,6 +79,7 @@ function Compara() {
         let gases = "";
         let fechas_inicio = "";
         let fechas_fin = "";
+        let sensors_id = "";
 
         for (let i=0; i<=numFiltros.current ; i++) {
             if (!filterData.current[i]|| !filterData.current[i]["desde"] || !filterData.current[i]["hasta"]) { // A alguno le falta seleccionar fechas
@@ -90,6 +91,7 @@ function Compara() {
                 gases += filterData.current[i]["ind"] + ",";
                 fechas_inicio += filterData.current[i]["desde"] + "/" + filterData.current[i]["desdeHora"] + ",";
                 fechas_fin += filterData.current[i]["hasta"] + "/" + filterData.current[i]["hastaHora"] + ",";
+                sensors_id += filterData.current[i]["ubic"].value + ",";
             }
         }
 
@@ -98,8 +100,9 @@ function Compara() {
         gases = gases.slice(0, -1);
         fechas_inicio = fechas_inicio.slice(0, -1);
         fechas_fin = fechas_fin.slice(0, -1);
+        sensors_id = sensors_id.slice(0, -1);
 
-        let query = `ubic=${ubicaciones}&ind=${gases}&inicio=${fechas_inicio}&fin=${fechas_fin}`;
+        let query = `ubic=${ubicaciones}&ind=${gases}&inicio=${fechas_inicio}&fin=${fechas_fin}&sensors_id=${sensors_id}`;
 
         setLoading(true); // Muestra gif de loading
 
