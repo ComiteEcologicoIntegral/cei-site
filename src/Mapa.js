@@ -75,7 +75,7 @@ function Mapa() {
 
       return highestAirQualityIndex;
     },  
-    [sensorData]
+    [sensorData, currentGas]
   );
 
   const markers = useMemo(() => {
