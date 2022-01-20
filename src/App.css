@@ -25,7 +25,10 @@
   --color-darkgreen: #387347;
   --color-black: #1B1B1B;
 
+  --color-highlight: #F2E313;
+
   --marker-size: 36px;
+  --marker-size-selected: 47px;
 }
 
 .no-data {
@@ -329,6 +332,27 @@ button, button:focus {
   font-size: 0.75rem;
   color:gray;
   font-weight: 300;
+}
+
+/* Leyenda Mapa */
+.leyenda-width {
+  width: 15rem;
+  background-color: white;
+  padding: 1rem;
+  margin-right: 1rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+}
+
+.leyenda-grid {
+  display: grid;
+  grid-template-columns: 1fr 11fr;
+  align-items: center;
+}
+
+/* Marker Mapa */
+.marker-border {
+  border: 5px solid var(--color-highlight);
 }
 
 /****** FOOTER ****/
