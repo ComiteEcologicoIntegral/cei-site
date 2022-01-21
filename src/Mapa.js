@@ -136,8 +136,6 @@ function Mapa() {
       //   highestAirQualityIndex = gasStatus;
       // }
 
-      console.log(currentLocation)
-
       return {
         currentLocation,
         ICAR_PM25: +data.ICAR_PM25,
