@@ -40,10 +40,12 @@ const anios = [
     { value: '2019', label: '2019' },
     { value: '2020', label: '2020' },
     { value: '2021', label: '2021' },
+    { value: '2022', label: '2022' },
+
 ]
 
 // Componente para la página de Registro Histórico
-function Calendario({ q, create, data, indi, setDesde, setHasta, downloadFile }) {
+function Calendario({ q, fecha, ubic, create, data, indi, setDesde, setHasta, downloadFile }) {
     /* 
         Parámetros:
             - q : query creado en los filtros
@@ -221,7 +223,7 @@ function Calendario({ q, create, data, indi, setDesde, setHasta, downloadFile })
                     </div>
                 </Col>
                 <Col sm={12} lg={6} className="d-flex align-items-start justify-content-center">
-                    <DatePicker value={value} onChange={setValue} />
+                    <DatePicker q={q} fecha={fecha} ubic={ubic} ind={indi} value={value} onChange={setValue} />
                 </Col>
             </Row>
         </div>

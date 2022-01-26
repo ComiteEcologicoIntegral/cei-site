@@ -9,7 +9,6 @@ import { Modal } from "react-bootstrap";
 moment.locale("es");
 
 const Calendario = lazy(() => import("./components/Calendario")) 
-const HeatMap  = lazy(() => import("./components/HeatMap"));
 
 function Registro() {
   const [data, setData] = useState(null);
@@ -230,18 +229,14 @@ function Registro() {
           <Suspense fallback={<div>Loading...</div>}>
             <Calendario
               q={queryString}
+              fecha={desde}
+              ubic={ubicacion.current}
               create={createQueryCal}
               data={data}
               indi={ind.current.value}
               setDesde={setDesde}
               setHasta={setHasta}
               downloadFile={downloadFile}
-            />
-            <HeatMap
-              q={queryString}
-              fecha={desde}
-              ubic={ubicacion.current}
-              ind={ind.current.value}
             />
           </Suspense>
         </>
