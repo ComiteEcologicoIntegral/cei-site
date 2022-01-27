@@ -108,14 +108,14 @@ const MapaFiltros = ({ onApply }) => {
                     </Col>
                     <Col xs={6} lg={3}>
                         <Row>
-                            <Col xs={10}>
+                            <Col xs={12}>
                                 <Select
                                     options={indOptions}
                                     value={gas}
                                     onChange={setGas}
                                 />
                             </Col>
-                            <Col xs={2}>
+                            {/* <Col xs={2}>
                             <OverlayTrigger
                             key='top'
                             placement='top'
@@ -130,7 +130,7 @@ const MapaFiltros = ({ onApply }) => {
                                 </Button>
                             </OverlayTrigger>
                                 
-                            </Col>
+                            </Col> */}
                         </Row>
                     </Col>
                     <Col>
@@ -138,11 +138,9 @@ const MapaFiltros = ({ onApply }) => {
                             className="btn-aplicar"
                             variant="primary"
                             block
-                            onClick={() => {
-                                onApply({ gas, location, interval: interval });
-                            }}
+                            onClick={handleShow}
                         >
-                            Aplicar
+                            Más información
                         </Button>
                     </Col>
                 </Form.Row>

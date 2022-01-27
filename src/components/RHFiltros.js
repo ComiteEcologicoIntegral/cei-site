@@ -64,9 +64,11 @@ function RHFiltros({
     const [indOptions, setIndOptions] = useState(indicadores);
     const [location, setLocation] = useState(null)
 
+    const [indicador, setIndicador] = useState(indicadores[0])
+
     const sistema = useRef(null);
     const ubicacion = useRef(null);
-    const indicador = useRef(indicadores[0]);
+    // const indicador = useRef(indicadores[0]);
 
     useEffect(() => {
         system.value === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores)
@@ -84,13 +86,27 @@ function RHFiltros({
 
     // Función general para crear el query
     function createQuery() {
-        updateMainFiltros(ubicacion.current, indicador.current, sistema.current); // Actualiza los valores de los filtros en el componente padre
+        updateMainFiltros(ubicacion.current, indicador, sistema.current); // Actualiza los valores de los filtros en el componente padre
         if (radioValue === '1') {
             createQueryGraph();
         } else {
             createQueryCal();
         }
     }
+
+    // Funcion para revisar si el contaminante seleccionado es valido en el sistema
+    const checkIfSystemValid = (value) => {
+        // Checar si selecciono Purple Air
+        if(value.label === 'PurpleAir'){
+            // Checar si esta seleccionado otro contaminante que no sea PM25
+            if(indicador.value !== 'PM25'){
+                setIndicador(indicadores[0])
+                // console.log(indicadores)
+                // indicador.current = indicadores[0];
+            }
+        }
+    }
+        
     return (
         <div className="mt-5">
             <div className="ta-center mb-5">
@@ -104,6 +120,7 @@ function RHFiltros({
                             options={systemOptions}
                             placeholder={'Sistema'}
                             onChange={(value) => {
+                                checkIfSystemValid(value)
                                 setLocation(null)
                                 ubicacion.current = null
                                 sistema.current = value
@@ -148,10 +165,8 @@ function RHFiltros({
                         <Select
                             options={indOptions}
                             placeholder={'Indicador'}
-                            onChange={(value) => {
-                                indicador.current = value;
-                            }}
-                            defaultValue={indicadores[0]}
+                            onChange={setIndicador}
+                            value={indicador}
                         />
                     </Col>
                     <Col xs={12} sm={3} className="mb-3">
