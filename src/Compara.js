@@ -53,6 +53,7 @@ function Compara() {
     // Todos los valores de los filtros se guardan en un solo arreglo 
     function modifyData(data, index) {
         filterData.current[index] = data;
+        console.log(filterData.current);
     }
 
     function addFiltro() {
@@ -124,6 +125,12 @@ function Compara() {
     let graphLayout = {
         title: {
             text: 'Compara datos',
+            font: {
+                size: 24
+            }
+        },
+        font: {
+            size: 16
         },
         showlegend: true,
         hovermode: 'closest',

@@ -48,6 +48,9 @@ function Registro() {
             }
             json.plot.data[0].x = fechasArray;
 
+            // Hacer más grande el texto de la grafica
+            json.plot.layout = { ...json.plot.layout, font: {size: 15} };
+
             setData(json.plot);
             setSummaryData(json.summary);
             setLoading(false);

@@ -12,6 +12,7 @@ const ComparaFiltros = (props) => {
     const [system, setSystem] = useState("PurpleAir");
     const [indOptions, setIndOptions] = useState(indicadores)
     const [location, setLocation] = useState(null)
+    const [indicador, setIndicador] = useState(indicadores[0])
     const ubic = useRef(sensores[0].zona ? sensores[0].zona : null);
     const ind = useRef(indicadores[0].value);
     const desde = useRef(null);
@@ -36,11 +37,15 @@ const ComparaFiltros = (props) => {
             }));
     }, [sensores, system]);
 
+    useEffect(() => {
+        updateData();
+    }, [indicador])
+
     // Cada que cambie uno de los inputs, se mandan al componente padre porque allá se crea el query
     function updateData() {
         let formData = {
             ubic: ubic.current,
-            ind: ind.current,
+            ind: indicador.value,
             desde: desde.current,
             hasta: hasta.current,
             desdeHora: desdeHora.current,
@@ -48,7 +53,20 @@ const ComparaFiltros = (props) => {
         }
         props.modifyData(formData, id.current);
     }
-    
+
+    // Funcion para revisar si el contaminante seleccionado es valido en el sistema
+    const checkIfSystemValid = (value) => {
+        // Checar si selecciono Purple Air
+        if(value.label === 'PurpleAir'){
+            // Checar si esta seleccionado otro contaminante que no sea PM25
+            if(indicador.value !== 'PM25'){
+                setIndicador(indicadores[0])
+                // console.log(indicadores)
+                // indicador.current = indicadores[0];
+            }
+        }
+    }
+            
     return (
         <Col sm={6}>
             <div className="compara-filtros mt-2 mb-4" id={"filtro-" + id.current}>
@@ -62,6 +80,7 @@ const ComparaFiltros = (props) => {
                                     placeholder={'Sistema'}
                                     className="mb-2"
                                     onChange={(value) => {
+                                        checkIfSystemValid(value)
                                         setSystem(value.value)
                                         setLocation(null)
                                         ubic.current = null
@@ -82,10 +101,8 @@ const ComparaFiltros = (props) => {
                                 <Col sm={6}>
                                     <Select 
                                     options={indOptions} 
-                                    defaultValue={indicadores[0]}
-                                    onChange={(value) => {
-                                        ind.current = value.value;
-                                        updateData()}}
+                                    value={indicador}
+                                    onChange={setIndicador}
                                 />
                                 </Col>
                             </Row>
