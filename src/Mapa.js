@@ -7,7 +7,7 @@ import Wrapper from "./components/WrapperMapa.js";
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
-import { Spinner, OverlayTrigger, Popover, Button } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import moment from "moment";
 
 const mapDefaultProps = {
