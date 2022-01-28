@@ -5,10 +5,7 @@ import {
     Button,
     Col,
     Row,
-    Tooltip,
-    OverlayTrigger,
 } from 'react-bootstrap';
-import { BsInfoCircle } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import { indicadores, idBlacklist, idBlacklistpriv } from '../constants'

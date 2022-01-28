@@ -27,7 +27,7 @@ const Header = () => {
                     <NavLink onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" exact to="/">Mapa</NavLink>
                     <NavLink onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/registro">Registro histórico</NavLink>
                     <NavLink onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/compara">Compara datos</NavLink>
-                    <NavLink onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/">Acerca de</NavLink>
+                    <NavLink onClick={() => setExpanded(false)} activeClassName="nav-active" className="menu-link" to="/acerca">Acerca de</NavLink>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
