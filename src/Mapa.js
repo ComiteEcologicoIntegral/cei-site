@@ -7,7 +7,7 @@ import Wrapper from "./components/WrapperMapa.js";
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
-import { Spinner, OverlayTrigger, Popover, Button } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import moment from "moment";
 
 const mapDefaultProps = {
@@ -19,7 +19,7 @@ const mapDefaultProps = {
 function Mapa() {
   const [currentGas, setCurrentGas] = useState(gases[0]);
   const [currentInterval, setCurrentInterval] = useState(0);
-  const [currentLocation, setCurrentLocation] = useState(null)
+  const [currentLocation, setCurrentLocation] = useState(null);
   const {
     data: sensorData,
     loading: loadingSensorData,
@@ -40,45 +40,61 @@ function Mapa() {
     [map]
   );
 
-  const airQualityIndex = useMemo(
-    () => {
-      if (sensorData == null) {
-        console.log("No data yet");
-        return 0;
+  const airQualityIndex = useMemo(() => {
+    if (sensorData == null) {
+      console.log("No data yet");
+      return 0;
+    }
+
+    let highestAirQualityIndex = 0;
+
+    const filteredSensors = sensorData.filter(
+      (sensor) =>
+        typeof sensor.Longitud === "number" &&
+        typeof sensor.Latitud === "number" &&
+        !mapBlacklist.includes(sensor.Sistema) &&
+        !idBlacklist.includes(sensor.Sensor_id)
+    );
+
+    filteredSensors.map((data) => {
+      const { name: gasName, units: gasUnits } = currentGas;
+
+      let preValue = 0;
+      // Presenta el value del indicador de calidad del aire
+      const prefix = "ICAR_";
+      // Checar el mas alto de los O3
+      preValue =
+        gasName === "O3"
+          ? data.Sistema === "AireNuevoLeon"
+            ? data[`${prefix}O3_1h`] >= data[`${prefix}O3_8h`]
+              ? data[`${prefix}O3_1h`]
+              : data[`${prefix}O3_8h`]
+            : data[`${prefix}${gasName}`]
+          : data[`${prefix}${gasName}`];
+
+      // Si no hay ICAR desplegar la concentración
+      if (preValue === -1) {
+        preValue = null;
       }
 
-      let highestAirQualityIndex = 0;
-
-      const filteredSensors = sensorData.filter(
-        (sensor) =>
-          typeof sensor.Longitud === "number" &&
-          typeof sensor.Latitud === "number" &&
-          !mapBlacklist.includes(sensor.Sistema) &&
-          !idBlacklist.includes(sensor.Sensor_id)
-      );
-
-      filteredSensors.map((data) => {
-        const { name: gasName, units: gasUnits } = currentGas;
-
-        let preValue =
-          gasName === "PM25"
-            ? data.Sistema === "PurpleAir"
-              ? data["PM25_Promedio"]
-              : data[gasName]
-            : data[gasName];
-
-        const value = typeof preValue === "number" ? preValue : "ND";
-
-        const gasStatus = getStatus(gasName, value);
-        if (gasStatus > highestAirQualityIndex) {
-          highestAirQualityIndex = gasStatus;
+      if (typeof preValue === "number") {
+        if (gasName === "NO2" || gasName === "SO2") {
+          preValue = +preValue.toFixed(4);
+        } else {
+          preValue = +preValue.toFixed(2);
         }
-      });
+      }
 
-      return highestAirQualityIndex;
-    },  
-    [sensorData, currentGas]
-  );
+      const value = typeof preValue === "number" ? preValue : "ND";
+
+      const gasStatus = getStatus(gasName, value);
+      if (gasStatus > highestAirQualityIndex) {
+        highestAirQualityIndex = gasStatus;
+      }
+    });
+
+    return highestAirQualityIndex;
+  }, [sensorData, currentGas]);
 
   const markers = useMemo(() => {
     const filteredSensors = sensorData.filter(
@@ -88,17 +104,17 @@ function Mapa() {
         !mapBlacklist.includes(sensor.Sistema) &&
         !idBlacklist.includes(sensor.Sensor_id)
     );
-    
+
     const resultingData = filteredSensors.map((data) => {
       const { name: gasName, units: gasUnits } = currentGas;
-    
+
       let preValue = null;
       /* Current Interval === 0 -> Presenta el value del indicador de calidad del aire */
-      if(currentInterval === 0){
+      if (currentInterval === 0) {
         // Presenta el value del indicador de calidad del aire
         const prefix = "ICAR_";
         // Checar el mas alto de los O3
-        preValue = 
+        preValue =
           gasName === "O3"
             ? data.Sistema === "AireNuevoLeon"
               ? data[`${prefix}O3_1h`] >= data[`${prefix}O3_8h`]
@@ -106,12 +122,13 @@ function Mapa() {
                 : data[`${prefix}O3_8h`]
               : data[`${prefix}${gasName}`]
             : data[`${prefix}${gasName}`];
-        
+
         // Si no hay ICAR desplegar la concentración
-        if(preValue === -1) {
+        if (preValue === -1) {
           preValue = null;
         }
-      } else if(currentInterval === 1){ // Current Interval === 1 -> Presenta el value de la concentracion horaria
+      } else if (currentInterval === 1) {
+        // Current Interval === 1 -> Presenta el value de la concentracion horaria
         // Presenta el value de la concentracion (tiempo real)
         preValue =
           gasName === "PM25"
@@ -121,8 +138,8 @@ function Mapa() {
             : data[gasName];
       }
 
-      if(typeof preValue === "number") {
-        if(gasName === "NO2" || gasName === "SO2") {
+      if (typeof preValue === "number") {
+        if (gasName === "NO2" || gasName === "SO2") {
           preValue = +preValue.toFixed(4);
         } else {
           preValue = +preValue.toFixed(2);
@@ -130,11 +147,6 @@ function Mapa() {
       }
 
       const value = typeof preValue === "number" ? preValue : "ND";
-
-      // const gasStatus = getStatus(gasName, value);
-      // if (gasStatus > highestAirQualityIndex) {
-      //   highestAirQualityIndex = gasStatus;
-      // }
 
       return {
         currentLocation,
@@ -191,7 +203,7 @@ function Mapa() {
     <div>
       <MapaFiltros
         onApply={({ gas, location, interval }) => {
-          if(interval) {
+          if (interval) {
             setCurrentInterval(interval.value);
           }
 
@@ -211,7 +223,6 @@ function Mapa() {
               setCenter([fSensor.Latitud, fSensor.Longitud]);
             }
           }
-
         }}
       />
       <div
@@ -254,37 +265,39 @@ function Mapa() {
             <div className="leyenda-width">
               <h6>Leyenda</h6>
               <div className="leyenda-grid">
-      
-                  <div
-                    style={{
-                      boxSizing: "border-box",
-                      borderRadius: "100%",
-                      width: "20px",
-                      height: "20px",
-                      marginRight: "0.75rem",
-                      padding: 0,
-                      border: "1px solid black",
-                    }}
-                    className="mb-2"
-                  ></div>
-                  <div className="mb-2">Los sensores del estado se representan con un círculo</div>
-                
-                  <div
-                    style={{
-                      boxSizing: "border-box",
-                      width: "20px",
-                      height: "20px",
-                      marginRight: "0.75rem",
-                      padding: 0,
-                      border: "1px solid black",
-                    }}
-                    className="mb-2"
-                  ></div>
-                  <div className="mb-2">Los sensores de Purple Air se representan con un cuadrado</div>
-                
-                  <div className="">ND</div>
-                  <div>No dato</div>
-                
+                <div
+                  style={{
+                    boxSizing: "border-box",
+                    borderRadius: "100%",
+                    width: "20px",
+                    height: "20px",
+                    marginRight: "0.75rem",
+                    padding: 0,
+                    border: "1px solid black",
+                  }}
+                  className="mb-2"
+                ></div>
+                <div className="mb-2">
+                  Los sensores del estado se representan con un círculo
+                </div>
+
+                <div
+                  style={{
+                    boxSizing: "border-box",
+                    width: "20px",
+                    height: "20px",
+                    marginRight: "0.75rem",
+                    padding: 0,
+                    border: "1px solid black",
+                  }}
+                  className="mb-2"
+                ></div>
+                <div className="mb-2">
+                  Los sensores de Purple Air se representan con un cuadrado
+                </div>
+
+                <div className="">ND</div>
+                <div>No dato</div>
               </div>
             </div>
             {/* <OverlayTrigger
@@ -333,8 +346,8 @@ function Mapa() {
         </div>
         <Wrapper whenCreated={setMap} {...mapDefaultProps}>
           {!loadingSensorData &&
-            markers.map((markerProps, idx) => { 
-              if (currentGas.name === 'PM25') {
+            markers.map((markerProps, idx) => {
+              if (currentGas.name === "PM25") {
                 return (
                   <Marcador
                     map={map}
@@ -347,7 +360,7 @@ function Mapa() {
                   />
                 );
               } else {
-                if(!markerProps.isPurpleAir) {
+                if (!markerProps.isPurpleAir) {
                   return (
                     <Marcador
                       map={map}
@@ -359,7 +372,6 @@ function Mapa() {
                       shape={markerProps.isPurpleAir ? "square" : "round"}
                     />
                   );
-
                 }
               }
             })}
