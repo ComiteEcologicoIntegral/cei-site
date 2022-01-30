@@ -49,9 +49,9 @@ const DatePicker = ({ q, fecha, ubic, ind, value, onChange }) => {
             newq = q.substring(0, q.indexOf("&inicio")); // solo nos interesa saber las ubicaciones y gases seleccionados
         }
 
-        if (!queryAnt.current || queryAnt.current !== newq || mesAnt.current != mes) { // Cambió la ubicación y gases seleccionados o el mes seleccionado
+        if (!queryAnt.current || queryAnt.current !== newq || mesAnt.current !== mes) { // Cambió la ubicación y gases seleccionados o el mes seleccionado
             if (queryAnt.current !== q) queryAnt.current = newq;
-            if (mesAnt.current != mes) mesAnt.current = mes;
+            if (mesAnt.current !== mes) mesAnt.current = mes;
 
             if (ubic && mes) {
                 // Creamos query, sacando los datos de todo el mes

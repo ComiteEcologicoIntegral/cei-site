@@ -65,7 +65,7 @@ function Compara() {
 
     // Elimina el último filtro
     function deleteFiltro() {
-        if (numFiltros.current != -1) {
+        if (numFiltros.current !== -1) {
             let filtroDiv = document.getElementById(`filtro-${numFiltros.current}`).parentNode;
             filtroDiv.parentNode.removeChild(filtroDiv);
             numFiltros.current = numFiltros.current - 1;

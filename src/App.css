@@ -261,6 +261,15 @@ button, button:focus {
   margin: 5px 20px;
 }
 
+.loading-default {
+  min-width: 300px;
+  max-width: 500px;
+  min-height: 300px;
+  max-height: 500px;
+  margin-top: 10%;
+  margin-bottom: 10%;
+}
+
 /****** COMPARA FILTROS ****/
 .compara-filtros {
   background-color:rgba(70,130,180,0.5);
