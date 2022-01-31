@@ -1,12 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Nav, NavLink, Tab } from 'react-bootstrap'
 
 const Recomendaciones = (props) => {
-
     const [selected, setSelected] = useState(props.selected ?? "buena");
+    
+    useEffect(() => {
+        setSelected(props.selected);
+    }, [props.selected]);
+
     const changeSelected = (curr) => {
-        setSelected(props.isManual ? curr : props.selected);
-        console.log(selected);
+        if (props.isManual) {
+            setSelected(curr);
+        }
     }
 
     return (
