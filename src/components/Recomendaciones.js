@@ -1,28 +1,36 @@
+import { useState } from 'react'
 import { Nav, NavLink, Tab } from 'react-bootstrap'
 
 const Recomendaciones = (props) => {
+
+    const [selected, setSelected] = useState(props.selected ?? "buena");
+    const changeSelected = (curr) => {
+        setSelected(props.isManual ? curr : props.selected);
+        console.log(selected);
+    }
+
     return (
         <div className="container mt-5 mb-3">
             <div className="ta-center mb-5">
                 <h3>Concentración horaria</h3>
                 <p>Conoce las recomendaciones según el índice de calidad del aire</p>
             </div>
-            <Tab.Container fill activeKey={props.selected ?? "buena"} className="recomendaciones h-100">
+            <Tab.Container fill activeKey={selected} className="recomendaciones h-100">
                 <Nav fill>
                     <Nav.Item>
-                        <NavLink eventKey="buena" className="nav-buena">Buena</NavLink>
+                        <NavLink eventKey="buena" className="nav-buena" onClick={() => changeSelected("buena")}>Buena</NavLink>
                     </Nav.Item>
                     <Nav.Item>
-                        <NavLink eventKey="acept" className="nav-acept">Aceptable</NavLink>
+                        <NavLink eventKey="acept" className="nav-acept" onClick={() => changeSelected("acept")}>Aceptable</NavLink>
                     </Nav.Item>
                     <Nav.Item>
-                        <NavLink eventKey="mala" className="nav-mala">Mala</NavLink>
+                        <NavLink eventKey="mala" className="nav-mala" onClick={() => changeSelected("mala")}>Mala</NavLink>
                     </Nav.Item>
                     <Nav.Item>
-                        <NavLink eventKey="muy" className="nav-muy">Muy Mala</NavLink>
+                        <NavLink eventKey="muy" className="nav-muy" onClick={() => changeSelected("muy")}>Muy Mala</NavLink>
                     </Nav.Item>
                     <Nav.Item>
-                        <NavLink eventKey="ext" className="nav-ext">Extremadamente Mala</NavLink>
+                        <NavLink eventKey="ext" className="nav-ext" onClick={() => changeSelected("ext")}>Extremadamente Mala</NavLink>
                     </Nav.Item>
                 </Nav>
 

@@ -5,6 +5,7 @@ import moment from "moment";
 import "moment/locale/es";
 import { apiUrl } from "./constants";
 import { Modal } from "react-bootstrap";
+import Recomendaciones from './components/Recomendaciones.js'
 
 moment.locale("es");
 
@@ -244,6 +245,7 @@ function Registro() {
           </Suspense>
         </>
       )}
+      <Recomendaciones isManual={true}/>
     </div>
   );
 }
