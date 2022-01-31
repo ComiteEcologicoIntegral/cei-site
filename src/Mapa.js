@@ -377,7 +377,7 @@ function Mapa() {
             })}
         </Wrapper>
       </div>
-      <Recomendaciones selected={airQualityTags[airQualityIndex]} />
+      <Recomendaciones selected={airQualityTags[airQualityIndex]} isManual={false} />
     </div>
   );
 }

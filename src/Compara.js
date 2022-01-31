@@ -4,6 +4,7 @@ import { Col, Row, Button } from 'react-bootstrap'
 import { fetchSummaryData } from './handlers/data';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSensorData } from './redux/reducers';
+import Recomendaciones from './components/Recomendaciones';
 import moment from 'moment';
 import 'moment/locale/es';
 import { apiUrl } from './constants';
@@ -65,7 +66,7 @@ function Compara() {
 
     // Elimina el último filtro
     function deleteFiltro() {
-        if (numFiltros.current != -1) {
+        if (numFiltros.current !== -1) {
             let filtroDiv = document.getElementById(`filtro-${numFiltros.current}`).parentNode;
             filtroDiv.parentNode.removeChild(filtroDiv);
             numFiltros.current = numFiltros.current - 1;
@@ -467,6 +468,7 @@ function Compara() {
                     />
                 </div>
             </Col>
+            <Recomendaciones isManual={true} />
             </Row>
         </div>
     )
