@@ -62,14 +62,17 @@ export const idBlacklist = [
     'P39497',
     'P39285',
     'P39355',
-
-
+    'P39285',
+    'P93927',
+    'P93745',
+    'P96317',
+    'P50871',
+    'P39285',
 
 ];
 export const idBlacklistpriv = [
     'P39497',
     'P39285',
-    'P39355'
 
 ];
 export const mapBlacklist = [
