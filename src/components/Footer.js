@@ -11,7 +11,7 @@ const Footer = () => {
                             <a className='text-white' href="https://sinaica.inecc.gob.mx/">Sinaica</a>{' '}
                             y de <a className='text-white' href="http://aire.nl.gob.mx/">Sima</a>
                         </p>
-                        <p className="mb-1">Patrocinado por Natuuramika® 2021</p>
+                        {/* <p className="mb-1">Patrocinado por Natuuramika® 2021</p> */}
                         <p>Proyecto Solidario con el servicio social del TEC de Monterrey</p>
                     </div>
                 </div>
