@@ -54,7 +54,6 @@ function Compara() {
     // Todos los valores de los filtros se guardan en un solo arreglo 
     function modifyData(data, index) {
         filterData.current[index] = data;
-        console.log(filterData.current);
     }
 
     function addFiltro() {
