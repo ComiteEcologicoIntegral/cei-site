@@ -17,6 +17,7 @@ const mapDefaultProps = {
 };
 
 function Mapa() {
+  const [showHideState, setshowHideState] = useState(1);
   const [currentGas, setCurrentGas] = useState(gases[0]);
   const [currentInterval, setCurrentInterval] = useState(0);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -27,7 +28,7 @@ function Mapa() {
   } = useSensorData({});
 
   const [map, setMap] = useState(null);
-
+  
   const setCenter = useCallback(
     (pos) => {
       if (map) {
@@ -224,6 +225,9 @@ function Mapa() {
           }
         }}
       />
+      <div  style ={{padding:'1%', marginTop: '2%', display: "block"}}>
+        <button class="smallBotton" style ={{color:'dark-grey', radius:'50%'}} onClick={() => setshowHideState(!showHideState)}>{showHideState ? "Leyenda Ocultar" : "Leyenda Mostrar" }</button>
+      </div>
       <div
         className="my-4"
         style={{
@@ -261,44 +265,47 @@ function Mapa() {
           style={{ zIndex: 99, pointerEvents: "none" }}
         >
           <div className="position-absolute end-0 right-0 ">
-            <div className="leyenda-width">
-              <h6>Leyenda</h6>
-              <div className="leyenda-grid">
-                <div
-                  style={{
-                    boxSizing: "border-box",
-                    borderRadius: "100%",
-                    width: "20px",
-                    height: "20px",
-                    marginRight: "0.75rem",
-                    padding: 0,
-                    border: "1px solid black",
-                  }}
-                  className="mb-2"
-                ></div>
-                <div className="mb-2">
-                  Los sensores del estado se representan con un círculo
-                </div>
-
-                <div
-                  style={{
-                    boxSizing: "border-box",
-                    width: "20px",
-                    height: "20px",
-                    marginRight: "0.75rem",
-                    padding: 0,
-                    border: "1px solid black",
-                  }}
-                  className="mb-2"
-                ></div>
-                <div className="mb-2">
-                  Los sensores de Purple Air se representan con un cuadrado
-                </div>
-
-                <div className="">ND</div>
-                <div>No dato</div>
-              </div>
-            </div>
+          { showHideState ?                 
+            <div className="leyenda-width opt1" >
+                    <h6>Leyenda</h6>
+                    <div className="leyenda-grid">
+                      <div
+                        style={{
+                          boxSizing: "border-box",
+                          borderRadius: "100%",
+                          width: "20px",
+                          height: "20px",
+                          marginRight: "0.75rem",
+                          padding: 0,
+                          border: "1px solid black",
+                        }}
+                        className="mb-2"
+                      ></div>
+                      <div className="mb-2">
+                        Los sensores del estado se representan con un círculo
+                      </div>
+    
+                      <div
+                        style={{
+                          boxSizing: "border-box",
+                          width: "20px",
+                          height: "20px",
+                          marginRight: "0.75rem",
+                          padding: 0,
+                          border: "1px solid black",
+                        }}
+                        className="mb-2"
+                      ></div>
+                      <div className="mb-2">
+                        Los sensores de Purple Air se representan con un cuadrado
+                      </div>
+    
+                      <div className="">ND</div>
+                      <div>No dato</div>
+                    </div>
+                    </div>
+              : null
+            }
             {/* <OverlayTrigger
               trigger="click"
               placement={"left"}
