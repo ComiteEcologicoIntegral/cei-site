@@ -62,6 +62,10 @@ export const idBlacklist = [
     'P39497',
     'P39285',
     'P39355',
+    'P71091',
+    'P49563',
+    'P49949',
+    'P50873',
 
 ];
 export const idBlacklistpriv = [
