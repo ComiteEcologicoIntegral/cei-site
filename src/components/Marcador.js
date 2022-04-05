@@ -69,6 +69,7 @@ function Marcador({
     provider,
     locationStr,
     labels,
+    urlMI,
     lastUpdate,
     map,
     shape = 'round',
@@ -353,11 +354,13 @@ function Marcador({
                 </div>
 
                 <div className="py-2 px-3 border-top text-center">
-                    <Button size="sm">Más información</Button>
+                    <Button size="sm">
+                        <a style={{ color: 'white' }} target='blank' href={urlMI}>Más información</a>
+                    </Button>
                     <p className="lh-sm mt-2 mb-0">
                         Fuente(s): <a target='blank' href={provider.ref}>{provider.name}</a>
                     </p>
-                </div>
+                </div> 
             </Popup>
         </Marker>
     );
@@ -402,6 +405,11 @@ Marcador.propTypes = {
         name: PropTypes.string,
         ref: PropTypes.string,
     }),
+
+    /**
+     * url para boton de Mas Informacion
+     */
+    urlMI: PropTypes.string,
 
     /**
      * Informacion de todos los indicadores del sensor

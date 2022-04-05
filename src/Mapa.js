@@ -96,6 +96,24 @@ function Mapa() {
     return highestAirQualityIndex;
   }, [sensorData, currentGas]);
 
+  //Diccionario para pasar de Sensor_id a nombre de estacion
+  const ANLKeys_dict = {
+    "ANL1": "SURESTE",
+    "ANL2": "NORESTE",
+    "ANL3": "SUROESTE",
+    "ANL4": "[SAN Pedro]",
+    "ANL5": "NORTE2",
+    "ANL6": "GARCIA",
+    "ANL7": "NOROESTE",
+    "ANL8": "SURESTE3",
+    "ANL9": "NORTE",
+    "ANL10": "NORESTE2",
+    "ANL11": "SUR",
+    "ANL12": "CENTRO",
+    "ANL13": "SURESTE2",
+    "ANL15": "PESQUERIA",
+}
+
   const markers = useMemo(() => {
     const filteredSensors = sensorData.filter(
       (sensor) =>
@@ -193,6 +211,16 @@ function Mapa() {
             ref: "#",
           };
         }),
+        //url para boton de Mas Informacion
+        urlMI:(() => {
+          if (data.Sistema === "PurpleAir")
+            return "https://map.purpleair.com/1/mAQI/a10/p0/cC0?select="+data.Sensor_id.substr(1)+"#13.91/"+data.Latitud+"/"+data.Longitud;
+          if (data.Sistema === "AireNuevoLeon")
+            return "http://aire.nl.gob.mx:81/SIMA2017reportes/ReporteDiariosimaIcars.php?estacion1="+ANLKeys_dict[data.Sensor_id];
+          if (data.Sistema === "Sinaica")
+            return "https://sinaica.inecc.gob.mx/";
+          return "#";
+        })(),
       };
     });
 
