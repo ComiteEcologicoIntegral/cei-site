@@ -165,7 +165,7 @@ function Mapa() {
       }
 
       const value = typeof preValue === "number" ? preValue : "ND";
-
+      
       return {
         currentLocation,
         ICAR_PM25: +data.ICAR_PM25,
@@ -176,6 +176,8 @@ function Mapa() {
         ICAR_NO2: +data.ICAR_NO2,
         ICAR_SO2: +data.ICAR_SO2,
         sensor_id: data.Sensor_id,
+        humedad: ( typeof data.Humedad_R === 'undefined' || data.Humedad_R === null ) ?  "N/D" : data.Humedad_R.toString(),
+        temperatura: ( typeof data.Temperatura_C === 'undefined' || data.Temperatura_C === null ) ?  "N/D" : data.Temperatura_C.toString(),
         position: [data.Latitud, data.Longitud],
         current: {
           indicator: currentGas.label ? currentGas.label : gasName,

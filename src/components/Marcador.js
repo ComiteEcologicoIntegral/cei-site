@@ -62,6 +62,8 @@ function Marcador({
     ICAR_NO2,
     ICAR_SO2,
     sensor_id,
+    humedad,
+    temperatura,
     label,
     status,
     position,
@@ -182,6 +184,18 @@ function Marcador({
                         <data>{locationStr}</data>
                     </div>
 
+                    <Row className='data-label'>
+                        <Col xs={5}>
+                            <small className="text-muted">Humedad</small>
+                            <br />
+                            <data>{humedad + ' %'}</data>
+                        </Col>
+                        <Col xs={5}>
+                            <small className="text-muted">Temperatura</small>
+                            <br />
+                            <data>{temperatura  + ' ºC'}</data>
+                        </Col>
+                    </Row>
 
                     <div className="data-label">
                         <small className="text-muted">
@@ -189,7 +203,7 @@ function Marcador({
                         </small>
                         <br />
                         <time>
-                            {moment(lastUpdate).format(
+                            {moment(lastUpdate).locale('en-ES').format(
                                 'ddd, MMMM D YYYY, h:mm:ss a'
                             )}
                         </time>
@@ -199,13 +213,11 @@ function Marcador({
                         <Col xs={3}>
                         </Col>
                         <Col xs={5}>
-                            <small className="text-muted">Tiempo Real</small>
+                            <small className="text-muted">AHORA</small>
                         </Col>
                         <Col xs={4}>
                             <small className="text-muted">ICAR</small>
                         </Col>
-                    {/* <div className="data-label2"> */}
-                    {/* </div> */}
                     </Row>
 
                     <Form >
