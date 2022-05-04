@@ -149,37 +149,37 @@ const MapaFiltros = ({ onApply }) => {
             </Modal.Header>
             <Modal.Body>
                 <Row>
-                    <h3 className="mod-sub"><span className="mod-ind morado">PM 10</span>&emsp; Material Particulado menor a 10 micrómetros</h3>
+                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-salud-pm10-y-pm2-5"><span className="mod-ind morado">PM 10</span></a>&emsp; Material Particulado menor a 10 micrómetros</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Mezcla compleja de partículas líquidas o sólidas que provienen de fuentes naturales o de fuentes antropogénicas, poseen un tamaño aerodinámico menor a 10 micrómetros.</p>
                 </Row>
                 <Row>
-                    <h3 className="mod-sub"><span className="mod-ind morado">PM 2.5</span>&emsp; Material Particulado menor a 2.5 micrómetros</h3>
+                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-salud-pm10-y-pm2-5"><span className="mod-ind morado">PM 2.5</span></a>&emsp; Material Particulado menor a 2.5 micrómetros</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Mezcla Compleja de Partículas líquidas o sólidas que provienen principalmente de fuentes antropogénicas, poseen un tamaño aerodinámico menor a 2.5 micrómetros.</p>
                 </Row>
                 <Row>
-                    <h3 className="mod-sub"><span className="mod-ind morado">O3</span>&emsp; Ozono</h3>
+                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-salud-de-ozono"><span className="mod-ind morado">O3</span></a>&emsp; Ozono</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Gas compuesto por 3 átomos de oxigeno que se encuentra principalmente en la estratosfera, puede formarse a nivel superficial debido a condiciones de alta radiación y temperatura.</p>
                 </Row>
                 <Row>
-                    <h3 className="mod-sub"><span className="mod-ind morado">CO</span>&emsp; Monóxido de Carbono</h3>
+                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-sal…oxido-de-carbono"><span className="mod-ind morado">CO</span></a>&emsp; Monóxido de Carbono</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Gas incoloro que se forma principalmente por la combustión de gasolinas, leña o carbón, este compuesto, en altas concentraciones puede ser muy nocivo a la salud.</p>
                 </Row>
                 <Row>
-                    <h3 className="mod-sub"><span className="mod-ind morado">SO2</span>&emsp; Dióxido de Azufre</h3>
+                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-sal…ioxido-de-azufre"><span className="mod-ind morado">SO2</span></a>&emsp; Dióxido de Azufre</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Es un gas formado por 2 átomos de oxígeno y uno de azufre, se forma principalmente por la combustión de combustibles fósiles con alto contenido de azufre.</p>
                 </Row>
                 <Row>
-                    <h3 className="mod-sub"><span className="mod-ind morado">NO2</span>&emsp; Dióxido de Nitrógeno</h3>
+                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-sal…dos-de-nitrogeno"><span className="mod-ind morado">NO2</span></a>&emsp; Dióxido de Nitrógeno</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Molécula con 2 átomos de oxígeno y uno de Nitrógeno que se produce principalmente por la combustión de combustibles fósiles empleados en vehículos y plantas de energía.</p>
