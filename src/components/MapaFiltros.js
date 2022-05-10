@@ -167,19 +167,19 @@ const MapaFiltros = ({ onApply }) => {
                     <p className="mod-desc">Gas compuesto por 3 átomos de oxigeno que se encuentra principalmente en la estratosfera, puede formarse a nivel superficial debido a condiciones de alta radiación y temperatura.</p>
                 </Row>
                 <Row>
-                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-sal…oxido-de-carbono"><span className="mod-ind morado">CO</span></a>&emsp; Monóxido de Carbono</h3>
+                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-salud-de-monoxido-de-carbono"><span className="mod-ind morado">CO</span></a>&emsp; Monóxido de Carbono</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Gas incoloro que se forma principalmente por la combustión de gasolinas, leña o carbón, este compuesto, en altas concentraciones puede ser muy nocivo a la salud.</p>
                 </Row>
                 <Row>
-                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-sal…ioxido-de-azufre"><span className="mod-ind morado">SO2</span></a>&emsp; Dióxido de Azufre</h3>
+                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-salud-de-dioxido-de-azufre"><span className="mod-ind morado">SO2</span></a>&emsp; Dióxido de Azufre</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Es un gas formado por 2 átomos de oxígeno y uno de azufre, se forma principalmente por la combustión de combustibles fósiles con alto contenido de azufre.</p>
                 </Row>
                 <Row>
-                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-sal…dos-de-nitrogeno"><span className="mod-ind morado">NO2</span></a>&emsp; Dióxido de Nitrógeno</h3>
+                    <h3 className="mod-sub"><a href="https://comiteecologicointerescolar.org/2022/02/23/efectos-a-la-salud-de-oxidos-de-nitrogeno"><span className="mod-ind morado">NO2</span></a>&emsp; Dióxido de Nitrógeno</h3>
                 </Row>
                 <Row>
                     <p className="mod-desc">Molécula con 2 átomos de oxígeno y uno de Nitrógeno que se produce principalmente por la combustión de combustibles fósiles empleados en vehículos y plantas de energía.</p>
