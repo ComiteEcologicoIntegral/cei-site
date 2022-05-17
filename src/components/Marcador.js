@@ -203,9 +203,7 @@ function Marcador({
                         </small>
                         <br />
                         <time>
-                            {moment(lastUpdate).locale('en-ES').format(
-                                'ddd, MMMM D YYYY, h:mm:ss a'
-                            )}
+                            {moment(lastUpdate).format("LL, LT")}
                         </time>
                     </div>
 

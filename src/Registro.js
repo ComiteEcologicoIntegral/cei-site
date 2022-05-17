@@ -7,8 +7,6 @@ import { apiUrl } from "./constants";
 import { Modal } from "react-bootstrap";
 import Recomendaciones from './components/Recomendaciones.js'
 
-moment.locale("es");
-
 const Calendario = lazy(() => import("./components/Calendario")) 
 
 function Registro() {
@@ -21,7 +19,6 @@ function Registro() {
   const [noData, setNoData] = useState(false); // Desplegar mensaje si no se encontraron datos en la BD
 
   // Datos de los filtros:
-  //const [indi, setIndi] = useState('PM25');
   const [desde, setDesde] = useState(null);
   const [hasta, setHasta] = useState(null);
   const [desdeHora, setDesdeHora] = useState("00:00:00");
