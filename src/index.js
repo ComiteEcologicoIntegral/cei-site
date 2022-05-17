@@ -7,6 +7,10 @@ import { BrowserRouter } from 'react-router-dom';
 import reduxConfig from './redux/config';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import moment from 'moment';
+import 'moment/locale/es';
+
+moment.locale("es");
 
 const { store, persistor } = reduxConfig();
 

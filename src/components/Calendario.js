@@ -8,8 +8,6 @@ import Select from 'react-select';
 import moment from 'moment'
 import 'moment/locale/es';
 
-moment.locale('es');
-
 const unidad = {
     PM25: "µg/m3",
     PM10: "µg/m3",
