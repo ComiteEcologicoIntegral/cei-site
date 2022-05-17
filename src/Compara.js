@@ -54,12 +54,46 @@ function Compara() {
     // Todos los valores de los filtros se guardan en un solo arreglo 
     function modifyData(data, index) {
         filterData.current[index] = data;
+
+        if (filterData.current[0]["hasta"]!=null && filterData.current[0]["desde"]!=null){
+            var fecha2=moment(filterData.current[0]["hasta"]+" "+filterData.current[0]["hastaHora"])
+            var fecha1=moment(filterData.current[0]["desde"]+" "+filterData.current[0]["desdeHora"])
+            var dias = fecha2.diff(fecha1,'days')
+            fecha1.add(dias, 'days')
+            var mins = fecha2.diff(fecha1,'minutes')
+
+            for (let i=1; i<=numFiltros.current; i++){
+                //alert(filterData.current[i]["desde"]+" "+filterData.current[0]["desdeHora"])
+                let tempFecha =moment(filterData.current[i]["desde"]+" "+filterData.current[0]["desdeHora"])
+                //alert(tempFecha)
+                tempFecha.add(dias,'days')
+                tempFecha.add(mins,'minutes')
+                //alert(tempFecha)
+                filterData.current[i]["hasta"] = tempFecha.format('YYYY-MM-DD')
+                filterData.current[i]["hastaHora"] = tempFecha.format('HH:mm:ss')
+                filterData.current[i]["desdeHora"] = filterData.current[0]["desdeHora"]
+            }
+        }
     }
 
     function addFiltro() {
-        if (numFiltros.current < maxNum) {
+        /*if (numFiltros.current < maxNum) {
             numFiltros.current = numFiltros.current + 1;
             setFilters([...filters, <ComparaFiltros id={numFiltros.current} modifyData={modifyData} sensores={sensores}/>]);
+        }*/
+        if (numFiltros.current < 0){
+            //alert(numFiltros)
+            numFiltros.current = numFiltros.current + 1;
+            setFilters([...filters, <ComparaFiltros id={numFiltros.current} modifyData={modifyData} sensores={sensores}/>]);
+        }else if(numFiltros.current<maxNum && filterData.current[0]["desde"]!=null && filterData.current[0]["hasta"]!=null){
+            numFiltros.current = numFiltros.current + 1;
+            setFilters([...filters, <ComparaFiltros id={numFiltros.current} modifyData={modifyData} sensores={sensores}/>]);
+
+        }
+        else if (numFiltros.current < maxNum) {
+            alert("Primero debe llenar el campo de fechas en el primer filtro")
+        }else{
+            alert("Ya tiene el maximo de 4 filtros")
         }
     }
 
@@ -74,6 +108,7 @@ function Compara() {
 
     function queryData() {
         if (numFiltros.current < 0) {
+            alert("Añada al menos un filtro primero")
             return;
         }
         let ubicaciones = "";
@@ -85,6 +120,9 @@ function Compara() {
         for (let i=0; i<=numFiltros.current ; i++) {
             if (!filterData.current[i]|| !filterData.current[i]["desde"] || !filterData.current[i]["hasta"]) { // A alguno le falta seleccionar fechas
                 alert("Selecciona las fechas");
+                return;
+            } else if (!filterData.current[i]["ubic"]) {
+                alert("Seleccione la ubicacion");
                 return;
             } else {
                 // Unir con comas
@@ -350,6 +388,7 @@ function Compara() {
                 let ubicacion = sensores.find(sensor => sensor.sensor_id === filterData.current[i]["ubic"].value).zona;
                 let gas = filterData.current[i]["ind"] === "PM25" ? "PM2.5" : filterData.current[i]["ind"];
                 setGas(gas);
+                let fecha = filterData.current[i]["desde"] + " " + filterData.current[i]["desdeHora"] + " a " + filterData.current[i]["hasta"] + " " + filterData.current[i]["hastaHora"]
 
                 switch(gas) {
                     case 'PM2.5':
@@ -372,7 +411,7 @@ function Compara() {
                         break;
                 }
 
-                data[i].name = `${ubicacion} (${gas})`; 
+                data[i].name = `${ubicacion} (${gas})`// [${fecha}]`; 
                 data[i].type = "scatter";
                 data[i].mode = "lines";
                 data[i].marker = { color: colors[i] };
@@ -386,22 +425,24 @@ function Compara() {
                 if(gas === 'PM2.5' || gas === 'PM10') {
                     // Agregar promedio movil 24h
                     const dataPromMovil = { ...data[i] }
-                    dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 24h`
+                    dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 24h `//[${fecha}]`
                     dataPromMovil.marker = { color: colors2[i] }
                     // for(let i=0;i<23;i++) {
                     //     moving_average.unshift(null)
                     // }
                     dataPromMovil.y = dataPromMovil.moving_average;
+                    dataPromMovil.visible = 'legendonly';
                     graph.push(dataPromMovil)
                     
                     // Agregar Indice aire y salud
                     const dataICAR = { ...data[i] }
-                    dataICAR.name = `${ubicacion} (${gas}) Indice Aire y Salud`
+                    dataICAR.name = `${ubicacion} (${gas}) Indice Aire y Salud`// [${fecha}]`
                     dataICAR.marker = { color: colors3[i] }
                     // for(let i=0;i<23;i++) {
                     //     moving_average.unshift(null)
                     // }
                     dataICAR.y = dataICAR.ICAR;
+                    dataICAR.visible = 'legendonly';
                     graph.push(dataICAR)
 
                 } else if (gas === 'SO2') {
@@ -413,6 +454,7 @@ function Compara() {
                     //     moving_average.unshift(null)
                     // }
                     dataPromMovil.y = dataPromMovil.moving_average;
+                    dataPromMovil.visible = 'legendonly';
                     graph.push(dataPromMovil)
                     
                 } else if (gas === 'CO') {
@@ -424,12 +466,16 @@ function Compara() {
                     //     moving_average.unshift(null)
                     // }
                     dataPromMovil.y = dataPromMovil.moving_average;
+                    dataPromMovil.visible = 'legendonly';
                     graph.push(dataPromMovil)
                 }
             }
 
             setGraphData(graph);
-        }
+        }/*else{
+            setLoading(false)
+            alert("No existen datos en ese rango")
+        }*/
 
     }
     
