@@ -47,4 +47,4 @@ jobs:
             docker pull haiwave/cei-repo:front
             docker stop cei-app
             docker rm cei-app
-            echo "docker run -d -p 9000:80 --name cei-app $DCKR_USRNM/cei-repo:front"
+            docker run -d -p 9000:80 --name cei-app "$DCKR_USRNM/cei-repo:front"
