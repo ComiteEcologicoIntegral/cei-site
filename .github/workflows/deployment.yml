@@ -40,8 +40,10 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
+          env:
+            DCKR_USRNM: ${{ secrets.DOCKER_USERNAME }}
           script: |
             docker pull haiwave/cei-repo:front
             docker stop cei-app
             docker rm cei-app
-            docker run -d -p 9000:80 --name cei-app haiwave/cei-repo:front
+            echo "docker run -d -p 9000:80 --name cei-app $DCKR_USRNM/cei-repo:front"
