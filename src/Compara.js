@@ -1,6 +1,6 @@
 import React, {useRef,  useEffect, useState} from 'react'
 import ComparaFiltros from './components/ComparaFiltros'
-import { Col, Row, Button } from 'react-bootstrap'
+import { Form, Col, Row, Button } from 'react-bootstrap'
 import { fetchSummaryData } from './handlers/data';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSensorData } from './redux/reducers';
@@ -11,6 +11,8 @@ import { apiUrl } from './constants';
 import Plot from 'react-plotly.js';
 
 function Compara() {
+    var ejesX = "days"
+    const ejesDias = ["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"]
 
     const dispatch = useDispatch();
     const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
@@ -49,21 +51,131 @@ function Compara() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    let type = "hour"
+
+
+    function modifyMinFecha(clear){
+        let tempFecha = moment(filterData.current[0]["desde"] + " " + filterData.current[0]["desdeHora"])
+        let tempDay = (3+tempFecha.isoWeekday()).toString()
+        if (tempFecha.isoWeekday()!=7){
+            tempDay = "0" + tempDay
+        }
+        //alert(numFiltros.current)
+        for (let i=1; i<=numFiltros.current; i++){
+            let minFecha = "2010-01-04".slice(0,-2)+tempDay
+            var filtro = document.getElementById('filtro-'+i+"desde")
+            if (filtro!=null){
+                var filtroParent = filtro.parentNode
+                filtro.min = minFecha
+                const today = moment().format("YYYY-MM-DD")
+                if (clear == 1){
+                    filtro.value = null
+                }
+                else if (clear == 2){
+                    //filtro.type="select"
+                    //alert("Month2")
+                    filtro.type="month" 
+                    minFecha = "2018-01"
+                    filtro.id = "filtro-" + i +"desde"
+                    const today2 = moment().format("YYYY-MM")
+                    filtro.step = "1"
+                    filtro.min = minFecha
+                    filtro.max = today2
+                    filtro.onChange=(event) => {
+                        filterData.current[0]["desde"] = event.target.value;
+                        filterData.current[0].updateData()}
+                    var update = {
+                        'xaxis.type' : '-'
+                    };
+                    //Plotly.relayout(graphLayout, update)
+                }else if (clear == 3){
+                    filtro.min = minFecha
+                    const today = moment().format("YYYY-MM-DD")
+                    //filtro.type="date"
+                    //alert("Week2")
+                    //var select = document.createElement('input')
+                    //select.className="cf-input form-control" 
+                    filtro.type="date" 
+                    filtro.step = "7"
+                    filtro.min = minFecha
+                    filtro.max = today
+                    filtro.onChange=(event) => {
+                        filterData.current[0]["desde"] = event.target.value;
+                        filterData.current[0].updateData()}
+                    filtro.id = "filtro-" + i +"desde"
+                    var update = {
+                        'xaxis.type' : '-'
+                    };
+                    //Plotly.relayout(graphLayout, update)
+
+                    
+                }else if (clear == 4){
+                    filtro.type="date" 
+                    filtro.step = "1"
+                    filtro.min = minFecha
+                    filtro.max = today
+                    filtro.onChange=(event) => {
+                        filterData.current[0]["desde"] = event.target.value;
+                        filterData.current[0].updateData()}
+                    filtro.id = "filtro-" + i +"desde"
+                    var update = {
+                        'xaxis.type' : '-'
+                    };
+                    //Plotly.relayout(graphLayout, update)
+                }
+            }
+        }
+    }
+
 
     // Esta función es llamada por los cada componente hijo (CompraFiltros) cuando se modifican los valores seleccionados
     // Todos los valores de los filtros se guardan en un solo arreglo 
     function modifyData(data, index) {
-        filterData.current[index] = data;
 
+        filterData.current[index] = data;
+        var filtro = document.getElementById('filtro-'+index+"desde")
         if (filterData.current[0]["hasta"]!=null && filterData.current[0]["desde"]!=null){
+            if (filtro!=null){
+                if (filtro.type != "date"){
+                    var filtroDay = moment(filterData.current[0]["desde"]).date()
+                    var strDia = ""
+                    if (filtroDay<10){
+                        strDia = "0"+filtroDay.toString()
+                    }else{
+                        strDia = filtroDay.toString()
+                    }
+                    filterData.current[index]["desde"] = filterData.current[index]["desde"]+"-"+strDia
+                }
+            }
             var fecha2=moment(filterData.current[0]["hasta"]+" "+filterData.current[0]["hastaHora"])
             var fecha1=moment(filterData.current[0]["desde"]+" "+filterData.current[0]["desdeHora"])
             var dias = fecha2.diff(fecha1,'days')
             fecha1.add(dias, 'days')
             var mins = fecha2.diff(fecha1,'minutes')
 
+            //Checar si el limite es dia de la semana, dia del mes o solamente hora
+            //Dias minimos para pasar de filtro de hora a filtro de semana
+            var diasMinSem = 1
+            //Dias maximos para pasar de filtro de semana a filtro de mes
+            var diasMaxSem = 10
+            var stepFiltro = 7
+            var typeFiltro = "date"
+            if (dias>diasMinSem && dias <= diasMaxSem){
+                //Filtrar por dia de la semana
+                modifyMinFecha(3);
+                ejesX = "days"
+            }else if (dias>diasMaxSem){
+                //Filtrar por dia del mes
+                modifyMinFecha(2);
+                ejesX = "months"
+            }else{
+                //filtar por hora
+                modifyMinFecha(4);
+                ejesX = "hours"
+            }
+
+
             for (let i=1; i<=numFiltros.current; i++){
-                //alert(filterData.current[i]["desde"]+" "+filterData.current[0]["desdeHora"])
                 let tempFecha =moment(filterData.current[i]["desde"]+" "+filterData.current[0]["desdeHora"])
                 //alert(tempFecha)
                 tempFecha.add(dias,'days')
@@ -73,21 +185,21 @@ function Compara() {
                 filterData.current[i]["hastaHora"] = tempFecha.format('HH:mm:ss')
                 filterData.current[i]["desdeHora"] = filterData.current[0]["desdeHora"]
             }
+            if (index == 0){
+                modifyMinFecha(1);
+            }
         }
     }
 
     function addFiltro() {
-        /*if (numFiltros.current < maxNum) {
-            numFiltros.current = numFiltros.current + 1;
-            setFilters([...filters, <ComparaFiltros id={numFiltros.current} modifyData={modifyData} sensores={sensores}/>]);
-        }*/
-        if (numFiltros.current < 0){
+        if (numFiltros.current <0){
             //alert(numFiltros)
             numFiltros.current = numFiltros.current + 1;
             setFilters([...filters, <ComparaFiltros id={numFiltros.current} modifyData={modifyData} sensores={sensores}/>]);
         }else if(numFiltros.current<maxNum && filterData.current[0]["desde"]!=null && filterData.current[0]["hasta"]!=null){
             numFiltros.current = numFiltros.current + 1;
             setFilters([...filters, <ComparaFiltros id={numFiltros.current} modifyData={modifyData} sensores={sensores}/>]);
+            modifyMinFecha(0);
 
         }
         else if (numFiltros.current < maxNum) {
@@ -108,7 +220,6 @@ function Compara() {
 
     function queryData() {
         if (numFiltros.current < 0) {
-            alert("Añada al menos un filtro primero")
             return;
         }
         let ubicaciones = "";
@@ -119,7 +230,8 @@ function Compara() {
 
         for (let i=0; i<=numFiltros.current ; i++) {
             if (!filterData.current[i]|| !filterData.current[i]["desde"] || !filterData.current[i]["hasta"]) { // A alguno le falta seleccionar fechas
-                alert("Selecciona las fechas");
+                //alert("Selecciona las fechas");
+                alert(filterData.current[0]["desde"] + "/" + filterData.current[0]["desdeHora"] + ",")
                 return;
             } else if (!filterData.current[i]["ubic"]) {
                 alert("Seleccione la ubicacion");
@@ -173,7 +285,17 @@ function Compara() {
         showlegend: true,
         hovermode: 'closest',
         width: 1000,
-        height: 700
+        height: 700,
+        xaxis: {
+            title: 'Fechas',
+            type: '-',
+            //tickvals : 
+            //ticktext: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+            //showticklabels: true,
+            //tickangle: 'auto',
+            //exponentformat: 'e',
+            //showexponent: 'all'
+        }
     };
 
     let getAnnotations = () => [
@@ -425,7 +547,7 @@ function Compara() {
                 if(gas === 'PM2.5' || gas === 'PM10') {
                     // Agregar promedio movil 24h
                     const dataPromMovil = { ...data[i] }
-                    dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 24h `//[${fecha}]`
+                    dataPromMovil.name = `${ubicacion} (${gas}) Promedio movil 24h`// [${fecha}]`
                     dataPromMovil.marker = { color: colors2[i] }
                     // for(let i=0;i<23;i++) {
                     //     moving_average.unshift(null)
@@ -476,6 +598,7 @@ function Compara() {
             setLoading(false)
             alert("No existen datos en ese rango")
         }*/
+        //alert(graphLayout.xaxis.type)
 
     }
     
