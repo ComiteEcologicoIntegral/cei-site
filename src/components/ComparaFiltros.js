@@ -1,8 +1,9 @@
 import React, {useRef, useMemo, useState, useEffect} from 'react'
 import { Form, Col, Row } from 'react-bootstrap'
 import Select from 'react-select';
-import moment from 'moment'
 import { systemOptions, indicadores, idBlacklistpriv } from '../constants';
+import moment from 'moment'
+import { string } from 'prop-types';
 
 // Componente para la página de Compara Datos
 const ComparaFiltros = (props) => {
@@ -20,6 +21,9 @@ const ComparaFiltros = (props) => {
     const hasta = useRef(null);
     const desdeHora = useRef('00:00:00');
     const hastaHora = useRef('00:00:00');
+
+    //FehaMInimia para seleccion de input
+    const minFecha=useRef("2010-01-04");
 
     useEffect(() => {
         system === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores)
@@ -48,6 +52,10 @@ const ComparaFiltros = (props) => {
         let tempHasta = null
         let tempHastaHora = null
         let tempDesdeHora = null
+        if (id.current>1){
+            //alert(document.getElementById("filtro-" + id.current+"desde").type)
+        }
+        //alert(id.current)
         if (id.current == 0){
             tempHasta=hasta.current
             tempHastaHora = hastaHora.current
@@ -60,8 +68,20 @@ const ComparaFiltros = (props) => {
             hasta: tempHasta,
             desdeHora: tempDesdeHora,
             hastaHora: tempHastaHora,
+            minFecha: minFecha.current
         }
         props.modifyData(formData, id.current);
+        /*if (id.current == 0){
+            let tempFecha = moment(desde.current + " " + desdeHora.current)
+            //let tempDay = toString(4+parseInt(desde.current.slice(8)))
+            let tempDay = (3+tempFecha.isoWeekday()).toString()
+            //alert(tempDay)
+            if (tempFecha.isoWeekday()!=7){
+                tempDay = "0" + tempDay
+            }
+            minFecha = props.getMinFecha()//minFecha.slice(0,-2)+tempDay
+            
+        }*/
     }
 
     // Funcion para revisar si el contaminante seleccionado es valido en el sistema
@@ -78,7 +98,7 @@ const ComparaFiltros = (props) => {
     }
 
     const today = moment().format("YYYY-MM-DD")
-            
+
     //Solo el primero deja ingresar hasta, otros filtros tienen mensaje/estan vacios en ese espacio
     if (id.current==0){
         return (
@@ -134,7 +154,7 @@ const ComparaFiltros = (props) => {
                                             <Form.Control 
                                             className="cf-input" 
                                             type="date" 
-                                            min = "2018-01-01"
+                                            min = {minFecha}
                                             max = {today}
                                             onChange={(event) => {
                                                 desde.current = event.target.value;
@@ -164,7 +184,7 @@ const ComparaFiltros = (props) => {
                                             <Form.Control 
                                             className="cf-input" 
                                             type="date" 
-                                            min = "2018-01-01"
+                                            min = {minFecha}
                                             max = {today}
                                             onChange={(event) => {
                                                 hasta.current = event.target.value;
@@ -242,12 +262,13 @@ const ComparaFiltros = (props) => {
                                             <Col sm={3}>
                                                 <p>Desde:</p>
                                             </Col>
-                                            <Col sm={9}>
+                                            <Col sm={9} id={"col-" + id.current}>
                                             <Form.Control 
                                             id={"filtro-" + id.current+"desde"}
                                             className="cf-input" 
                                             type="date" 
-                                            min = "2018-01-01"
+                                            step = "7"
+                                            min = {minFecha}
                                             max = {today}
                                             onChange={(event) => {
                                                 desde.current = event.target.value;
