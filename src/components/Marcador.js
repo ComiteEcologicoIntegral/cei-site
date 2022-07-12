@@ -211,7 +211,7 @@ function Marcador({
                         <Col xs={3}>
                         </Col>
                         <Col xs={5}>
-                            <small className="text-muted">AHORA</small>
+                            <small className="text-muted">ÚLTIMA ACTUALIZACIÓN</small>
                         </Col>
                         <Col xs={4}>
                             <small className="text-muted">ICAR</small>
