@@ -199,6 +199,16 @@ select {
   border-color: #ced4da;
 }
 
+
+.filtros {
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .info-btn {
   float: right;
 }
@@ -213,6 +223,24 @@ select {
   border: none;
   font-weight: 500;
 }
+
+.filtro-material {
+  display: inline-block;
+}
+
+.btn-info {
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  display: inline-block;
+  padding: 0;
+  margin-left: 0.9rem;
+  margin-bottom: 6px;
+  border: 1px solid red;
+  background: none;
+  color: #1B1B1B;
+}
+
 /***** MODAL *****/
 .modal-body {
   padding:20px 40px;
