@@ -74,7 +74,7 @@ const MapaFiltros = ({ onApply }) => {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container">
             <Form>
             <Form.Row className="mapa-filtros"> 
                     <Col className="mb-4 filter-container" xs={12} lg={6}>
@@ -109,9 +109,10 @@ const MapaFiltros = ({ onApply }) => {
                     <Col className="mb-4 filter-container" xs={12} lg={6}>
                         <div className='filtros'>
                             <div>
-                                <p className='font-weight-bold mb-1'>Cifra</p>
+                                <p className='font-weight-bold mb-1 mt-4'>Cifra</p>
                                 <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona la cifra que deseas calcular.</p>
-                                    <Select className=""
+                                    <Select
+                                        placeholder="Cifra"
                                         options={intervalos}
                                         onChange={setInterval_}
                                         value={interval}
@@ -129,6 +130,7 @@ const MapaFiltros = ({ onApply }) => {
                                 </Button>
                                 <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona el contaminante que deseas filtrar.</p>
                                 <Select 
+                                    placeholder="Contaminante"
                                     options={indOptions}
                                     value={gas}
                                     onChange={setGas}

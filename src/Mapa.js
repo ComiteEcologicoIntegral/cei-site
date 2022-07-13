@@ -233,7 +233,10 @@ function Mapa() {
     <div>
       <div className="MapaIntro ta-center mt-5">
         <h2>Calidad del aire en tiempo real</h2>
-        <p>El mapa permite consultar información sobre la calidad del aire en Monterrey</p>
+        <p>Consulta información en tiempo real sobre la calidad del aire en Monterrey</p>
+      </div>
+      <div className="mapa-info mt-5">
+        <p>En esta página puedes ver información en tiempo real acerca de la calidad del aire en Monterrey, si deseas obtener información más específica puedes hacer uso de los filtros de abajo.</p>
       </div>
       <MapaFiltros
         onApply={({ gas, location, interval }) => {

@@ -189,6 +189,12 @@ nav a img {
 }
 
 /***** FILTROS MAPA ******/
+
+.mapa-info {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
 select {
   appearance: auto !important;
   -moz-appearance: auto !important;
@@ -222,6 +228,7 @@ select {
   background-color: steelblue;
   border: none;
   font-weight: 500;
+  max-width: 250px;
 }
 
 .filtro-material {
@@ -276,7 +283,7 @@ button, button:focus {
 .toggle-vista.btn-light.active {
   background-color: var(--color-darkgreen) !important;
   color:white !important;
-  border-radius: 5px;
+  border-radius: 0px;
   z-index: 0;
 }
 
@@ -296,6 +303,13 @@ button, button:focus {
   max-height: 500px;
   margin-top: 10%;
   margin-bottom: 10%;
+}
+
+.col-boton {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 /****** COMPARA FILTROS ****/
