@@ -256,7 +256,7 @@ function Mapa() {
         }}
       />
       <div  style ={{padding:'1%', marginTop: '2%', display: "block"}}>
-        <button class="smallBotton" style ={{color:'dark-grey', radius:'50%'}} onClick={() => setshowHideState(!showHideState)}>{showHideState ? "Leyenda Ocultar" : "Leyenda Mostrar" }</button>
+        <button class="smallBotton" style ={{color:'dark-grey', radius:'50%'}} onClick={() => setshowHideState(!showHideState)}>{showHideState ? "Ocultar Leyenda" : "Mostrar Leyenda" }</button>
       </div>
       <div
         className="my-4"
