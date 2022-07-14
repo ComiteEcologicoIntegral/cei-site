@@ -191,7 +191,13 @@ nav a img {
 /***** FILTROS MAPA ******/
 
 .mapa-info {
-  max-width: 1060px;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 5px;
+}
+
+.mapa-info p {
+  width: 90%;
   margin: 0 auto;
 }
 
@@ -421,6 +427,18 @@ button, button:focus {
 footer {
   background-color: var(--color-darkgreen);
   color: white;
+
+}
+
+.footer-container {
+  width: 100%;
+
+}
+
+.footer-info {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 /**** Heat Map Tooltip ****/
