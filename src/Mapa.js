@@ -9,6 +9,7 @@ import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 import { Spinner } from "react-bootstrap";
 import moment from "moment";
+import autoMergeLevel1 from "redux-persist/es/stateReconciler/autoMergeLevel1";
 
 const mapDefaultProps = {
   center: [25.67, -100.25],
@@ -262,16 +263,16 @@ function Mapa() {
           }
         }}
       />
-      <div  style ={{padding:'1%', marginTop: '2%', display: "block"}}>
+      <div  style ={{padding:'1%', width: "70%", margin: "0 auto"}}>
         <button class="smallBotton" style ={{color:'dark-grey', radius:'50%'}} onClick={() => setshowHideState(!showHideState)}>{showHideState ? "Leyenda Ocultar" : "Leyenda Mostrar" }</button>
       </div>
       <div
-        className="my-4"
+        className="my-4 ta-center map-container"
         style={{
           zIndex: 0,
           position: "relative",
-          width: "100%",
           height: "500px",
+          margin: "0 auto"
         }}
       >
         {errorSensorData && (
