@@ -254,6 +254,10 @@ select {
   color: #1B1B1B;
 }
 
+.map-container {
+  width: 70%;
+}
+
 /***** MODAL *****/
 .modal-body {
   padding:20px 40px;
@@ -448,6 +452,12 @@ footer {
 
 .hmTooltip p {
   margin-bottom: 0px;
+}
+
+@media (max-width: 768px) {
+  .map-container {
+    width: 80%;
+  }
 }
 
 @import 'bootstrap/dist/css/bootstrap.min.css';
