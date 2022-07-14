@@ -235,7 +235,7 @@ function Mapa() {
         <h2>Calidad del aire en tiempo real</h2>
         <p>Consulta información en tiempo real sobre la calidad del aire en Monterrey</p>
       </div>
-      <div className="mapa-info mt-5">
+      <div className="mapa-info mt-5 mb-3">
         <p>En esta página puedes ver información en tiempo real acerca de la calidad del aire en Monterrey, si deseas obtener información más específica puedes hacer uso de los filtros de abajo.</p>
       </div>
       <MapaFiltros
