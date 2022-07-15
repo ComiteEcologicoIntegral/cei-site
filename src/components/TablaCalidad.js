@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 
 function TablaCalidad() {
     return(
-        <Container className="t-center mb-5" style={{width: "80%", border: "1px solid white", fontSize: "0.8rem"}}>
+        <Container className="t-center mb-5 mt-4" style={{width: "80%", border: "1px solid white", fontSize: "0.8rem"}}>
             <Row className="ta-center font-weight-bold" style={{border: "1px solid white", backgroundColor: "#eaeaea", borderTopRightRadius: "12px", borderTopLeftRadius: "12px", padding: "12px"}}>
                 <Col><p>Nivel</p></Col>
                 <Col ><p>Valor numérico</p></Col>
