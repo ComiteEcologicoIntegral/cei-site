@@ -3,6 +3,7 @@ import Recomendaciones from "./components/Recomendaciones.js";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
+import { TablaCalidad } from "./components/TablaCalidad.js";
 
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
@@ -422,6 +423,7 @@ function Mapa() {
         </Wrapper>
       </div>
       <Recomendaciones selected={airQualityTags[airQualityIndex]} isManual={false} />
+      <TablaCalidad/>
     </div>
   );
 }
