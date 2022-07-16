@@ -267,7 +267,7 @@ function Mapa() {
           height: "500px",
         }}
       >
-        {errorSensorData && (
+        {/* {errorSensorData && (
           <div
             className="position-absolute w-100 end-0 p-2"
             style={{ zIndex: 100 }}
@@ -276,7 +276,7 @@ function Mapa() {
               Ocurrió un error al cargar los datos.
             </div>
           </div>
-        )}
+        )} */}
         {loadingSensorData && (
           <div
             className="w-100 h-100 d-flex position-absolute"
@@ -294,6 +294,9 @@ function Mapa() {
           className="w-100 h-100 position-absolute p-2"
           style={{ zIndex: 99, pointerEvents: "none" }}
         >
+          <div className="position-absolute end-0 left-0">
+            <h6>x</h6>
+          </div>
           <div className="position-absolute end-0 right-0 ">
           { showHideState ?                 
             <div className="leyenda-width opt1" >
@@ -413,7 +416,7 @@ function Mapa() {
             })}
         </Wrapper>
       </div>
-      <Recomendaciones selected={airQualityTags[airQualityIndex]} isManual={false} />
+      <Recomendaciones selected={airQualityTags[airQualityIndex]} isManual={true} />
     </div>
   );
 }

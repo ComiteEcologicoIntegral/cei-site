@@ -636,7 +636,7 @@ function Compara() {
                     />
                 </div>
             </Col>
-            <Recomendaciones isManual={true} />
+            <Recomendaciones selected = {'buena'} isManual={true} />
             </Row>
         </div>
     )
