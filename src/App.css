@@ -35,7 +35,12 @@
   color:var(--color-nodata);
 }
 .morado {
-  color:var(--color-extmala);
+  color:var(--color-darkgreen);
+  text-decoration: underline;
+}
+
+.morado:hover{
+  color: #85BF4B;
 }
 
 .bueno {
@@ -232,6 +237,20 @@ font-weight: bold;
  margin-bottom: 25px;
  color: var(--color-black);
 }
+
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-header .close{
+  margin-left: 60% !important;
+  position: absolute;
+  right: 1%;
+  top: 0.5%;
+}
+
 
 button, button:focus {
   border:none !important;
