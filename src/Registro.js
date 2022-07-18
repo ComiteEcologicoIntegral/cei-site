@@ -199,7 +199,8 @@ function Registro() {
           <p>Revise los parametros e intente de nuevo.</p>
         </Modal.Body>
       </Modal>
-      <RHFiltros
+      <RHFiltros 
+        
         createQueryGraph={createQueryGraph}
         createQueryCal={createQueryCal}
         radioValue={radioValue}
