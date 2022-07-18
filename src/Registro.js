@@ -243,7 +243,7 @@ function Registro() {
           </Suspense>
         </>
       )}
-      <Recomendaciones isManual={true}/>
+      <Recomendaciones selected = 'buena' isManual={true}/>
     </div>
   );
 }
