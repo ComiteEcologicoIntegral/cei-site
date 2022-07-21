@@ -3,12 +3,14 @@ import Recomendaciones from "./components/Recomendaciones.js";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
+import { TablaCalidad } from "./components/TablaCalidad.js";
 
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 import { Spinner } from "react-bootstrap";
 import moment from "moment";
+import autoMergeLevel1 from "redux-persist/es/stateReconciler/autoMergeLevel1";
 
 const mapDefaultProps = {
   center: [25.67, -100.25],
@@ -231,6 +233,13 @@ function Mapa() {
 
   return (
     <div>
+      <div className="MapaIntro ta-center mt-5">
+        <h2>Calidad del aire en tiempo real</h2>
+        <p>Consulta información en tiempo real sobre la calidad del aire en Monterrey</p>
+      </div>
+      <div className="mapa-info mt-5 mb-3">
+        <p>En esta página puedes ver información en tiempo real acerca de la calidad del aire en Monterrey, si deseas obtener información más específica puedes hacer uso de los filtros de abajo.</p>
+      </div>
       <MapaFiltros
         onApply={({ gas, location, interval }) => {
           if (interval) {
@@ -259,15 +268,15 @@ function Mapa() {
         <button class="smallBotton" style ={{color:'dark-grey', radius:'50%'}} onClick={() => setshowHideState(!showHideState)}>{showHideState ? "Leyenda Ocultar" : "Leyenda Mostrar" }</button>
       </div>
       <div
-        className="my-4"
+        className="my-4 ta-center map-container"
         style={{
           zIndex: 0,
           position: "relative",
-          width: "100%",
           height: "500px",
+          margin: "0 auto"
         }}
       >
-        {errorSensorData && (
+        {/* {errorSensorData && (
           <div
             className="position-absolute w-100 end-0 p-2"
             style={{ zIndex: 100 }}
@@ -276,7 +285,7 @@ function Mapa() {
               Ocurrió un error al cargar los datos.
             </div>
           </div>
-        )}
+        )} */}
         {loadingSensorData && (
           <div
             className="w-100 h-100 d-flex position-absolute"
@@ -294,6 +303,9 @@ function Mapa() {
           className="w-100 h-100 position-absolute p-2"
           style={{ zIndex: 99, pointerEvents: "none" }}
         >
+          <div className="position-absolute end-0 left-0">
+            <h6>x</h6>
+          </div>
           <div className="position-absolute end-0 right-0 ">
           { showHideState ?                 
             <div className="leyenda-width opt1" >
@@ -413,7 +425,7 @@ function Mapa() {
             })}
         </Wrapper>
       </div>
-      <Recomendaciones selected={airQualityTags[airQualityIndex]} isManual={false} />
+      <Recomendaciones selected={airQualityTags[airQualityIndex]} isManual={true} />
     </div>
   );
 }
