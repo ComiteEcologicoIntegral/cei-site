@@ -199,7 +199,8 @@ function Registro() {
           <p>Revise los parametros e intente de nuevo.</p>
         </Modal.Body>
       </Modal>
-      <RHFiltros
+      <RHFiltros 
+        
         createQueryGraph={createQueryGraph}
         createQueryCal={createQueryCal}
         radioValue={radioValue}
@@ -242,7 +243,7 @@ function Registro() {
           </Suspense>
         </>
       )}
-      <Recomendaciones isManual={true}/>
+      <Recomendaciones selected = 'buena' isManual={true}/>
     </div>
   );
 }
