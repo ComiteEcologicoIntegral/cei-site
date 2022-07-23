@@ -74,71 +74,85 @@ const MapaFiltros = ({ onApply }) => {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container">
             <Form>
-                <p style={{ fontSize: "0.9em" }}>*Recuerda que el sistema PurpleAir solo tiene disponible el contaminante PM2.5</p>
-                <Form.Row className="mapa-filtros"> 
-                    <Col className="mb-3" xs={12} lg={4}>
-                        <Select
-                            placeholder="Sistema"
-                            value={systemChosen}
-                            onChange={(value) => {
-                                checkIfSystemValid(value)
-                                setSystemChosen(value)
-                                setLocation(null)
-                            }}
-                            options={systemOptions}
-                        />
-                        <Select
-                            placeholder="Ubicación"
-                            value={location}
-                            onChange={setLocation}
-                            options={locationOptions}
-                        />
-                    </Col>
-                    <Col className="mb-3" xs={6} lg={3}>
-                        <Select
-                            options={intervalos}
-                            onChange={setInterval_}
-                            value={interval}
-                        />
-                    </Col>
-                    <Col xs={6} lg={3}>
-                        <Row>
-                            <Col xs={12}>
+            <Form.Row className="mapa-filtros"> 
+                    <Col className="mb-4 filter-container" xs={12} lg={6}>
+                        <div className='filtros'>
+                            <div>
+                                <p className='font-weight-bold mb-1'>Sistema</p>
+                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona el sistema de sensores que deseas visualizar.</p>
+                                <p style={{fontSize: "0.8rem"}} className="mb-1">*Recuerda que el sistema PurpleAir solo tiene disponible el contaminante PM2.5</p>
+                                <Select className="mb-4"
+                                    placeholder="Seleccionar"
+                                    value={systemChosen}
+                                    onChange={(value) => {
+                                        checkIfSystemValid(value)
+                                        setSystemChosen(value)
+                                        setLocation(null)
+                                    }}
+                                    options={systemOptions}
+                                />
+                            </div>
+                            <div>
+                                <p className='font-weight-bold mb-1'>Ubicación</p>
+                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona la ubicación que deseas resaltar (estas pueden variar dependiendo del sistema de sensores que selecciones).</p>
                                 <Select
+                                    placeholder="Seleccionar"
+                                    value={location}
+                                    onChange={setLocation}
+                                    options={locationOptions}
+                                />
+                            </div>
+                        </div>
+                    </Col>
+                    <Col className="mb-4 filter-container" xs={12} lg={6}>
+                        <div className='filtros'>
+                            <div>
+                                <p className='font-weight-bold mb-1 mt-4'>Medida</p>
+                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona la medida que deseas calcular.</p>
+                                    <Select
+                                        placeholder="Medida"
+                                        options={intervalos}
+                                        onChange={setInterval_}
+                                        value={interval}
+                                    />
+                            </div>
+
+                            <div>
+                                <p className='filtro-material font-weight-bold mb-1'>Contaminante</p>
+                                <Button
+                                    className="btn-info"
+                                    block
+                                    onClick={handleShow}
+                                >
+                                    ?
+                                </Button>
+                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona el contaminante que deseas filtrar.</p>
+                                <Select 
+                                    placeholder="Contaminante"
                                     options={indOptions}
                                     value={gas}
                                     onChange={setGas}
                                 />
-                            </Col>
-                            {/* <Col xs={2}>
-                            <OverlayTrigger
-                            key='top'
-                            placement='top'
-                            overlay={
-                                <Tooltip>
-                                Info. indicadores
-                                </Tooltip>
-                            }
-                            >
-                                <Button className="info-btn" variant="link" onClick={handleShow }>
-                                    <BsInfoCircle color="MediumVioletRed" />
-                                </Button>
-                            </OverlayTrigger>
-                                
-                            </Col> */}
-                        </Row>
-                    </Col>
-                    <Col>
-                        <Button
-                            className="btn-aplicar"
-                            variant="primary"
-                            block
-                            onClick={handleShow}
+                            </div>
+                        </div>
+                        {/* <Col xs={2}>
+                        <OverlayTrigger
+                        key='top'
+                        placement='top'
+                        overlay={
+                            <Tooltip>
+                            Info. indicadores
+                            </Tooltip>
+                        }
                         >
-                            Más información
-                        </Button>
+                            <Button className="info-btn" variant="link" onClick={handleShow }>
+                                <BsInfoCircle color="MediumVioletRed" />
+                            </Button>
+                        </OverlayTrigger>
+                            
+                        </Col> */}
                     </Col>
                 </Form.Row>
             </Form>

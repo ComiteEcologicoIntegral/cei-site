@@ -113,9 +113,50 @@ function RHFiltros({
                 <h2>Registro Histórico</h2>
                 <p>Consulta los datos históricos de la calidad del aire</p>
             </div>
-            <Form>
+            <ButtonGroup toggle style={{width: "100%"}}>
+                {radios.map((radio, idx) => (
+                    <ToggleButton
+                        className="toggle-vista"
+                        key={idx}
+                        type="radio"
+                        variant="light"
+                        name="radio"
+                        value={radio.value}
+                        checked={radioValue === radio.value}
+                        onChange={(e) =>
+                            setRadioValue(e.currentTarget.value)
+                        }
+                    >
+                        {radio.name}
+                    </ToggleButton>
+                ))}
+            </ButtonGroup>
+            <div>
+                {radioValue == "1" && (
+                    <div className='mt-3'>
+                        <p>Generar gráficas a partir de los registros de la calidad del aire del periodo que desees.</p>
+                        <ol>
+                            <li>Selecciona los filtros que deseas aplicar.</li>
+                            <li>Selecciona la fecha inicial y fecha final de la gráfica.</li>
+                        </ol>
+                    </div>
+                )}
+                {radioValue == "2" && (
+                    <div className='mt-3'>
+                        <p>Consulta y descarga los registros mensuales de la calidad del aire.</p>
+                        <ol>
+                            <li>Selecciona los filtros que deseas aplicar.</li>
+                            <li>Selecciona el mes que desea conultar.</li>
+                        </ol>
+                    </div>
+                )}
+            </div>
+            <Form className='mb-3'>
                 <Form.Row className="mb-3">
                     <Col xs={6}>
+                        <p className='font-weight-bold mb-1'>Sistema</p>
+                            <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona el sistema de sensores que deseas visualizar.</p>
+                            <p style={{fontSize: "0.8rem"}} className="mb-1">*Recuerda que el sistema PurpleAir solo tiene disponible el contaminante PM2.5</p>
                         <Select
                             options={systemOptions}
                             placeholder={'Sistema'}
@@ -129,6 +170,8 @@ function RHFiltros({
                         />
                     </Col>
                     <Col xs={6}>
+                    <p className='font-weight-bold mb-2'>Ubicación</p>
+                        <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona la ubicación que deseas resaltar (estas pueden variar dependiendo del sistema de sensores que selecciones).</p>
                         <Select
                             options={sensores}
                             value={location}
@@ -142,26 +185,8 @@ function RHFiltros({
                 </Form.Row>
                 <Form.Row>
                     <Col>
-                        <ButtonGroup toggle>
-                            {radios.map((radio, idx) => (
-                                <ToggleButton
-                                    className="toggle-vista"
-                                    key={idx}
-                                    type="radio"
-                                    variant="light"
-                                    name="radio"
-                                    value={radio.value}
-                                    checked={radioValue === radio.value}
-                                    onChange={(e) =>
-                                        setRadioValue(e.currentTarget.value)
-                                    }
-                                >
-                                    {radio.name}
-                                </ToggleButton>
-                            ))}
-                        </ButtonGroup>
-                    </Col>
-                    <Col className="mb-3">
+                    <p className='filtro-material font-weight-bold mb-1'>Contaminante</p>
+                        <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona el contaminante que deseas filtrar.</p>
                         <Select
                             options={indOptions}
                             placeholder={'Indicador'}
@@ -169,8 +194,8 @@ function RHFiltros({
                             value={indicador}
                         />
                     </Col>
-                    <Col xs={12} sm={3} className="mb-3">
-                        <Button
+                    <Col className="col-boton">
+                    <Button
                             className="btn-aplicar"
                             variant="primary"
                             block

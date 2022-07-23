@@ -609,6 +609,15 @@ function Compara() {
                 <p>Compara la calidad del aire en diferente lugar y tiempo</p>
             </div>
             <hr className="mb-4"/>
+            <div>
+                <p>Pasos para generar las gráficas:</p>
+                <ol>
+                    <li>Agerga el primer filtro que deseas graficar seleccionando el sistema, la ubicación, el contaminante, la fecha de inicio y la fecha final.</li>
+                    <li>Agerga otro filtro seleccionando las opciones que deseas comparar.</li>
+                    <li>Repite el segundo paso hasta 4 veces si así lo deseas.</li>
+                    <li>Persiona el botón "Generar gráfica".</li>
+                </ol>
+            </div>
             <Row className="mt-2 mb-1 d-flex justify-content-center" id="filtros">
                 {filters}
             </Row>
@@ -636,7 +645,7 @@ function Compara() {
                     />
                 </div>
             </Col>
-            <Recomendaciones isManual={true} />
+            <Recomendaciones selected = {'buena'} isManual={true} />
             </Row>
         </div>
     )
