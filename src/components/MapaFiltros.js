@@ -109,10 +109,10 @@ const MapaFiltros = ({ onApply }) => {
                     <Col className="mb-4 filter-container" xs={12} lg={6}>
                         <div className='filtros'>
                             <div>
-                                <p className='font-weight-bold mb-1 mt-4'>Cifra</p>
-                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona la cifra que deseas calcular.</p>
+                                <p className='font-weight-bold mb-1 mt-4'>Medida</p>
+                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona la medida que deseas calcular.</p>
                                     <Select
-                                        placeholder="Cifra"
+                                        placeholder="Medida"
                                         options={intervalos}
                                         onChange={setInterval_}
                                         value={interval}

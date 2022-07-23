@@ -89,6 +89,7 @@ const Recomendaciones = (props) => {
                             <li>Suspender entrenamientos y partidos de ligas deportivas y actividades físicas extracurriculares</li>
                             <li>Suspender el uso de cigarros de cualquier tipo</li>
                             <li>Limitar el uso de vehículos que usen combustibles fósiles</li>
+                        </ul>
             <div className="ta-center mb-5">
                 <h3>Otras Herramientas</h3>
                 <p>Recomendamos visitar el sitio web {' '}
@@ -96,7 +97,7 @@ const Recomendaciones = (props) => {
                    para conocer más acerca de las condiciones meteorológicas, y así entender cómo se comportarán los contaminantes en el día, pues el viento aleja los contaminantes del aire de su origen y los puede dispersar a otros lugares, lo que significa que la contaminación en un área puede afectar la calidad del aire en un área extensa.
                 </p>
             </div>
-                        </ul>
+                        
                     </Tab.Pane>
                 </Tab.Content>
             </Tab.Container>
