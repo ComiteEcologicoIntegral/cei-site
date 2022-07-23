@@ -15,10 +15,10 @@ const Recomendaciones = (props) => {
     }
 
     return (
-        <div className="container mt-5 mb-3">
+        <div className="container mt-5 ">
             <div className="ta-center mb-5">
-                <h3>Concentración horaria</h3>
-                <p>Conoce las recomendaciones según el índice de calidad del aire</p>
+                
+                <h3>Conoce las recomendaciones según el índice de calidad del aire</h3>
             </div>
             <Tab.Container fill activeKey={selected} className="recomendaciones h-100">
                 <Nav fill>
