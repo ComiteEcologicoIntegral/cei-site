@@ -152,6 +152,16 @@ function Marcador({
 
     return (
 
+//         <Marker
+//   position={[latitude, longitude]}
+//   icon={getIcon(markerType)}
+//   eventHandlers={{
+//     mouseover: (event) => event.target.openPopup(),
+//   }}
+// >
+//   <Popup>Hello</Popup>
+// </Marker>;
+
         <Marker position={position} icon={icon} {...props}>
             <Popup
                 ref={popupRef}

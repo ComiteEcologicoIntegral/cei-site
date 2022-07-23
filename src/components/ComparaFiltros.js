@@ -102,122 +102,124 @@ const ComparaFiltros = (props) => {
     //Solo el primero deja ingresar hasta, otros filtros tienen mensaje/estan vacios en ese espacio
     if (id.current==0){
         return (
-            <Col sm={6}>
-                <div className="compara-filtros mt-2 mb-4" id={"filtro-" + id.current}>
-                    <Form>
-                        <Form.Group as={Row}>
-                            <Col sm={12}>
-                                <Row>
-                                    <Col sm={6}>
-                                        <Select 
-                                        options={systemOptions} 
-                                        placeholder={'Sistema'}
-                                        className="mb-2"
-                                        onChange={(value) => {
-                                            checkIfSystemValid(value)
-                                            setSystem(value.value)
-                                            setLocation(null)
-                                            ubic.current = null
-                                            updateData()
-                                        }}
-                                        />
-                                        <Select 
-                                        options={sensorOptions} 
-                                        value={location}
-                                        placeholder={'Ubicación'}
-                                        className="mb-2"
-                                        onChange={(value) => {
-                                            setLocation(value)
-                                            ubic.current = value;
-                                            updateData()}}
-                                        />
-                                    </Col>
-                                    <Col sm={6}>
-                                        <Select 
-                                        options={indOptions} 
-                                        value={indicador}
-                                        onChange={setIndicador}
-                                        />
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Form.Group>
-                        <Form.Group as={Row}>
-                            <Col sm={12}>
-                                <Row>
-                                    <Col sm={6}>
-                                        <Row>
-                                            <Col sm={3}>
-                                                <p>Desde:</p>
-                                            </Col>
-                                            <Col sm={9}>
-                                            <Form.Control 
-                                            className="cf-input" 
-                                            type="date" 
-                                            min = {minFecha}
-                                            max = {today}
-                                            onChange={(event) => {
-                                                desde.current = event.target.value;
-                                                updateData()}}>
-                                            </Form.Control>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col sm={3}></Col>
-                                            <Col sm={9}>
+                <Col sm={6}>
+                    <div className="compara-filtros mt-2 mb-4" id={"filtro-" + id.current}>
+                        <Form className='pb-3'>
+                            <Form.Group as={Row}>
+                                <Col sm={12}>
+                                    <p className='ta-center'>Filtro 1</p>
+                                    <Row>
+                                        <Col sm={6}>
+                                            <Select 
+                                            options={systemOptions} 
+                                            placeholder={'Sistema'}
+                                            className="mb-2"
+                                            onChange={(value) => {
+                                                checkIfSystemValid(value)
+                                                setSystem(value.value)
+                                                setLocation(null)
+                                                ubic.current = null
+                                                updateData()
+                                            }}
+                                            />
+                                            <Select 
+                                            options={sensorOptions} 
+                                            value={location}
+                                            placeholder={'Ubicación'}
+                                            className="mb-2"
+                                            onChange={(value) => {
+                                                setLocation(value)
+                                                ubic.current = value;
+                                                updateData()}}
+                                            />
+                                        </Col>
+                                        <Col sm={6}>
+                                            <Select 
+                                            options={indOptions} 
+                                            value={indicador}
+                                            onChange={setIndicador}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Col sm={12}>
+                                    <Row>
+                                        <Col sm={6}>
+                                            <Row>
+                                                <Col sm={3}>
+                                                    <p>Desde:</p>
+                                                </Col>
+                                                <Col sm={9}>
                                                 <Form.Control 
+                                                className="cf-input" 
+                                                type="date" 
+                                                min = {minFecha}
+                                                max = {today}
                                                 onChange={(event) => {
-                                                    desdeHora.current = event.target.value + ':00';
-                                                    updateData()
-                                                }}
-                                                type="time">
+                                                    desde.current = event.target.value;
+                                                    updateData()}}>
                                                 </Form.Control>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                    <Col sm={6}>
-                                        <Row>
-                                            <Col sm={3}>
-                                                <p>Hasta:</p>
-                                            </Col>
-                                            <Col sm={9}>
-                                            <Form.Control 
-                                            className="cf-input" 
-                                            type="date" 
-                                            min = {minFecha}
-                                            max = {today}
-                                            onChange={(event) => {
-                                                hasta.current = event.target.value;
-                                                updateData()}}>
-                                            </Form.Control>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col sm={3}></Col>
-                                            <Col sm={9}>
-                                                <Form.Control
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col sm={3}></Col>
+                                                <Col sm={9}>
+                                                    <Form.Control 
+                                                    onChange={(event) => {
+                                                        desdeHora.current = event.target.value + ':00';
+                                                        updateData()
+                                                    }}
+                                                    type="time">
+                                                    </Form.Control>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                        <Col sm={6}>
+                                            <Row>
+                                                <Col sm={3}>
+                                                    <p>Hasta:</p>
+                                                </Col>
+                                                <Col sm={9}>
+                                                <Form.Control 
+                                                className="cf-input" 
+                                                type="date" 
+                                                min = {minFecha}
+                                                max = {today}
                                                 onChange={(event) => {
-                                                    hastaHora.current = event.target.value + ':00';
-                                                    updateData()
-                                                }}                                            
-                                                type="time"></Form.Control>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Form.Group>
-                    </Form>
-                </div>
-            </Col>
+                                                    hasta.current = event.target.value;
+                                                    updateData()}}>
+                                                </Form.Control>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col sm={3}></Col>
+                                                <Col sm={9}>
+                                                    <Form.Control
+                                                    onChange={(event) => {
+                                                        hastaHora.current = event.target.value + ':00';
+                                                        updateData()
+                                                    }}                                            
+                                                    type="time"></Form.Control>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Form.Group>
+                        </Form>
+                    </div>
+                </Col>
         )
     }else{// if (id.current==2){
         return (
             <Col sm={6}>
                 <div className="compara-filtros mt-2 mb-4" id={"filtro-" + id.current}>
-                    <Form>
+                    <Form className='pb-3'>
                         <Form.Group as={Row}>
                             <Col sm={12}>
+                                <p className='ta-center'>Filtro {id.current + 1}</p>
                                 <Row>
                                     <Col sm={6}>
                                         <Select 
