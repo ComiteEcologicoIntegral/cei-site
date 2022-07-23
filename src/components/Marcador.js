@@ -372,11 +372,11 @@ function Marcador({
                         ))}
                     </Form>
                 </div>
-                <div className="data-label">
+                    <div className="data-label">
                         <small className="text-muted">
-                        * Índice de acuerdo a la NOM-172-SEMARNAT-2019    
+                            *Índice de acuerdo a la NOM-172-SEMARNAT-2019
                         </small>
-                </div>
+                    </div>
                 <div className="py-2 px-3 border-top text-center">
                     <Button size="sm">
                         <a style={{ color: 'white' }} target='blank' href={urlMI}>Más información</a>
