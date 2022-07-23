@@ -134,7 +134,7 @@ function RHFiltros({
             <div>
                 {radioValue == "1" && (
                     <div className='mt-3'>
-                        <p>Generar gráficas a partir de los registros de la calidad del aire del periodo que desees.</p>
+                        <p>Genera gráficas a partir de los registros de la calidad del aire del periodo que desees.</p>
                         <ol>
                             <li>Selecciona los filtros que deseas aplicar.</li>
                             <li>Selecciona la fecha inicial y fecha final de la gráfica.</li>
