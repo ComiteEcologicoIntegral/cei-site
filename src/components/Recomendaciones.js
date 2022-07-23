@@ -97,7 +97,6 @@ const Recomendaciones = (props) => {
                    para conocer más acerca de las condiciones meteorológicas, y así entender cómo se comportarán los contaminantes en el día, pues el viento aleja los contaminantes del aire de su origen y los puede dispersar a otros lugares, lo que significa que la contaminación en un área puede afectar la calidad del aire en un área extensa.
                 </p>
             </div>
-                        
                     </Tab.Pane>
                 </Tab.Content>
             </Tab.Container>
