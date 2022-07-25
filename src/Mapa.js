@@ -303,13 +303,16 @@ function Mapa() {
           className="w-100 h-100 position-absolute p-2"
           style={{ zIndex: 99, pointerEvents: "none" }}
         >
-          <div className="position-absolute end-0 left-0">
-            <h6>x</h6>
-          </div>
+          
           <div className="position-absolute end-0 right-0 ">
           { showHideState ?                 
-            <div className="leyenda-width opt1" >
-                    <h6>Leyenda</h6>
+            <div className="leyenda-width" >
+              <div className="leyenda-header">
+              <h6>Leyenda</h6>
+              <div className="ocultar-leyenda position-relative end-0 left-0">
+              <button onClick={() => {console.log("hola")}}>x</button>
+            </div>
+              </div>
                     <div className="leyenda-grid">
                       <div
                         style={{
@@ -397,7 +400,7 @@ function Mapa() {
             markers.map((markerProps, idx) => {
               if (currentGas.name === "PM25") {
                 return (
-                  <Marcador
+                  <Marcador 
                     map={map}
                     key={idx}
                     {...markerProps}
@@ -426,6 +429,7 @@ function Mapa() {
         </Wrapper>
       </div>
       <Recomendaciones selected={airQualityTags[airQualityIndex]} isManual={true} />
+      {/* <TablaCalidad/> */}
     </div>
   );
 }
