@@ -4,40 +4,86 @@ import { Container, Row, Col } from "react-bootstrap";
 function TablaCalidad() {
     return(
         <Container className="t-center mb-5 mt-4" style={{width: "80%", border: "1px solid white", fontSize: "0.8rem"}}>
-            <Row className="ta-center font-weight-bold" style={{border: "1px solid white", backgroundColor: "#eaeaea", borderTopRightRadius: "12px", borderTopLeftRadius: "12px", padding: "12px"}}>
-                <Col><p>Nivel</p></Col>
-                <Col ><p>Valor numérico</p></Col>
-                <Col><p>Significado</p></Col>
+            <Row className="ta-center font-weight-bold" style={{border: "1px solid white", borderTopRightRadius: "12px", borderTopLeftRadius: "12px", padding: "12px"}}>
+                <Col style={{}}><p>----</p></Col>
+                <Col ><p>----</p></Col>
+                <Col style={{backgroundColor: "#00cc03"}}><p>Buena</p></Col>
+                <Col style={{backgroundColor: "#ffff00"}}><p>Aceptable</p></Col>
+                <Col style={{backgroundColor: "#fe6601"}}><p>Mala</p></Col>
+                <Col style={{backgroundColor: "#fc0204"}}><p>Muy mala</p></Col>
+                <Col className="text-white" style={{backgroundColor: "#640132"}}><p>Extremadamente mala</p></Col>
             </Row>
-            <Row style={{border: "1px solid white", backgroundColor: "#00cc03", padding: "12px"}}>
-                <Col>Bueno</Col>
-                <Col>0 a 50</Col>
-                <Col>La calidad del aire se considera satisfactoria y la contaminación del aire representa poco o ningun riesgo.</Col>
+            <Row style={{border: "1px solid white", padding: "12px"}}>
+                <Col>PM10 μg/m3</Col>
+                <Col>Promedio móvil ponderado 12 horas</Col>
+                <Col style={{backgroundColor: "#00cc03"}}>0-50</Col>
+                <Col style={{backgroundColor: "#ffff00"}}>50-70</Col>
+                <Col style={{backgroundColor: "#fe6601"}}>155-235</Col>
+                <Col style={{backgroundColor: "#fc0204"}}>70-155</Col>
+                <Col className="text-white" style={{backgroundColor: "#640132"}}>{'>'}235</Col>
             </Row>
-            <Row style={{border: "1px solid white", backgroundColor: "#ffff00", padding: "12px"}}>
-                <Col>Moderada</Col>
-                <Col>51 a 100</Col>
-                <Col>La calidad del aire es aceptable, sin embargo, puede habar un problema de salur moderado para un número muy pequeño de personas que son excepcionalmente sensible a la contaminación del aire.</Col>
+            <Row style={{border: "1px solid white", padding: "12px"}}>
+                <Col>PM2.5 μg/m3</Col>
+                <Col>Promedio ponderado 12 horas</Col>
+                <Col style={{backgroundColor: "#00cc03"}}>0-25</Col>
+                <Col style={{backgroundColor: "#ffff00"}}>25-41</Col>
+                <Col style={{backgroundColor: "#fe6601"}}>79-147</Col>
+                <Col style={{backgroundColor: "#fc0204"}}>41-79</Col>
+                <Col className="text-white" style={{backgroundColor: "#640132"}}>{'>'}147</Col>
             </Row>
-            <Row style={{border: "1px solid white", backgroundColor: "#fe6601", padding: "12px"}}>
-                <Col>No saludable para grupos sensibles</Col>
-                <Col>101 a 150</Col>
-                <Col>Miembros de grupos sensibles pueden experimentar efectos de salud. El público en general no es probable que sea afectado.</Col>
+            <Row style={{border: "1px solid white", padding: "12px"}}>
+                <Col>CO ppm</Col>
+                <Col>Promedio 8 horas</Col>
+                <Col style={{backgroundColor: "#00cc03"}}>0-8.75</Col>
+                <Col style={{backgroundColor: "#ffff00"}}>8.75-9</Col>
+                <Col style={{backgroundColor: "#fe6601"}}>13.3-15.5</Col>
+                <Col style={{backgroundColor: "#fc0204"}}>9-13.3</Col>
+                <Col className="text-white" style={{backgroundColor: "#640132"}}>{'>'}15.5</Col>
             </Row>
-            <Row className="text-white" style={{border: "1px solid white", backgroundColor: "#fc0204", padding: "12px"}}>
-                <Col>Insalubre</Col>
-                <Col>151 a 200</Col>
-                <Col>Todo el mundo puede comenzar a experimentar efectos en la salud, los miembros de grupos sensibles pueden experimentar efectos de salud más graves.</Col>
+            <Row style={{border: "1px solid white", padding: "12px"}}>
+                <Col>NO2 ppm</Col>
+                <Col>Concentración promedio 1 hora</Col>
+                <Col style={{backgroundColor: "#00cc03"}}>0-0.103</Col>
+                <Col style={{backgroundColor: "#ffff00"}}>0.103-0.106</Col>
+                <Col style={{backgroundColor: "#fe6601"}}>0.23-0.25</Col>
+                <Col style={{backgroundColor: "#fc0204"}}>0.106-0.23</Col>
+                <Col className="text-white" style={{backgroundColor: "#640132"}}>{'>'}0.25</Col>
             </Row>
-            <Row className="text-white" style={{border: "1px solid white", backgroundColor: "#990134", padding: "12px"}}>
-                <Col>Muy insalubre</Col>
-                <Col>201 a 300</Col>
-                <Col>Las advertencias sanitarias de las condiciones de emergencia. Toda la población tiene más probabilidades de ser afectados.</Col>
+            <Row style={{border: "1px solid white", padding: "12px"}}>
+                <Col>SO2 ppm</Col>
+                <Col>Promedio 24 horas</Col>
+                <Col style={{backgroundColor: "#00cc03"}}>0-0.015</Col>
+                <Col style={{backgroundColor: "#ffff00"}}>0.015-0.04</Col>
+                <Col style={{backgroundColor: "#fe6601"}}>0.165-0.22</Col>
+                <Col style={{backgroundColor: "#fc0204"}}>0.04-0.165</Col>
+                <Col className="text-white" style={{backgroundColor: "#640132"}}>{'>'}0.22</Col>
             </Row>
-            <Row className="text-white" style={{border: "1px solid white", backgroundColor: "#640132", padding: "12px", borderBottomRightRadius: "12px", borderBottomLeftRadius: "12px"}}>
-                <Col>Peligroso</Col>
-                <Col>301 a 500</Col>
-                <Col>Alerta de salud: todo el mundo puede experimentar efectos de salud más graves.</Col>
+            <Row  style={{border: "1px solid white", padding: "12px", borderBottomRightRadius: "12px", borderBottomLeftRadius: "12px"}}>
+                <Col>SO2 ppm</Col>
+                <Col>Concentración promedio 1 hora</Col>
+                <Col style={{backgroundColor: "#00cc03"}}></Col>
+                <Col style={{backgroundColor: "#ffff00"}}></Col>
+                <Col style={{backgroundColor: "#fe6601"}}></Col>
+                <Col style={{backgroundColor: "#fc0204"}}>0.075</Col>
+                <Col className="text-white" style={{backgroundColor: "#640132"}}></Col>
+            </Row>
+            <Row style={{border: "1px solid white", padding: "12px", borderBottomRightRadius: "12px", borderBottomLeftRadius: "12px"}}>
+                <Col>Ozono ppm</Col>
+                <Col>Promedio 8 horas</Col>
+                <Col style={{backgroundColor: "#00cc03"}}>0-0.051</Col>
+                <Col style={{backgroundColor: "#ffff00"}}>0.051-0.065</Col>
+                <Col style={{backgroundColor: "#fe6601"}}>0.092-0.114</Col>
+                <Col style={{backgroundColor: "#fc0204"}}>0.065-0.092</Col>
+                <Col className="text-white" style={{backgroundColor: "#640132"}}>{'>'}0.114</Col>
+            </Row>
+            <Row style={{border: "1px solid white", padding: "12px", borderBottomRightRadius: "12px", borderBottomLeftRadius: "12px"}}>
+                <Col>Ozono ppm</Col>
+                <Col>Concentración promedio 1 hora</Col>
+                <Col style={{backgroundColor: "#00cc03"}}></Col>
+                <Col style={{backgroundColor: "#ffff00"}}></Col>
+                <Col style={{backgroundColor: "#fe6601"}}></Col>
+                <Col style={{backgroundColor: "#fc0204"}}>0.09</Col>
+                <Col className="text-white" style={{backgroundColor: "#640132"}}></Col>
             </Row>
         </Container>
     )

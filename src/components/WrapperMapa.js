@@ -16,7 +16,7 @@ function Wrapper({ center, children, ...props }) {
             scrollWheelZoom={false}
             style={{
                 height: '100%',
-                widht: '100%',
+                width: '100%',
             }}
             {...props}
         >
