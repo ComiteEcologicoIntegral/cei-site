@@ -310,7 +310,7 @@ function Mapa() {
               <div className="leyenda-header">
               <h6>Leyenda</h6>
               <div className="ocultar-leyenda position-relative end-0 left-0">
-              <button onClick={() => {console.log("hola")}}>x</button>
+              {/* <button onClick={() => {console.log("hola")}}>x</button> */}
             </div>
               </div>
                     <div className="leyenda-grid">
@@ -429,7 +429,7 @@ function Mapa() {
         </Wrapper>
       </div>
       <Recomendaciones selected={airQualityTags[airQualityIndex]} isManual={true} />
-      {/* <TablaCalidad/> */}
+      <TablaCalidad gas={currentGas.name}/>
     </div>
   );
 }
