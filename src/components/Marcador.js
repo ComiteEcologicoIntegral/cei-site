@@ -374,7 +374,8 @@ function Marcador({
                 </div>
                     <div className="data-label">
                         <small className="text-muted">
-                            *Índice de acuerdo a la NOM-172-SEMARNAT-2019
+                            *Índice de acuerdo a la {' '}
+                            <a className='text-black' href="https://www.dof.gob.mx/nota_detalle.php?codigo=5579387&fecha=20/11/2019#gsc.tab=0"> NOM-172-SEMARNAT-2019 </a>{' '}
                         </small>
                     </div>
                 <div className="py-2 px-3 border-top text-center">
