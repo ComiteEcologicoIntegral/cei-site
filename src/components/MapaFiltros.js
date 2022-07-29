@@ -81,7 +81,6 @@ const MapaFiltros = ({ onApply }) => {
                         <div className='filtros'>
                             <div>
                                 <p className='font-weight-bold mb-1'>Sistema</p>
-                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona el sistema de sensores que deseas visualizar.</p>
                                 <p style={{fontSize: "0.8rem"}} className="mb-1">*Recuerda que el sistema PurpleAir solo tiene disponible el contaminante PM2.5</p>
                                 <Select className="mb-4"
                                     placeholder="Seleccionar"
@@ -95,8 +94,7 @@ const MapaFiltros = ({ onApply }) => {
                                 />
                             </div>
                             <div>
-                                <p className='font-weight-bold mb-1'>Ubicación</p>
-                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona la ubicación que deseas resaltar (estas pueden variar dependiendo del sistema de sensores que selecciones).</p>
+                                <p className='font-weight-bold mb-4'>Ubicación</p>
                                 <Select
                                     placeholder="Seleccionar"
                                     value={location}
@@ -109,9 +107,9 @@ const MapaFiltros = ({ onApply }) => {
                     <Col className="mb-4 filter-container" xs={12} lg={6}>
                         <div className='filtros'>
                             <div>
-                                <p className='font-weight-bold mb-1 mt-4'>Medida</p>
-                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona la medida que deseas calcular.</p>
+                                <p className='font-weight-bold mb-4'>Medida</p>
                                     <Select
+                                        className="mb-4"
                                         placeholder="Medida"
                                         options={intervalos}
                                         onChange={setInterval_}
@@ -120,7 +118,7 @@ const MapaFiltros = ({ onApply }) => {
                             </div>
 
                             <div>
-                                <p className='filtro-material font-weight-bold mb-1'>Contaminante</p>
+                                <p className='filtro-material font-weight-bold mb-4'>Contaminante</p>
                                 <Button
                                     className="btn-info"
                                     block
@@ -128,7 +126,6 @@ const MapaFiltros = ({ onApply }) => {
                                 >
                                     ?
                                 </Button>
-                                <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona el contaminante que deseas filtrar.</p>
                                 <Select 
                                     placeholder="Contaminante"
                                     options={indOptions}
