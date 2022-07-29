@@ -230,7 +230,7 @@ function Marcador({
                             <small className="text-muted">ÚLTIMA ACTUALIZACIÓN</small>
                         </Col>
                         <Col xs={4}>
-                            <small className="text-muted">ICAR</small>
+                            <small className="text-muted">ICAR*</small>
                         </Col>
                     </Row>
 
@@ -378,7 +378,12 @@ function Marcador({
                         ))}
                     </Form>
                 </div>
-
+                    <div className="data-label">
+                        <small className="text-muted">
+                            *Índice de acuerdo a la {' '}
+                            <a className='text-black' href="https://www.dof.gob.mx/nota_detalle.php?codigo=5579387&fecha=20/11/2019#gsc.tab=0"> NOM-172-SEMARNAT-2019 </a>{' '}
+                        </small>
+                    </div>
                 <div className="py-2 px-3 border-top text-center">
                     <Button size="sm">
                         <a style={{ color: 'white' }} target='blank' href={urlMI}>Más información</a>
