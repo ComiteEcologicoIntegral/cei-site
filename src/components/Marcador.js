@@ -160,11 +160,10 @@ function Marcador({
         // onMouseOut={(e) => {
         //     e.target.closePopup();
         // }}
-        eventHandlers={{
-                 mouseover: (event) => event.target.openPopup(),
-       }}
-        icon={icon} {...props} 
-        
+            eventHandlers={{
+                mouseover: (event) => event.target.openPopup()
+            }}
+            icon={icon} {...props}
         >
 
             <Popup
