@@ -5,9 +5,9 @@ function TablaCalidad({gas}) {
     return(
         <Container className="t-center mb-5 mt-4" style={{width: "80%", border: "1px solid white", fontSize: "0.8rem"}}>
             <h3>Indice de calidad {gas}</h3>
-            <Row className="ta-center font-weight-bold" style={{border: "1px solid black", borderTopRightRadius: "12px", borderTopLeftRadius: "12px"}}>
+            <Row className="ta-center font-weight-bold" style={{border: "1px solid white", borderTopRightRadius: "12px", borderTopLeftRadius: "12px"}}>
                 <Col style={{}}><p>Contaminante</p></Col>
-                <Col ><p>----</p></Col>
+                <Col ><p>Promedio</p></Col>
                 <Col style={{backgroundColor: "#00cc03"}}><p>Buena</p></Col>
                 <Col style={{backgroundColor: "#ffff00"}}><p>Aceptable</p></Col>
                 <Col style={{backgroundColor: "#fe6601"}}><p>Mala</p></Col>
@@ -15,7 +15,7 @@ function TablaCalidad({gas}) {
                 <Col className="text-white" style={{backgroundColor: "#640132", borderTopRightRadius: "12px"}}><p>Extremadamente mala</p></Col>
             </Row>
             {gas == "PM25" && (
-                <Row style={{border: "1px solid black", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
+                <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>PM2.5 μg/m3</Col>
                     <Col>Promedio ponderado 12 horas</Col>
                     <Col style={{backgroundColor: "#00cc03"}}>0-25</Col>
@@ -26,7 +26,7 @@ function TablaCalidad({gas}) {
                 </Row>
             )}
             {gas == "PM10" && (
-                <Row style={{border: "1px solid black", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
+                <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>PM10 μg/m3</Col>
                     <Col>Promedio móvil ponderado 12 horas</Col>
                     <Col style={{backgroundColor: "#00cc03"}}>0-50</Col>
@@ -37,7 +37,7 @@ function TablaCalidad({gas}) {
                 </Row>
             )}
             {gas == "O3" && (
-                <Row style={{ border: "1px solid black", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
+                <Row className="ta-center" style={{ border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>Ozono ppm</Col>
                     <Col>Promedio 8 horas</Col>
                     <Col style={{backgroundColor: "#00cc03"}}>0-0.051</Col>
@@ -47,7 +47,7 @@ function TablaCalidad({gas}) {
                     <Col className="text-white" style={{backgroundColor: "#640132", borderBottomRightRadius: "12px"}}>{'>'}0.114</Col>
                 </Row>)}
             {gas == "CO" && (
-                <Row style={{border: "1px solid black", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
+                <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>CO ppm</Col>
                     <Col>Promedio 8 horas</Col>
                     <Col style={{backgroundColor: "#00cc03"}}>0-8.75</Col>
@@ -58,7 +58,7 @@ function TablaCalidad({gas}) {
                 </Row>
             )}
             {gas == "NO2" && (
-                <Row style={{border: "1px solid black", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
+                <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>NO2 ppm</Col>
                     <Col>Concentración promedio 1 hora</Col>
                     <Col style={{backgroundColor: "#00cc03"}}>0-0.103</Col>
@@ -69,7 +69,7 @@ function TablaCalidad({gas}) {
                 </Row>
             )}
             {gas == "SO2" && (
-                <Row style={{border: "1px solid black", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
+                <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>SO2 ppm</Col>
                     <Col>Promedio 24 horas</Col>
                     <Col style={{backgroundColor: "#00cc03"}}>0-0.015</Col>
