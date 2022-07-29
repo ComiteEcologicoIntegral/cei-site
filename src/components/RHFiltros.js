@@ -134,7 +134,7 @@ function RHFiltros({
             <div>
                 {radioValue == "1" && (
                     <div className='mt-3'>
-                        <p>En este apartado puedes generar y filtrar gráficas a partir de los registros de la calidad del aire de la cantidad con la cantidad de días que desees.</p>
+                        <p>Genera gráficas a partir de los registros de la calidad del aire del periodo que desees.</p>
                         <ol>
                             <li>Selecciona los filtros que deseas aplicar.</li>
                             <li>Selecciona la fecha inicial y fecha final de la gráfica.</li>
@@ -143,7 +143,7 @@ function RHFiltros({
                 )}
                 {radioValue == "2" && (
                     <div className='mt-3'>
-                        <p>En este apartado puedes consultar y descargar los registros de la calidad del aire mensualmente.</p>
+                        <p>Consulta y descarga los registros mensuales de la calidad del aire.</p>
                         <ol>
                             <li>Selecciona los filtros que deseas aplicar.</li>
                             <li>Selecciona el mes que desea conultar.</li>
