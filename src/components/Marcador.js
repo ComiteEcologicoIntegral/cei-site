@@ -209,7 +209,7 @@ function Marcador({
 
                     <div className="data-label">
                         <small className="text-muted">
-                            Última actualización
+                            Concentración horaria
                         </small>
                         <br />
                         <time>
@@ -221,7 +221,7 @@ function Marcador({
                         <Col xs={3}>
                         </Col>
                         <Col xs={5}>
-                            <small className="text-muted">ÚLTIMA ACTUALIZACIÓN</small>
+                            <small className="text-muted">Concentración horaria</small>
                         </Col>
                         <Col xs={4}>
                             <small className="text-muted">ICAR*</small>
