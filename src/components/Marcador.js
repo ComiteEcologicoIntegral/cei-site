@@ -11,7 +11,7 @@ import { divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Link } from 'react-router-dom';
 
-import { Marker, Popup } from 'react-leaflet';
+import { Marker, Popup, TileLayer, Tooltip } from 'react-leaflet';
 import { Button, Form, Col, Row, InputGroup } from 'react-bootstrap';
 import moment from 'moment';
 import { getStatus } from '../handlers/statusCriteria';
@@ -152,28 +152,34 @@ function Marcador({
 
     return (
 
-//         <Marker
-//   position={[latitude, longitude]}
-//   icon={getIcon(markerType)}
-//   eventHandlers={{
-//     mouseover: (event) => event.target.openPopup(),
-//   }}
-// >
-//   <Popup>Hello</Popup>
-// </Marker>;
+        <Marker position={position} 
+        // onMouseOver={(e) => {
+        //     e.target.openPopup();
+        //     console.log("Hola");
+        // }}
+        // onMouseOut={(e) => {
+        //     e.target.closePopup();
+        // }}
+            eventHandlers={{
+                mouseover: (event) => event.target.openPopup()
+            }}
+            icon={icon} {...props}
+        >
 
-        <Marker position={position} icon={icon} {...props}>
             <Popup
-                ref={popupRef}
-                className="custom-popup"
-                closeButton={(props) => (
-                    <button
-                        {...props}
-                        type="button"
-                        class="btn-close"
-                        aria-label="Close"
-                    ></button>
-                )}
+            onMouseOver={e => {
+                console.log("Hola");
+            }}
+                //ref={popupRef}
+                //className="custom-popup"
+                // closeButton={(props) => (
+                //     <button
+                //         {...props}
+                //         type="button"
+                //         class="btn-close"
+                //         aria-label="Close"
+                //     ></button>
+                // )}
             >
 
                 <div className="px-3 py-2">
