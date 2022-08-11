@@ -155,7 +155,6 @@ function RHFiltros({
                 <Form.Row className="mb-3">
                     <Col xs={6}>
                         <p className='font-weight-bold mb-1'>Sistema</p>
-                            <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona el sistema de sensores que deseas visualizar.</p>
                             <p style={{fontSize: "0.8rem"}} className="mb-1">*Recuerda que el sistema PurpleAir solo tiene disponible el contaminante PM2.5</p>
                         <Select
                             options={systemOptions}
@@ -170,9 +169,9 @@ function RHFiltros({
                         />
                     </Col>
                     <Col xs={6}>
-                    <p className='font-weight-bold mb-2'>Ubicación</p>
-                        <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona la ubicación que deseas resaltar (estas pueden variar dependiendo del sistema de sensores que selecciones).</p>
+                    <p className='font-weight-bold mb-4'>Ubicación</p>
                         <Select
+                            className="mt-1"
                             options={sensores}
                             value={location}
                             placeholder={'Ubicación'}
@@ -185,8 +184,7 @@ function RHFiltros({
                 </Form.Row>
                 <Form.Row>
                     <Col>
-                    <p className='filtro-material font-weight-bold mb-1'>Contaminante</p>
-                        <p style={{fontSize: "0.8rem"}} className="mb-1">Selecciona el contaminante que deseas filtrar.</p>
+                    <p className='filtro-material font-weight-bold mb-2'>Contaminante</p>
                         <Select
                             options={indOptions}
                             placeholder={'Indicador'}
