@@ -272,7 +272,7 @@ function Mapa() {
         style={{
           zIndex: 0,
           position: "relative",
-          height: "500px",
+          height: "90vh",
           margin: "0 auto"
         }}
       >
