@@ -1,15 +1,10 @@
 import moment from 'moment';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
 
-function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout, downloadFile, summary}) {
-    useEffect(() => {
-        setDesde(null);
-        setHasta(null);
-        setDesdeHora('00:00:00')
-        setHastaHora('00:00:00')
-    }, []);
+// TODO: Simplificar, dividir en sub componentes
+function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, startDate, endDate, startDateTime, endDateTime, data, layout, downloadFile, summary}) {
     return (
         <div>
             <Form className="mt-4 mb-4">
@@ -26,13 +21,18 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                                 <Form.Control
                                     type="date"
                                     required
+                                    value={moment(startDate).format('yyyy-MM-DD')}
                                     onChange={(event) => setDesde(moment(event.target.value))}
                                 ></Form.Control>
                             </Col>
 
                             <Col xs={5}>
                                 <Form.Control
-                                    onChange={(event) => setDesdeHora(event.target.value + ':00')}
+                                    value={startDateTime}
+                                    onChange={(event) => {
+                                        console.log(event);
+                                        setDesdeHora(event.target.value + ':00')
+                                    }}
                                     type="time"></Form.Control>
                             </Col>
                         </Row>
@@ -49,6 +49,7 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
                                 <Form.Control
                                     type="date"
                                     required
+                                    value={moment(endDate).format('yyyy-MM-DD')}
                                     onChange={(event) =>
                                         setHasta(moment(event.target.value))
                                     }
@@ -57,6 +58,7 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, data, layout,
 
                             <Col xs={5}>
                                 <Form.Control
+                                    value={endDateTime}
                                     onChange={(event) => setHastaHora(event.target.value + ':00')}
                                     type="time"></Form.Control>
                             </Col>

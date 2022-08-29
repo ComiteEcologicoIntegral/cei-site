@@ -10,6 +10,7 @@ import Recomendaciones from './components/Recomendaciones.js'
 const Calendario = lazy(() => import("./components/Calendario")) 
 
 function Registro() {
+  // http://localhost:3000/location=Garc%C3%ADa&gas=PM25&system=G&start_date=08/02/2022/00:00:00&end_date=08/29/2022/00:00:00
   const [data, setData] = useState(null);
   const [summaryData, setSummaryData] = useState(null);
   const [radioValue, setRadioValue] = useState("1"); // sección seleccionada (Gráfica/Calendario)
@@ -18,18 +19,40 @@ function Registro() {
   const [loading, setLoading] = useState(false); // gif
   const [noData, setNoData] = useState(false); // Desplegar mensaje si no se encontraron datos en la BD
 
-  // Datos de los filtros:
-  const [desde, setDesde] = useState(null);
-  const [hasta, setHasta] = useState(null);
-  const [desdeHora, setDesdeHora] = useState("00:00:00");
-  const [hastaHora, setHastaHora] = useState("00:00:00");
-  const ind = useRef({ value: "PM25" });
+  // Datos de los filtros
+  // Get start and end dates from url
+  const urlParams = new URLSearchParams(window.location.search);
+  const dateFormat = 'MM/DD/YYYY/HH:mm:ss';
+  const startDateString = urlParams.get('start_date');
+  let startTime = null;
+  let startDate = null;
+  if (startDateString != null) {
+    startDate = moment(startDateString, dateFormat).toDate();
+    startTime = moment(startDate).format('HH:mm:ss');
+  }
+
+  const endDateString = urlParams.get('end_date');
+  let endTime = null;
+  let endDate = null;
+  if (endDateString != null) {
+    endDate = moment(endDateString, dateFormat).toDate();
+    endTime = moment(endDate).format('HH:mm:ss');
+  }
+
+  const [desde, setDesde] = useState(startDate);
+  const [hasta, setHasta] = useState(endDate);
+  const [desdeHora, setDesdeHora] = useState(startTime);
+  const [hastaHora, setHastaHora] = useState(endTime);
+  const gas = useRef({ value: "PM25" });
   const ubicacion = useRef(null);
-  const syst = useRef(null);
+  const system = useRef(null);
 
   useEffect(() => {
     if (queryString) {
       if (radioValue === "1") {
+
+        let newURL = window.location.origin + window.location.pathname + "?" + queryString;
+        window.history.pushState({path:newURL},'',newURL);
         // Sección gráfica
         fetch(`${apiUrl}/get-graph-opt?${queryString}`)
           .then((response) => response.json())
@@ -48,7 +71,6 @@ function Registro() {
 
             // Hacer más grande el texto de la grafica
             json.plot.layout = { ...json.plot.layout, font: {size: 15} };
-
             setData(json.plot);
             setSummaryData(json.summary);
             setLoading(false);
@@ -68,9 +90,9 @@ function Registro() {
 
   // Esta función es llamada por un componente hijo para actualizar los valores cada que cambian en los filtros
   function updateMainFiltros(u, i, s) {
-    syst.current = s;
+    system.current = s;
     ubicacion.current = u;
-    ind.current = i;
+    gas.current = i;
   }
 
   // Crea el string del query para la gráfica
@@ -84,15 +106,18 @@ function Registro() {
       return;
     }
 
-    setLoading(true); // Muestra gif de loading
+    setLoading(true);
+
+    let desdeHoraString = desdeHora == null ? '00:00:00' : desdeHora;
+    let hastaHoraString = hastaHora == null ? '00:00:00' : hastaHora;
 
     let queryStr = `location=${ubicacion.current.label}&gas=${
-      ind.current.value
-    }&system=${syst.current.opt}&start_date=${moment
+      gas.current.value
+    }&system=${system.current.opt}&start_date=${moment
       .utc(desde)
-      .format("MM/DD/YYYY")}${"/"}${desdeHora}&end_date=${moment
+      .format("MM/DD/YYYY")}${"/"}${desdeHoraString}&end_date=${moment
       .utc(hasta)
-      .format("MM/DD/YYYY")}${"/"}${hastaHora}`;
+      .format("MM/DD/YYYY")}${"/"}${hastaHoraString}`;
 
     setQueryString(queryStr);
   }
@@ -117,7 +142,7 @@ function Registro() {
 
     queryStr +=
       "&ind=" +
-      ind.current.value +
+      gas.current.value +
       "&inicio=" +
       initialDate.format("YYYY-MM-DD") +
       "&fin=" +
@@ -135,7 +160,7 @@ function Registro() {
         // Para el calendario se descarga todo el mes
         queryStr +=
           "&gas=" +
-          ind.current.value +
+          gas.current.value +
           "&start_date=" +
           desde.startOf("month").format("YYYY-MM-DD") +
           "&end_date=" +
@@ -144,7 +169,7 @@ function Registro() {
         // Para la sección de la gráfica se descarga según las fechas seleccionadas
         queryStr +=
           "&gas=" +
-          ind.current.value +
+          gas.current.value +
           "&start_date=" +
           desde.format("YYYY-MM-DD") +
           "&end_date=" +
@@ -200,7 +225,6 @@ function Registro() {
         </Modal.Body>
       </Modal>
       <RHFiltros 
-        
         createQueryGraph={createQueryGraph}
         createQueryCal={createQueryCal}
         radioValue={radioValue}
@@ -221,6 +245,10 @@ function Registro() {
           setHasta={setHasta}
           setDesdeHora={setDesdeHora}
           setHastaHora={setHastaHora}
+          startDate={desde}
+          endDate={hasta}
+          startDateTime={desdeHora}
+          endDateTime={hastaHora}
           downloadFile={downloadFile}
           summary={summaryData}
           {...data}
@@ -235,7 +263,7 @@ function Registro() {
               ubic={ubicacion.current}
               create={createQueryCal}
               data={data}
-              indi={ind.current.value}
+              indi={gas.current.value}
               setDesde={setDesde}
               setHasta={setHasta}
               downloadFile={downloadFile}
