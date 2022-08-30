@@ -2,7 +2,6 @@ import React, {
     useCallback,
     useEffect,
     useMemo,
-    useRef,
     useState,
 } from 'react';
 import ReactDOM from 'react-dom';
@@ -11,8 +10,8 @@ import { divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Link } from 'react-router-dom';
 
-import { Marker, Popup, TileLayer, Tooltip } from 'react-leaflet';
-import { Button, Form, Col, Row, InputGroup } from 'react-bootstrap';
+import { Marker, Popup } from 'react-leaflet';
+import { Button, Form, Col, Row } from 'react-bootstrap';
 import moment from 'moment';
 import { getStatus } from '../handlers/statusCriteria';
 
@@ -20,7 +19,7 @@ import { getStatus } from '../handlers/statusCriteria';
 const showLabel = (label) => {
     if (typeof label != 'number') return label;
     let fixed = 0;
-    if(label.toFixed(2) == 0) {
+    if(label.toFixed(2) === 0) {
         fixed = label.toFixed(4);
     } else {
         fixed = label.toFixed(2);
@@ -33,7 +32,6 @@ const renderMarker = (label, status, shape = 'round', currentLocation, locationS
     return (
         <div
             className={`${currentLocation === locationStr ? 'marker-wrapper-selected' : 'marker-wrapper'}`}
-            // style={currentLocation === locationStr ? { zIndex: 1 } : { zIndex: shape === 'round' ? -1 : -10 }}
         >
             <div
                 className={`marker-${status} marker-base marker-shape-${shape} ${currentLocation === locationStr ? 'marker-border marker-size-' : ''}`}
@@ -78,7 +76,6 @@ function Marcador({
     ...props
 }) {
     const marker = useMemo(() => document.createElement('div'), []);
-    const popupRef = useRef();
     const [icon, setIcon] = useState(null);
 
     const updateMarker = useCallback(
@@ -93,54 +90,54 @@ function Marcador({
                 })
             );
         },
-        [shape]
+        [shape, marker]
     );
 
     useEffect(() => {
         updateMarker(label, status, currentLocation, locationStr);
-    }, [label, status, updateMarker, currentLocation]);
+    }, [label, status, updateMarker, currentLocation, locationStr]);
     
     function getStatusColor(label) {
         if(label === 'PM2.5') {
-            if(ICAR_PM25 == '-1.00' || ICAR_PM25 == '0.00') {
+            if(ICAR_PM25 === '-1.00' || ICAR_PM25 === '0.00') {
                 return 99;
             } else {
                 return getStatus('PM25', ICAR_PM25);
             }
         } else if(label === 'PM10') {
-            if(ICAR_PM10 == '-1.00' || ICAR_PM10 == '0.00') {
+            if(ICAR_PM10 === '-1.00' || ICAR_PM10 === '0.00') {
                 return 99;
             } else {
                 return getStatus(label, ICAR_PM10);
             }
         } else if(label === 'O3') {
             if(ICAR_O3_8h >= ICAR_O3_1h) {
-                if(ICAR_O3_8h == '-1.00' || ICAR_O3_8h == '0.00') {
+                if(ICAR_O3_8h === '-1.00' || ICAR_O3_8h === '0.00') {
                     return 99;
                 } else {
                     return getStatus(label, ICAR_O3_8h);
                 }
             } else {
-                if(ICAR_O3_1h == '-1.00' || ICAR_O3_1h == '0.00') {
+                if(ICAR_O3_1h === '-1.00' || ICAR_O3_1h === '0.00') {
                     return 99;
                 } else {
                     return getStatus(label, ICAR_O3_1h);
                 }
             }
         } else if(label === 'CO') {
-            if(ICAR_CO == '-1.00' || ICAR_CO == '0.00') {
+            if(ICAR_CO === '-1.00' || ICAR_CO === '0.00') {
                 return 99;
             } else {
                 return getStatus(label, ICAR_CO);
             }
         } else if(label === 'NO2') {
-            if(ICAR_NO2 == '-1.00' || ICAR_NO2 == '0.00') {
+            if(ICAR_NO2 === '-1.00' || ICAR_NO2 === '0.00') {
                 return 99;
             } else {
                 return getStatus(label, ICAR_NO2);
             }
         } else if(label === 'SO2') {
-            if(ICAR_SO2 == '-1.00' || ICAR_SO2 == '0.00') {
+            if(ICAR_SO2 === '-1.00' || ICAR_SO2 === '0.00') {
                 return 99;
             } else {
                 return getStatus(label, ICAR_SO2);
@@ -153,13 +150,6 @@ function Marcador({
     return (
 
         <Marker position={position} 
-        // onMouseOver={(e) => {
-        //     e.target.openPopup();
-        //     console.log("Hola");
-        // }}
-        // onMouseOut={(e) => {
-        //     e.target.closePopup();
-        // }}
             eventHandlers={{
                 mouseover: (event) => event.target.openPopup()
             }}
@@ -170,16 +160,6 @@ function Marcador({
             onMouseOver={e => {
                 console.log("Hola");
             }}
-                //ref={popupRef}
-                //className="custom-popup"
-                // closeButton={(props) => (
-                //     <button
-                //         {...props}
-                //         type="button"
-                //         class="btn-close"
-                //         aria-label="Close"
-                //     ></button>
-                // )}
             >
 
                 <div className="px-3 py-2">
@@ -266,10 +246,10 @@ function Marcador({
                                 
                                 {
                                         label === 'PM2.5' ?
-                                        ICAR_PM25 == '-1.00' ?
+                                        ICAR_PM25 === '-1.00' ?
                                         <span>{'ND'}</span>
                                         :
-                                        ICAR_PM25 == '0.00' ?
+                                        ICAR_PM25 === '0.00' ?
                                         <span>{'ND'}</span>
                                         :
                                         <span>{ICAR_PM25.toFixed(2)}</span>
@@ -308,64 +288,64 @@ function Marcador({
                             
                             {
                                     label === 'PM2.5' ?
-                                    ICAR_PM25 == '-1.00' ?
+                                    ICAR_PM25 === '-1.00' ?
                                     <span>{'ND'}</span>
                                     :
-                                    ICAR_PM25 == '0.00' ?
+                                    ICAR_PM25 === '0.00' ?
                                     <span>{'ND'}</span>
                                     :
                                     <span>{ICAR_PM25.toFixed(2)}</span>
                                     :
                                     label === 'PM10' ?
-                                    ICAR_PM10 == '-1.00' ?
+                                    ICAR_PM10 === '-1.00' ?
                                     <span>{'ND'}</span>
                                     :
-                                    ICAR_PM10 == '0.00' ?
+                                    ICAR_PM10 === '0.00' ?
                                     <span>{'ND'}</span>
                                     :
                                     <span>{ICAR_PM10.toFixed(0)}</span>
                                     :
                                     label === 'O3' ?
                                     ICAR_O3_8h >= ICAR_O3_1h ?
-                                    ICAR_O3_8h == '-1.00' ?
+                                    ICAR_O3_8h === '-1.00' ?
                                     <span>{'ND'}</span>
                                     :
-                                    ICAR_O3_8h == '0.00' ?
+                                    ICAR_O3_8h === '0.00' ?
                                     <span>{'ND'}</span>
                                     :
                                     <span>{ICAR_O3_8h.toFixed(3)}</span>
                                     :
-                                    ICAR_O3_1h == '-1.00' ?
+                                    ICAR_O3_1h === '-1.00' ?
                                     <span>{'ND'}</span>
                                     :
-                                    ICAR_O3_1h == '0.00' ?
+                                    ICAR_O3_1h === '0.00' ?
                                     <span>{'ND'}</span>
                                     :
                                     <span>{ICAR_O3_1h.toFixed(3)}</span>
                                     :
                                     label === 'CO' ?
-                                    ICAR_CO == '-1.00' ?
+                                    ICAR_CO === '-1.00' ?
                                     <span>{'ND'}</span>
                                     :
-                                    ICAR_CO == '0.00' ?
+                                    ICAR_CO === '0.00' ?
                                     <span>{'ND'}</span>
                                     :
                                     <span>{ICAR_CO.toFixed(2)}</span>
                                     :
                                     label === 'NO2' ?
-                                    ICAR_NO2 == '-1.00' ?
+                                    ICAR_NO2 === '-1.00' ?
                                     <span>{'ND'}</span>
                                     :
-                                    ICAR_NO2 == '0.00' ?
+                                    ICAR_NO2 === '0.00' ?
                                     <span>{'ND'}</span>
                                     :
                                     <span>{ICAR_NO2.toFixed(4)}</span>
                                     :
                                     label === 'SO2' ?
-                                    ICAR_SO2 == '-1.00' ?
+                                    ICAR_SO2 === '-1.00' ?
                                     <span>{'ND'}</span>
                                     :
-                                    ICAR_SO2 == '0.00' ?
+                                    ICAR_SO2 === '0.00' ?
                                     <span>{'ND'}</span>
                                     :
                                     <span>{ICAR_SO2.toFixed(4)}</span>

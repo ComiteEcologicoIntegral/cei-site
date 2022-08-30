@@ -14,7 +14,7 @@ function TablaCalidad({gas}) {
                 <Col style={{backgroundColor: "#fc0204"}}><p>Muy mala</p></Col>
                 <Col className="text-white" style={{backgroundColor: "#640132", borderTopRightRadius: "12px"}}><p>Extremadamente mala</p></Col>
             </Row>
-            {gas == "PM25" && (
+            {gas === "PM25" && (
                 <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>PM2.5 μg/m3</Col>
                     <Col>Promedio ponderado 12 horas</Col>
@@ -25,7 +25,7 @@ function TablaCalidad({gas}) {
                     <Col className="text-white" style={{backgroundColor: "#640132", borderBottomRightRadius: "12px"}}>{'>'}147</Col>
                 </Row>
             )}
-            {gas == "PM10" && (
+            {gas === "PM10" && (
                 <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>PM10 μg/m3</Col>
                     <Col>Promedio móvil ponderado 12 horas</Col>
@@ -36,7 +36,7 @@ function TablaCalidad({gas}) {
                     <Col className="text-white" style={{backgroundColor: "#640132"}}>{'>'}235</Col>
                 </Row>
             )}
-            {gas == "O3" && (
+            {gas === "O3" && (
                 <Row className="ta-center" style={{ border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>Ozono ppm</Col>
                     <Col>Promedio 8 horas</Col>
@@ -46,7 +46,7 @@ function TablaCalidad({gas}) {
                     <Col style={{backgroundColor: "#fc0204"}}>0.065-0.092</Col>
                     <Col className="text-white" style={{backgroundColor: "#640132", borderBottomRightRadius: "12px"}}>{'>'}0.114</Col>
                 </Row>)}
-            {gas == "CO" && (
+            {gas === "CO" && (
                 <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>CO ppm</Col>
                     <Col>Promedio 8 horas</Col>
@@ -57,7 +57,7 @@ function TablaCalidad({gas}) {
                     <Col className="text-white" style={{backgroundColor: "#640132", borderBottomRightRadius: "12px"}}>{'>'}15.5</Col>
                 </Row>
             )}
-            {gas == "NO2" && (
+            {gas === "NO2" && (
                 <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>NO2 ppm</Col>
                     <Col>Concentración promedio 1 hora</Col>
@@ -68,7 +68,7 @@ function TablaCalidad({gas}) {
                     <Col className="text-white" style={{backgroundColor: "#640132", borderBottomRightRadius: "12px"}}>{'>'}0.25</Col>
                 </Row>
             )}
-            {gas == "SO2" && (
+            {gas === "SO2" && (
                 <Row className="ta-center" style={{border: "1px solid white", borderBottomLeftRadius:"12px", borderBottomRightRadius: "12px"}}>
                     <Col>SO2 ppm</Col>
                     <Col>Promedio 24 horas</Col>
