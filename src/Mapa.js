@@ -3,6 +3,7 @@ import Recomendaciones from "./components/Recomendaciones.js";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
+import Leyenda from "./components/LeyendaMapa.js"
 import { TablaCalidad } from "./components/TablaCalidad.js";
 
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
@@ -264,11 +265,8 @@ function Mapa() {
           }
         }}
       />
-      <div  style ={{padding:'1%', marginTop: '2%', display: "block"}}>
-        <button class="smallBotton" style ={{color:'dark-grey', radius:'50%'}} onClick={() => setshowHideState(!showHideState)}>{showHideState ? "Ocultar Leyenda" : "Mostrar Leyenda" }</button>
-      </div>
       <div
-        className="my-4 ta-center map-container"
+        className="my-4 ta-center map-container position-relative"
         style={{
           zIndex: 0,
           position: "relative",
@@ -299,102 +297,10 @@ function Mapa() {
             </div>
           </div>
         )}
-        <div
-          className="w-100 h-100 position-absolute p-2"
-          style={{ zIndex: 99, pointerEvents: "none" }}
-        >
-          
-          <div className="position-absolute end-0 right-0 ">
-          { showHideState ?                 
-            <div className="leyenda-width" >
-              <div className="leyenda-header">
-              <h6>Leyenda</h6>
-              <div className="ocultar-leyenda position-relative end-0 left-0">
-              {/* <button onClick={() => {console.log("hola")}}>x</button> */}
-            </div>
-              </div>
-                    <div className="leyenda-grid">
-                      <div
-                        style={{
-                          boxSizing: "border-box",
-                          borderRadius: "100%",
-                          width: "20px",
-                          height: "20px",
-                          marginRight: "0.75rem",
-                          padding: 0,
-                          border: "1px solid black",
-                        }}
-                        className="mb-2"
-                      ></div>
-                      <div className="mb-2">
-                        Los sensores del estado se representan con un círculo
-                      </div>
-    
-                      <div
-                        style={{
-                          boxSizing: "border-box",
-                          width: "20px",
-                          height: "20px",
-                          marginRight: "0.75rem",
-                          padding: 0,
-                          border: "1px solid black",
-                        }}
-                        className="mb-2"
-                      ></div>
-                      <div className="mb-2">
-                        Los sensores de Purple Air se representan con un cuadrado
-                      </div>
-    
-                      <div className="">ND</div>
-                      <div>No dato</div>
-                    </div>
-                    </div>
-              : null
-            }
-            {/* <OverlayTrigger
-              trigger="click"
-              placement={"left"}
-              overlay={
-                <Popover>
-                  <Popover.Title as="h3">Leyenda</Popover.Title>
-                  <Popover.Content>
-                    <div className="d-flex align-items-center">
-                      <div
-                        style={{
-                          boxSizing: "border-box",
-                          borderRadius: "100%",
-                          width: "35px",
-                          height: "20px",
-                          marginRight: "0.75rem",
-                          padding: 0,
-                          border: "1px solid black",
-                        }}
-                      ></div>
-                      Los sensores del estado se representan con un círculo
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <div
-                        style={{
-                          boxSizing: "border-box",
-                          width: "35px",
-                          height: "20px",
-                          marginRight: "0.75rem",
-                          padding: 0,
-                          border: "1px solid black",
-                        }}
-                      ></div>
-                      Los sensores de Purple Air se representan con un cuadrado
-                    </div>
-                  </Popover.Content>
-                </Popover>
-              }
-            >
-              <Button variant="link" className="pe-auto">
-                Leyenda
-              </Button>
-            </OverlayTrigger> */}
-          </div>
-        </div>
+
+
+        <Leyenda showHideState={showHideState} setshowHideState={setshowHideState}/>
+
         <Wrapper whenCreated={setMap} {...mapDefaultProps}>
           {!loadingSensorData &&
             markers.map((markerProps, idx) => {
