@@ -150,9 +150,7 @@ function Marcador({
     return (
 
         <Marker position={position} 
-            eventHandlers={{
-                mouseover: (event) => event.target.openPopup()
-            }}
+            onClick={(event) => event.target.openPopup()}
             icon={icon} {...props}
         >
 
