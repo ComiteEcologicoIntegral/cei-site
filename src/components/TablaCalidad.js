@@ -20,8 +20,8 @@ function TablaCalidad({gas}) {
                     <Col>Promedio ponderado 12 horas</Col>
                     <Col style={{backgroundColor: "#00cc03"}}>0-25</Col>
                     <Col style={{backgroundColor: "#ffff00"}}>25-41</Col>
-                    <Col style={{backgroundColor: "#fe6601"}}>79-147</Col>
-                    <Col style={{backgroundColor: "#fc0204"}}>41-79</Col>
+                    <Col style={{backgroundColor: "#fe6601"}}>41-79</Col>
+                    <Col style={{backgroundColor: "#fc0204"}}>79-147</Col>
                     <Col className="text-white" style={{backgroundColor: "#640132", borderBottomRightRadius: "12px"}}>{'>'}147</Col>
                 </Row>
             )}
