@@ -1,14 +1,56 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BsInfoCircle } from "react-icons/bs";
+import Radium, { StyleRoot } from "radium";
 
-export default function Leyenda (props) {
+const flash = {
+  "10%": {
+    transform: "scale(1.3)",
+  },
+  "20%": {
+    transform: "rotate(0.1turn) scale(1.3)",
+  },
+  "40%": {
+    transform: "rotate(-0.1turn) scale(1.3)",
+  },
+  "60%": {
+    transform: "rotate(0.1turn) scale(1.3)",
+  },
+  "80%": {
+    transform: "rotate(-0.1turn) scale(1.3)",
+  }
+};
 
+const styles = {
+  flash: {
+    animation: "x 2s linear 2",
+    animationName: Radium.keyframes(flash, "flash"),
+    transformOrigin: "center",
+  },
+};
+
+export default function Leyenda(props) {
   const { showHideState, setshowHideState } = props;
+  const [flashStyle, setflashStyle] = useState(styles.flash);
+  let intervalId = null;
+
+  useEffect(() => {
+    if (!showHideState) {
+      clearInterval(intervalId);
+      intervalId = setInterval(() => {
+        setflashStyle((flashStyle) => (flashStyle === styles.flash ? {} : styles.flash));
+      }, 5000);
+
+      return () => {
+        clearInterval(intervalId);
+        intervalId = null;
+      };
+    }
+  }, [showHideState]);
 
   return (
-    <div className="position-absolute end-0 right-0 " style={{zIndex: 99}}>
-      { showHideState ?                 
-        <div className="leyenda-width" >
+    <div className="position-absolute end-0 right-0 " style={{ zIndex: 99 }}>
+      {showHideState ? (
+        <div className="leyenda-width">
           <div className="leyenda-header">
             <h6>Leyenda</h6>
             <div className="ocultar-leyenda">
@@ -28,9 +70,7 @@ export default function Leyenda (props) {
               }}
               className="mb-2"
             ></div>
-            <div className="mb-2">
-              Sensores del estado
-            </div>
+            <div className="mb-2">Sensores del estado</div>
 
             <div
               style={{
@@ -43,64 +83,20 @@ export default function Leyenda (props) {
               }}
               className="mb-2"
             ></div>
-            <div className="mb-2">
-              Sensores PurpleAir
-            </div>
-
+            <div className="mb-2">Sensores PurpleAir</div>
             <div className="">ND</div>
             <div>No dato</div>
           </div>
         </div>
-        : 
-        <div style ={{display: "block"}}>
-          <button class="smallBotton" onClick={() => setshowHideState(!showHideState)} >
-            <BsInfoCircle  style={{height: "20px", width: "20px"}}/>
-          </button>
-        </div>
-
-      }
-      {/* <OverlayTrigger
-              trigger="click"
-              placement={"left"}
-              overlay={
-                <Popover>
-                  <Popover.Title as="h3">Leyenda</Popover.Title>
-                  <Popover.Content>
-                    <div className="d-flex align-items-center">
-                      <div
-                        style={{
-                          boxSizing: "border-box",
-                          borderRadius: "100%",
-                          width: "35px",
-                          height: "20px",
-                          marginRight: "0.75rem",
-                          padding: 0,
-                          border: "1px solid black",
-                        }}
-                      ></div>
-                      Los sensores del estado se representan con un círculo
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <div
-                        style={{
-                          boxSizing: "border-box",
-                          width: "35px",
-                          height: "20px",
-                          marginRight: "0.75rem",
-                          padding: 0,
-                          border: "1px solid black",
-                        }}
-                      ></div>
-                      Los sensores de Purple Air se representan con un cuadrado
-                    </div>
-                  </Popover.Content>
-                </Popover>
-              }
-            >
-              <Button variant="link" className="pe-auto">
-                Leyenda
-              </Button>
-            </OverlayTrigger> */}
+      ) : (
+        <StyleRoot>
+          <div className="info-button-container" style={flashStyle}>
+            <button class="info-button" onClick={() => setshowHideState(!showHideState)}>
+              <BsInfoCircle style={{ height: "20px", width: "20px", backgroundColor: "white", borderRadius: "50%" }} />
+            </button>
+          </div>
+        </StyleRoot>
+      )}
     </div>
   );
 }
