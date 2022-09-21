@@ -68,8 +68,9 @@ const qualityGasData = {
 };
 
 function TablaCalidad({ gas }) {
+
   const selectedGas = qualityGasData[gas];
-  console.log(gas);
+
   return (
     <Container
       className="t-center mb-5 mt-4"
