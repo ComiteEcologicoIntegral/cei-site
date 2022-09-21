@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import Radium, { StyleRoot } from "radium";
+import "./MapLegend.css"
 
 const flash = {
   "10%": {
@@ -17,7 +18,7 @@ const flash = {
   },
   "80%": {
     transform: "rotate(-0.1turn) scale(1.3)",
-  }
+  },
 };
 
 const styles = {
@@ -28,7 +29,7 @@ const styles = {
   },
 };
 
-export default function Leyenda(props) {
+export default function MapLegend(props) {
   const { showHideState, setshowHideState } = props;
   const [flashStyle, setflashStyle] = useState(styles.flash);
   let intervalId = null;
@@ -47,52 +48,49 @@ export default function Leyenda(props) {
     }
   }, [showHideState]);
 
+  const LegendItem = (props) => {
+    const { text, icon } = props;
+
+    return (
+      <div className="legend-item">
+        {icon && (
+          <div className="legend-item-icon">
+            <img src={icon} alt={"Legend Icon"} />
+          </div>
+        )}
+        <div className="legend-item-text">{text}</div>
+      </div>
+    );
+  };
+
   return (
-    <div className="position-absolute end-0 right-0 " style={{ zIndex: 99 }}>
+    <div className="position-absolute end-0 right-0 d-flex flex-center" style={{ zIndex: 99 }}>
       {showHideState ? (
-        <div className="leyenda-width">
-          <div className="leyenda-header">
+        <div className="legend-width">
+          <div className="legend-header">
             <h6>Leyenda</h6>
-            <div className="ocultar-leyenda">
+            <div className="hide-legend-button">
               <button onClick={() => setshowHideState(!showHideState)}>x</button>
             </div>
           </div>
-          <div className="leyenda-grid">
-            <div
-              style={{
-                boxSizing: "border-box",
-                borderRadius: "100%",
-                width: "20px",
-                height: "20px",
-                marginRight: "0.75rem",
-                padding: 0,
-                border: "1px solid black",
-              }}
-              className="mb-2"
-            ></div>
-            <div className="mb-2">Sensores del estado</div>
-
-            <div
-              style={{
-                boxSizing: "border-box",
-                width: "20px",
-                height: "20px",
-                marginRight: "0.75rem",
-                padding: 0,
-                border: "1px solid black",
-              }}
-              className="mb-2"
-            ></div>
-            <div className="mb-2">Sensores PurpleAir</div>
-            <div className="">ND</div>
-            <div>No dato</div>
+          <div className="legend-grid">
+            <LegendItem text={"Sensores del Estado"} icon={"images/sensor_estado.jpeg"} />
+            <LegendItem text={"Sensores PurpleAir"} icon={"images/sensor_purple_air.jpeg"} />
+            <LegendItem text={"ND"} icon={"images/no_data.jpeg"} />
           </div>
         </div>
       ) : (
         <StyleRoot>
           <div className="info-button-container" style={flashStyle}>
             <button class="info-button" onClick={() => setshowHideState(!showHideState)}>
-              <BsInfoCircle style={{ height: "20px", width: "20px", backgroundColor: "white", borderRadius: "50%" }} />
+              <BsInfoCircle
+                style={{
+                  height: "20px",
+                  width: "20px",
+                  backgroundColor: "white",
+                  borderRadius: "50%",
+                }}
+              />
             </button>
           </div>
         </StyleRoot>
@@ -100,3 +98,4 @@ export default function Leyenda(props) {
     </div>
   );
 }
+
