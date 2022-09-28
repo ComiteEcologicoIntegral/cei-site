@@ -20,29 +20,10 @@ function Registro() {
   const [noData, setNoData] = useState(false); // Desplegar mensaje si no se encontraron datos en la BD
 
   // Datos de los filtros
-  // Get start and end dates from url
-  const urlParams = new URLSearchParams(window.location.search);
-  const dateFormat = "MM/DD/YYYY/HH:mm:ss";
-  const startDateString = urlParams.get("start_date");
-  let startTime = null;
-  let startDate = null;
-  if (startDateString != null) {
-    startDate = moment(startDateString, dateFormat).toDate();
-    startTime = moment(startDate).format("HH:mm:ss");
-  }
-
-  const endDateString = urlParams.get("end_date");
-  let endTime = null;
-  let endDate = null;
-  if (endDateString != null) {
-    endDate = moment(endDateString, dateFormat).toDate();
-    endTime = moment(endDate).format("HH:mm:ss");
-  }
-
-  const [desde, setDesde] = useState(startDate);
-  const [hasta, setHasta] = useState(endDate);
-  const [desdeHora, setDesdeHora] = useState(startTime);
-  const [hastaHora, setHastaHora] = useState(endTime);
+  const [startDate, setStartDate] = useState(Date());
+  const [endDate, setEndDate] = useState(Date());
+  const [startTime, setStartTime] = useState({});
+  const [endTime, setEndTime] = useState({});
   const gas = useRef({ value: "PM25" });
   const ubicacion = useRef(null);
   const system = useRef(null);
@@ -50,8 +31,7 @@ function Registro() {
   useEffect(() => {
     if (queryString) {
       if (radioValue === "1") {
-        let newURL =
-          window.location.origin + window.location.pathname + "?" + queryString;
+        let newURL = window.location.origin + window.location.pathname + "?" + queryString;
         window.history.pushState({ path: newURL }, "", newURL);
         // Sección gráfica
         fetch(`${apiUrl}/get-graph-opt?${queryString}`)
@@ -101,22 +81,20 @@ function Registro() {
       alert("Selecciona una ubicación.");
       return;
     }
-    if (!desde || !hasta) {
+    if (!startDate || !endDate) {
       alert("Selecciona las fechas.");
       return;
     }
 
     setLoading(true);
 
-    let desdeHoraString = desdeHora == null ? "00:00:00" : desdeHora;
-    let hastaHoraString = hastaHora == null ? "00:00:00" : hastaHora;
+    let desdeHoraString = startTime == null ? "00:00:00" : startTime;
+    let hastaHoraString = endTime == null ? "00:00:00" : endTime;
 
-    let queryStr = `location=${ubicacion.current.label}&gas=${
-      gas.current.value
-    }&system=${system.current.opt}&start_date=${moment
-      .utc(desde)
-      .format("MM/DD/YYYY")}${"/"}${desdeHoraString}&end_date=${moment
-      .utc(hasta)
+    let queryStr = `location=${ubicacion.current.label}&gas=${gas.current.value}&system=${
+      system.current.opt
+    }&start_date=${moment.utc(startDate).format("MM/DD/YYYY")}${"/"}${desdeHoraString}&end_date=${moment
+      .utc(endDate)
       .format("MM/DD/YYYY")}${"/"}${hastaHoraString}`;
 
     setQueryString(queryStr);
@@ -133,8 +111,8 @@ function Registro() {
     }
 
     if (!initialDate || !endingDate) {
-      initialDate = desde;
-      endingDate = hasta;
+      initialDate = startDate;
+      endingDate = endDate;
     }
 
     let queryStr = "ubic=";
@@ -162,18 +140,18 @@ function Registro() {
           "&gas=" +
           gas.current.value +
           "&start_date=" +
-          desde.startOf("month").format("YYYY-MM-DD") +
+          startDate.startOf("month").format("YYYY-MM-DD") +
           "&end_date=" +
-          hasta.endOf("month").format("YYYY-MM-DD");
+          endDate.endOf("month").format("YYYY-MM-DD");
       } else {
         // Para la sección de la gráfica se descarga según las fechas seleccionadas
         queryStr +=
           "&gas=" +
           gas.current.value +
           "&start_date=" +
-          desde.format("YYYY-MM-DD") +
+          startDate.format("YYYY-MM-DD") +
           "&end_date=" +
-          hasta.format("YYYY-MM-DD");
+          endDate.format("YYYY-MM-DD");
       }
 
       return queryStr;
@@ -230,6 +208,14 @@ function Registro() {
         radioValue={radioValue}
         setRadioValue={setRadioValue}
         updateMainFiltros={updateMainFiltros}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        startTime={startTime}
+        setStartTime={setStartTime}
+        endTime={endTime}
+        setEndTime={setEndTime}
       />
       <div className="text-center">
         <img
@@ -241,14 +227,12 @@ function Registro() {
       </div>
       {radioValue === "1" && (
         <Grafica
-          setDesde={setDesde}
-          setHasta={setHasta}
-          setDesdeHora={setDesdeHora}
-          setHastaHora={setHastaHora}
-          startDate={desde}
-          endDate={hasta}
-          startDateTime={desdeHora}
-          endDateTime={hastaHora}
+          setDesdeHora={setStartTime}
+          setHastaHora={setEndTime}
+          startDate={startDate}
+          endDate={endDate}
+          startDateTime={startTime}
+          endDateTime={endTime}
           downloadFile={downloadFile}
           summary={summaryData}
           {...data}
@@ -259,13 +243,13 @@ function Registro() {
           <Suspense fallback={<div>Loading...</div>}>
             <Calendario
               q={queryString}
-              fecha={desde}
+              fecha={startDate}
               ubic={ubicacion.current}
               create={createQueryCal}
               data={data}
               indi={gas.current.value}
-              setDesde={setDesde}
-              setHasta={setHasta}
+              setDesde={setStartDate}
+              setHasta={setEndDate}
               downloadFile={downloadFile}
             />
           </Suspense>
