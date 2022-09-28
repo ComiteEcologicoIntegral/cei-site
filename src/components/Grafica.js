@@ -1,4 +1,3 @@
-import moment from 'moment';
 import React from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
@@ -7,66 +6,6 @@ import Plot from 'react-plotly.js';
 function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, startDate, endDate, startDateTime, endDateTime, data, layout, downloadFile, summary}) {
     return (
         <div>
-            <Form className="mt-4 mb-4">
-                <Form.Row className="d-flex justify-content-evenly">
-                    <Col xs={12} lg={5} className="mb-3">
-                        <Row>
-                            <Col xs={2}>
-                                <Form.Label className="col-form-label">
-                                    Desde:{' '}
-                                </Form.Label>
-                            </Col>
-
-                            <Col xs={5}>
-                                <Form.Control
-                                    type="date"
-                                    required
-                                    value={moment(startDate).format('yyyy-MM-DD')}
-                                    onChange={(event) => setDesde(moment(event.target.value))}
-                                ></Form.Control>
-                            </Col>
-
-                            <Col xs={5}>
-                                <Form.Control
-                                    value={startDateTime}
-                                    onChange={(event) => {
-                                        console.log(event);
-                                        setDesdeHora(event.target.value + ':00')
-                                    }}
-                                    type="time"></Form.Control>
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col xs={12} lg={5} className="mb-3">
-                        <Row>
-                            <Col xs={2}>
-                                <Form.Label className="col-form-label">
-                                    Hasta:{' '}
-                                </Form.Label>
-                            </Col>
-
-                            <Col xs={5}>
-                                <Form.Control
-                                    type="date"
-                                    required
-                                    value={moment(endDate).format('yyyy-MM-DD')}
-                                    onChange={(event) =>
-                                        setHasta(moment(event.target.value))
-                                    }
-                                ></Form.Control>
-                            </Col>
-
-                            <Col xs={5}>
-                                <Form.Control
-                                    value={endDateTime}
-                                    onChange={(event) => setHastaHora(event.target.value + ':00')}
-                                    type="time"></Form.Control>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Form.Row>
-            </Form>
-
             <Row className="mb-5">
                 <Col xs={12} lg={4} xl={2}>
                     <Row xs={12}>
