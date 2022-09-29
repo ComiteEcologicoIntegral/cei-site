@@ -5,9 +5,9 @@ import moment from "moment";
 import "moment/locale/es";
 import { apiUrl } from "./constants";
 import { Modal } from "react-bootstrap";
-import Recomendaciones from './components/Recomendaciones.js'
+import Recomendaciones from "./components/Recomendaciones.js";
 
-const Calendario = lazy(() => import("./components/Calendario")) 
+const Calendario = lazy(() => import("./components/Calendario"));
 
 function Registro() {
   // http://localhost:3000/location=Garc%C3%ADa&gas=PM25&system=G&start_date=08/02/2022/00:00:00&end_date=08/29/2022/00:00:00
@@ -22,21 +22,21 @@ function Registro() {
   // Datos de los filtros
   // Get start and end dates from url
   const urlParams = new URLSearchParams(window.location.search);
-  const dateFormat = 'MM/DD/YYYY/HH:mm:ss';
-  const startDateString = urlParams.get('start_date');
+  const dateFormat = "MM/DD/YYYY/HH:mm:ss";
+  const startDateString = urlParams.get("start_date");
   let startTime = null;
   let startDate = null;
   if (startDateString != null) {
     startDate = moment(startDateString, dateFormat).toDate();
-    startTime = moment(startDate).format('HH:mm:ss');
+    startTime = moment(startDate).format("HH:mm:ss");
   }
 
-  const endDateString = urlParams.get('end_date');
+  const endDateString = urlParams.get("end_date");
   let endTime = null;
   let endDate = null;
   if (endDateString != null) {
     endDate = moment(endDateString, dateFormat).toDate();
-    endTime = moment(endDate).format('HH:mm:ss');
+    endTime = moment(endDate).format("HH:mm:ss");
   }
 
   const [desde, setDesde] = useState(startDate);
@@ -50,9 +50,9 @@ function Registro() {
   useEffect(() => {
     if (queryString) {
       if (radioValue === "1") {
-
-        let newURL = window.location.origin + window.location.pathname + "?" + queryString;
-        window.history.pushState({path:newURL},'',newURL);
+        let newURL =
+          window.location.origin + window.location.pathname + "?" + queryString;
+        window.history.pushState({ path: newURL }, "", newURL);
         // Sección gráfica
         fetch(`${apiUrl}/get-graph-opt?${queryString}`)
           .then((response) => response.json())
@@ -70,7 +70,7 @@ function Registro() {
             json.plot.data[0].x = fechasArray;
 
             // Hacer más grande el texto de la grafica
-            json.plot.layout = { ...json.plot.layout, font: {size: 15} };
+            json.plot.layout = { ...json.plot.layout, font: { size: 15 } };
             setData(json.plot);
             setSummaryData(json.summary);
             setLoading(false);
@@ -108,8 +108,8 @@ function Registro() {
 
     setLoading(true);
 
-    let desdeHoraString = desdeHora == null ? '00:00:00' : desdeHora;
-    let hastaHoraString = hastaHora == null ? '00:00:00' : hastaHora;
+    let desdeHoraString = desdeHora == null ? "00:00:00" : desdeHora;
+    let hastaHoraString = hastaHora == null ? "00:00:00" : hastaHora;
 
     let queryStr = `location=${ubicacion.current.label}&gas=${
       gas.current.value
@@ -224,7 +224,7 @@ function Registro() {
           <p>Revise los parametros e intente de nuevo.</p>
         </Modal.Body>
       </Modal>
-      <RHFiltros 
+      <RHFiltros
         createQueryGraph={createQueryGraph}
         createQueryCal={createQueryCal}
         radioValue={radioValue}
@@ -271,7 +271,7 @@ function Registro() {
           </Suspense>
         </>
       )}
-      <Recomendaciones selected = 'buena' isManual={true}/>
+      <Recomendaciones selected="buena" isManual={true} />
     </div>
   );
 }
