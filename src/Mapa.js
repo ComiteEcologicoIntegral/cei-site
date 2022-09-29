@@ -3,7 +3,7 @@ import Recomendaciones from "./components/Recomendaciones.js";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
-import Leyenda from "./components/LeyendaMapa.js"
+import Leyenda from "./components/LeyendaMapa.js";
 import { TablaCalidad } from "./components/TablaCalidad.js";
 
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
@@ -11,7 +11,6 @@ import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 import { Spinner } from "react-bootstrap";
 import moment from "moment";
-import autoMergeLevel1 from "redux-persist/es/stateReconciler/autoMergeLevel1";
 
 const mapDefaultProps = {
   center: [25.67, -100.25],
@@ -31,11 +30,10 @@ function Mapa() {
   } = useSensorData({});
 
   const [map, setMap] = useState(null);
-  
+
   const setCenter = useCallback(
     (pos) => {
       if (map) {
-        // setLastCenter(pos);
         map.setView(pos, mapDefaultProps.zoom, {
           animate: true,
         });
@@ -101,21 +99,21 @@ function Mapa() {
 
   //Diccionario para pasar de Sensor_id a nombre de estacion
   const ANLKeys_dict = {
-    "ANL1": "SURESTE",
-    "ANL2": "NORESTE",
-    "ANL3": "SUROESTE",
-    "ANL4": "[SAN Pedro]",
-    "ANL5": "NORTE2",
-    "ANL6": "GARCIA",
-    "ANL7": "NOROESTE",
-    "ANL8": "SURESTE3",
-    "ANL9": "NORTE",
-    "ANL10": "NORESTE2",
-    "ANL11": "SUR",
-    "ANL12": "CENTRO",
-    "ANL13": "SURESTE2",
-    "ANL15": "PESQUERIA",
-}
+    ANL1: "SURESTE",
+    ANL2: "NORESTE",
+    ANL3: "SUROESTE",
+    ANL4: "[SAN Pedro]",
+    ANL5: "NORTE2",
+    ANL6: "GARCIA",
+    ANL7: "NOROESTE",
+    ANL8: "SURESTE3",
+    ANL9: "NORTE",
+    ANL10: "NORESTE2",
+    ANL11: "SUR",
+    ANL12: "CENTRO",
+    ANL13: "SURESTE2",
+    ANL15: "PESQUERIA",
+  };
 
   const markers = useMemo(() => {
     const filteredSensors = sensorData.filter(
@@ -168,7 +166,7 @@ function Mapa() {
       }
 
       const value = typeof preValue === "number" ? preValue : "ND";
-      
+
       return {
         currentLocation,
         ICAR_PM25: +data.ICAR_PM25,
@@ -179,8 +177,15 @@ function Mapa() {
         ICAR_NO2: +data.ICAR_NO2,
         ICAR_SO2: +data.ICAR_SO2,
         sensor_id: data.Sensor_id,
-        humedad: ( typeof data.Humedad_R === 'undefined' || data.Humedad_R === null ) ?  "N/D" : data.Humedad_R.toString(),
-        temperatura: ( typeof data.Temperatura_C === 'undefined' || data.Temperatura_C === null ) ?  "N/D" : data.Temperatura_C.toString(),
+        humedad:
+          typeof data.Humedad_R === "undefined" || data.Humedad_R === null
+            ? "N/D"
+            : data.Humedad_R.toString(),
+        temperatura:
+          typeof data.Temperatura_C === "undefined" ||
+          data.Temperatura_C === null
+            ? "N/D"
+            : data.Temperatura_C.toString(),
         position: [data.Latitud, data.Longitud],
         current: {
           indicator: currentGas.label ? currentGas.label : gasName,
@@ -216,12 +221,23 @@ function Mapa() {
             ref: "#",
           };
         }),
+
         //url para boton de Mas Informacion
-        urlMI:(() => {
+        urlMI: (() => {
           if (data.Sistema === "PurpleAir")
-            return "https://map.purpleair.com/1/mAQI/a10/p0/cC0?select="+data.Sensor_id.substr(1)+"#13.91/"+data.Latitud+"/"+data.Longitud;
+            return (
+              "https://map.purpleair.com/1/mAQI/a10/p0/cC0?select=" +
+              data.Sensor_id.substr(1) +
+              "#13.91/" +
+              data.Latitud +
+              "/" +
+              data.Longitud
+            );
           if (data.Sistema === "AireNuevoLeon")
-            return "http://aire.nl.gob.mx:81/SIMA2017reportes/ReporteDiariosimaIcars.php?estacion1="+ANLKeys_dict[data.Sensor_id];
+            return (
+              "http://aire.nl.gob.mx:81/SIMA2017reportes/ReporteDiariosimaIcars.php?estacion1=" +
+              ANLKeys_dict[data.Sensor_id]
+            );
           if (data.Sistema === "Sinaica")
             return "https://sinaica.inecc.gob.mx/";
           return "#";
@@ -236,10 +252,17 @@ function Mapa() {
     <div>
       <div className="MapaIntro ta-center mt-5">
         <h2>Calidad del aire en tiempo real</h2>
-        <p>Consulta información en tiempo real sobre la calidad del aire en Monterrey</p>
+        <p>
+          Consulta información en tiempo real sobre la calidad del aire en
+          Monterrey
+        </p>
       </div>
       <div className="mapa-info mt-5 mb-3">
-        <p>En esta página puedes ver información en tiempo real acerca de la calidad del aire en Monterrey, si deseas obtener información más específica puedes hacer uso de los filtros de abajo.</p>
+        <p>
+          En esta página puedes ver información en tiempo real acerca de la
+          calidad del aire en Monterrey, si deseas obtener información más
+          específica puedes hacer uso de los filtros de abajo.
+        </p>
       </div>
       <MapaFiltros
         onApply={({ gas, location, interval }) => {
@@ -271,7 +294,7 @@ function Mapa() {
           zIndex: 0,
           position: "relative",
           height: "90vh",
-          margin: "0 auto"
+          margin: "0 auto",
         }}
       >
         {/* {errorSensorData && (
@@ -298,15 +321,17 @@ function Mapa() {
           </div>
         )}
 
-
-        <Leyenda showHideState={showHideState} setshowHideState={setshowHideState}/>
+        <Leyenda
+          showHideState={showHideState}
+          setshowHideState={setshowHideState}
+        />
 
         <Wrapper whenCreated={setMap} {...mapDefaultProps}>
           {!loadingSensorData &&
             markers.map((markerProps, idx) => {
               if (currentGas.name === "PM25") {
                 return (
-                  <Marcador 
+                  <Marcador
                     map={map}
                     key={idx}
                     {...markerProps}
@@ -334,8 +359,11 @@ function Mapa() {
             })}
         </Wrapper>
       </div>
-      <Recomendaciones selected={airQualityTags[airQualityIndex]} isManual={true} />
-      <TablaCalidad gas={currentGas.name}/>
+      <Recomendaciones
+        selected={airQualityTags[airQualityIndex]}
+        isManual={true}
+      />
+      <TablaCalidad gas={currentGas.name} />
     </div>
   );
 }
