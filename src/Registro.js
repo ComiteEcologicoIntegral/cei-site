@@ -11,7 +11,8 @@ const Calendario = lazy(() => import("./components/Calendario"));
 
 function Registro() {
   // http://localhost:3000/location=Garc%C3%ADa&gas=PM25&system=G&start_date=08/02/2022/00:00:00&end_date=08/29/2022/00:00:00
-  const [data, setData] = useState(null);
+  const [plotData, setPlotData] = useState(null);
+  const [calendarData, setCalendarData] = useState(null);
   const [summaryData, setSummaryData] = useState(null);
   const [radioValue, setRadioValue] = useState("1"); // sección seleccionada (Gráfica/Calendario)
   const [queryString, setQueryString] = useState(null); // string del query
@@ -51,7 +52,7 @@ function Registro() {
 
             // Hacer más grande el texto de la grafica
             json.plot.layout = { ...json.plot.layout, font: { size: 15 } };
-            setData(json.plot);
+            setPlotData(json.plot);
             setSummaryData(json.summary);
             setLoading(false);
           });
@@ -59,14 +60,10 @@ function Registro() {
         // Sección calendario
         fetch(`${apiUrl}/datos-fecha?${queryString}`)
           .then((response) => response.json())
-          .then((json) => setData(json));
+          .then((json) => setCalendarData(json));
       }
     }
-  }, [queryString]); // Cada que cambia el string del query creado, hacemos un request al api
-
-  useEffect(() => {
-    setData(null);
-  }, [radioValue]); // Cuando cambiamos entre Gráfica y Calendario, borramos los datos
+  }, [queryString]);
 
   // Esta función es llamada por un componente hijo para actualizar los valores cada que cambian en los filtros
   function updateMainFiltros(u, i, s) {
@@ -93,7 +90,9 @@ function Registro() {
 
     let queryStr = `location=${ubicacion.current.label}&gas=${gas.current.value}&system=${
       system.current.opt
-    }&start_date=${moment.utc(startDate).format("MM/DD/YYYY")}${"/"}${desdeHoraString}&end_date=${moment
+    }&start_date=${moment
+      .utc(startDate)
+      .format("MM/DD/YYYY")}${"/"}${desdeHoraString}&end_date=${moment
       .utc(endDate)
       .format("MM/DD/YYYY")}${"/"}${hastaHoraString}`;
 
@@ -225,19 +224,14 @@ function Registro() {
           style={loading ? {} : { display: "none" }}
         />
       </div>
-      {radioValue === "1" && (
-        <Grafica
-          setDesdeHora={setStartTime}
-          setHastaHora={setEndTime}
-          startDate={startDate}
-          endDate={endDate}
-          startDateTime={startTime}
-          endDateTime={endTime}
-          downloadFile={downloadFile}
-          summary={summaryData}
-          {...data}
-        />
-      )}
+      {radioValue === "1" &&
+        (plotData !== null ? (
+          <Grafica downloadFile={downloadFile} summary={summaryData} {...plotData} />
+        ) : (
+          <div className="w-100 text-center">
+            Selecciona un sensor, contaminante y fechas para obtener los datos 
+          </div>
+        ))}
       {radioValue === "2" && (
         <>
           <Suspense fallback={<div>Loading...</div>}>
@@ -246,7 +240,7 @@ function Registro() {
               fecha={startDate}
               ubic={ubicacion.current}
               create={createQueryCal}
-              data={data}
+              data={calendarData}
               indi={gas.current.value}
               setDesde={setStartDate}
               setHasta={setEndDate}

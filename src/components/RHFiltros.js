@@ -218,7 +218,7 @@ function RHFiltros({
             />
           </Col>
           <Col xs={4}>
-            <p className="font-weight-bold mb-2">Inicio</p>
+            <p className="font-weight-bold mb-2">Desde</p>
             <div className="d-flex justify-content-between flex-row">
               <Form.Control
                 type="date"
@@ -234,7 +234,7 @@ function RHFiltros({
             </div>
           </Col>
           <Col xs={4}>
-            <p className="font-weight-bold mb-2">Fin</p>
+            <p className="font-weight-bold mb-2">Hasta</p>
             <div className="d-flex justify-content-between flex-row">
               <Form.Control
                 type="date"
