@@ -3,7 +3,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
 
 // TODO: Simplificar, dividir en sub componentes
-function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, startDate, endDate, startDateTime, endDateTime, data, layout, downloadFile, summary}) {
+function Grafica({ data, layout, downloadFile, summary}) {
     return (
         <div>
             <Row className="mb-5">
@@ -101,12 +101,7 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, startDate, en
 
                 <Col sm={12} lg={8} xl={10}>
                     <div className="grafico mb-4">
-                        {data && (
                             <Plot className="grafico-resize" data={data} layout={layout} config={{ responsive: true }} />
-                        )}
-                        {typeof data == 'undefined' && (
-                            <div>Seleccionar un sensor, contaminante y fechas para ver sus datos</div>
-                        )}
                     </div>
                 </Col>
                 <Row className="d-block d-sm-none w-100" xs={11}>
