@@ -74,9 +74,9 @@ export default function MapLegend(props) {
             </div>
           </div>
           <div className="legend-grid">
-            <LegendItem text={"Sensores del Estado"} icon={"images/sensor_estado.jpeg"} />
-            <LegendItem text={"Sensores PurpleAir"} icon={"images/sensor_purple_air.jpeg"} />
-            <LegendItem text={"ND"} icon={"images/no_data.jpeg"} />
+            <LegendItem text={"Sensores del Estado"} icon={"images/sensor_estado.png"} />
+            <LegendItem text={"Sensores PurpleAir"} icon={"images/sensor_purple_air.png"} />
+            <LegendItem text={"ND"} icon={"images/no_data.png"} />
           </div>
         </div>
       ) : (
