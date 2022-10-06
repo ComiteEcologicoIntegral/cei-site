@@ -3,7 +3,7 @@ import Recomendaciones from "./components/Recomendaciones.js";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
-import Leyenda from "./components/LeyendaMapa.js";
+import Legend from "./components/MapLegend/MapLegend"
 import { TablaCalidad } from "./components/TablaCalidad.js";
 
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
@@ -321,10 +321,7 @@ function Mapa() {
           </div>
         )}
 
-        <Leyenda
-          showHideState={showHideState}
-          setshowHideState={setshowHideState}
-        />
+        <Legend showHideState={showHideState} setshowHideState={setshowHideState}/>
 
         <Wrapper whenCreated={setMap} {...mapDefaultProps}>
           {!loadingSensorData &&
