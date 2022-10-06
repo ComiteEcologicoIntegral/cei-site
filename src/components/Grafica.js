@@ -1,72 +1,11 @@
-import moment from 'moment';
 import React from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
 
 // TODO: Simplificar, dividir en sub componentes
-function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, startDate, endDate, startDateTime, endDateTime, data, layout, downloadFile, summary}) {
+function Grafica({ data, layout, downloadFile, summary}) {
     return (
         <div>
-            <Form className="mt-4 mb-4">
-                <Form.Row className="d-flex justify-content-evenly">
-                    <Col xs={12} lg={5} className="mb-3">
-                        <Row>
-                            <Col xs={2}>
-                                <Form.Label className="col-form-label">
-                                    Desde:{' '}
-                                </Form.Label>
-                            </Col>
-
-                            <Col xs={5}>
-                                <Form.Control
-                                    type="date"
-                                    required
-                                    value={moment(startDate).format('yyyy-MM-DD')}
-                                    onChange={(event) => setDesde(moment(event.target.value))}
-                                ></Form.Control>
-                            </Col>
-
-                            <Col xs={5}>
-                                <Form.Control
-                                    value={startDateTime}
-                                    onChange={(event) => {
-                                        console.log(event);
-                                        setDesdeHora(event.target.value + ':00')
-                                    }}
-                                    type="time"></Form.Control>
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col xs={12} lg={5} className="mb-3">
-                        <Row>
-                            <Col xs={2}>
-                                <Form.Label className="col-form-label">
-                                    Hasta:{' '}
-                                </Form.Label>
-                            </Col>
-
-                            <Col xs={5}>
-                                <Form.Control
-                                    type="date"
-                                    required
-                                    value={moment(endDate).format('yyyy-MM-DD')}
-                                    onChange={(event) =>
-                                        setHasta(moment(event.target.value))
-                                    }
-                                ></Form.Control>
-                            </Col>
-
-                            <Col xs={5}>
-                                <Form.Control
-                                    value={endDateTime}
-                                    onChange={(event) => setHastaHora(event.target.value + ':00')}
-                                    type="time"></Form.Control>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Form.Row>
-            </Form>
-
             <Row className="mb-5">
                 <Col xs={12} lg={4} xl={2}>
                     <Row xs={12}>
@@ -162,12 +101,7 @@ function Grafica({ setDesde, setHasta, setDesdeHora, setHastaHora, startDate, en
 
                 <Col sm={12} lg={8} xl={10}>
                     <div className="grafico mb-4">
-                        {data && (
                             <Plot className="grafico-resize" data={data} layout={layout} config={{ responsive: true }} />
-                        )}
-                        {typeof data == 'undefined' && (
-                            <div>Seleccionar un sensor, contaminante y fechas para ver sus datos</div>
-                        )}
                     </div>
                 </Col>
                 <Row className="d-block d-sm-none w-100" xs={11}>
