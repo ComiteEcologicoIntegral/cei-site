@@ -259,27 +259,6 @@ select {
   width: 70%;
 }
 
-.leyenda-header {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 10px;
-}
-
-.ocultar-leyenda {
-  position: absolute;
-  top: 3%;
-  right: 8%;
-}
-
-.ocultar-leyenda button {
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 99;
-  height: 20px;
-  width: 20px;
-  line-height: 20px;
-}
-
 /***** MODAL *****/
 .modal-body {
   padding:20px 40px;
@@ -431,30 +410,17 @@ button, button:focus {
   font-weight: 300;
 }
 
-/* Leyenda Mapa */
-.leyenda-width {
-  width: 15rem;
-  background-color: white;
-  padding: 1rem;
-  margin-right: 1rem;
-  font-size: 0.9rem;
-  border-radius: 10px;
-}
-
-.smallBotton{
-  border-radius: 50%;
-  background-color: white;
-  height: 30px;
-  width: 30px;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-.leyenda-grid {
-  display: grid;
-  grid-template-columns: 1fr 11fr;
+.info-button-container {
+  display: flex;
+  justify-content: center;
   align-items: center;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}
+
+.info-button{
+  background: none;
 }
 
 /* Marker Mapa */
