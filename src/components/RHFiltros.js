@@ -45,10 +45,8 @@ function RHFiltros({
 
   const dispatch = useDispatch();
   const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
-  const [date, setDate] = useState(Date());
 
   const [sensRaw, setSensRaw] = useState(null);
-  let sensores = [];
 
   useEffect(() => {
     // TODO: convertir a hook
@@ -64,66 +62,48 @@ function RHFiltros({
     } else {
       setSensRaw(sensorData);
     }
-  }, [sensorDataLastUpdate, dispatch, sensorData]);
+  }, [sensorDataLastUpdate, sensorData]);
 
-  const urlParams = new URLSearchParams(window.location.search);
+  const [system, setSystem] = useState(null);
+  const [sensors, setSensores] = useState([]);
+  const [indOptions, setIndOptions] = useState(null);
+  const [indicador, setIndicador] = useState(null);
+  const [sensor, setSensor] = useState(null);
 
-  // Get system
-  let selectedSystemValue = urlParams.get("system") === "G" ? systemOptions[1] : systemOptions[0];
+  const enforceValidGas = () => {
+      setIndicador(indicadores[0]);
+  };
 
-  // Get location
-  let locationString = urlParams.get("location");
-  let selectedLocation = null;
-  if (locationString !== null) {
-    selectedLocation = { value: "", label: locationString };
-  }
-
-  // Get gas
-  let selectedGas = indicadores.find((indicador) => {
-    return indicador.value === urlParams.get("gas");
-  });
-  if (selectedGas == null) {
-    selectedGas = indicadores[0];
-  }
-
-  // Get start and end dates
-  let dateFormat = "MM/DD/YYYY/HH:MM:SS";
-  moment(urlParams.get("start_date"), dateFormat).toDate();
-  moment(urlParams.get("end_date"), dateFormat).toDate();
-
-  const [system, setSystem] = useState(selectedSystemValue);
-  const [indOptions, setIndOptions] = useState(indicadores);
-  const [indicador, setIndicador] = useState(selectedGas);
-  const sistema = useRef(selectedSystemValue);
-
-  const [location, setLocation] = useState(selectedLocation);
-  const ubicacion = useRef(selectedLocation);
+  const setSystemValue = (system) => {
+    enforceValidGas();
+    setSensor(null);
+    setSystem(system);
+  };
 
   // Crear valores para el dropdown
-  if (sensRaw) {
+  useEffect(() => {
+    if (!sensRaw || !system) return;
+
+    let sensors = [];
     sensRaw.forEach((element) => {
       if (system.value === element.Sistema && !idBlacklistpriv.includes(element.Sensor_id)) {
-        sensores.push({ value: element.Sensor_id, label: element.Zona });
+        sensors.push({ value: element.Sensor_id, label: element.Zona });
       }
     });
-  }
+
+    setSensores(sensors);
+    system.value === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores);
+  }, [sensRaw, system]);
 
   // Función general para crear el query
   function createQuery() {
-    updateMainFiltros(ubicacion.current, indicador, sistema.current); // Actualiza los valores de los filtros en el componente padre
+    updateMainFiltros(sensor.value, indicador, system.value); // Actualiza los valores de los filtros en el componente padre
     if (radioValue === "1") {
       createQueryGraph();
     } else {
       createQueryCal();
     }
   }
-
-  // Funcion para revisar si el contaminante seleccionado es valido en el sistema
-  const enforceValidGas = (value) => {
-    if (value.label === "PurpleAir" && indicador.value !== "PM25") {
-      setIndicador(indicadores[0]);
-    }
-  };
 
   return (
     <div className="mt-5">
@@ -178,16 +158,7 @@ function RHFiltros({
               options={systemOptions}
               value={system}
               placeholder={"Sistema"}
-              onChange={(value) => {
-                enforceValidGas(value);
-                setLocation(null);
-                ubicacion.current = null;
-                sistema.current = value;
-                setSystem(value);
-                system.value === "PurpleAir"
-                  ? setIndOptions([indicadores[0]])
-                  : setIndOptions(indicadores);
-              }}
+              onChange={setSystemValue}
             />
             <p style={{ fontSize: "0.8rem" }} className="mb-1">
               *Recuerda que el sistema PurpleAir solo tiene disponible el contaminante PM2.5
@@ -197,12 +168,11 @@ function RHFiltros({
             <p className="font-weight-bold">Ubicación</p>
             <Select
               className="mt-1"
-              options={sensores}
-              value={location}
+              options={sensors}
+              value={sensor}
               placeholder={"Ubicación"}
               onChange={(value) => {
-                setLocation(value);
-                ubicacion.current = value;
+                setSensor(value);
               }}
             />
           </Col>
