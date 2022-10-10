@@ -21,8 +21,8 @@ function Registro() {
   const [noData, setNoData] = useState(false); // Desplegar mensaje si no se encontraron datos en la BD
 
   // Datos de los filtros
-  const [startDate, setStartDate] = useState(Date());
-  const [endDate, setEndDate] = useState(Date());
+  const [startDate, setStartDate] = useState(moment());
+  const [endDate, setEndDate] = useState(moment());
   const [startTime, setStartTime] = useState({});
   const [endTime, setEndTime] = useState({});
   const gas = useRef({ value: "PM25" });
