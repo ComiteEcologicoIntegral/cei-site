@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import '../styles/calendario.css';
 import { Button, Col, Row, Accordion, Card } from 'react-bootstrap'
 import DatePicker from './DatePicker'
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
-import { getStatus } from '../handlers/statusCriteria';
+import { getStatus } from '../../../handlers/statusCriteria';
 import Select from 'react-select';
 import moment from 'moment'
+import './Calendario.css';
 import 'moment/locale/es';
 
 const unidad = {
@@ -43,7 +43,7 @@ const anios = [
 ]
 
 // Componente para la página de Registro Histórico
-function Calendario({ q, fecha, ubic, create, data, indi, setDesde, setHasta, downloadFile }) {
+function Calendario({ q, fecha, ubic, create, data, gas, setDesde, setHasta, downloadFile }) {
     /* 
         Parámetros:
             - q : query creado en los filtros
@@ -58,7 +58,7 @@ function Calendario({ q, fecha, ubic, create, data, indi, setDesde, setHasta, do
     // Función para obtener la clase a la que pertenece según la medida
     // Dicha clase es para darle el color según el nivel de riesgo 
     function colorIndice(medida) {
-        let val = getStatus(indi, medida);
+        let val = getStatus(gas, medida);
 
         switch (val) {
             case 0:
@@ -118,7 +118,7 @@ function Calendario({ q, fecha, ubic, create, data, indi, setDesde, setHasta, do
             // Junta los datos de la misma hora aunque sean de diferente sensor para ponerlos en un mismo acordión
             while (index < data.length && data[index]["dia"].includes(ch)) {
                 // Se crea un p tag con un bullet de color, ubicación, medida registrada y unidad
-                info.push(<p><AiFillRightSquare className={colorIndice(data[index][indi])} />{data[index]["zona"]}: {data[index][indi] ? ` ${data[index][indi]} ${unidad[indi]}` : " No hay registro"}</p>);
+                info.push(<p><AiFillRightSquare className={colorIndice(data[index][gas])} />{data[index]["zona"]}: {data[index][gas] ? ` ${data[index][gas]} ${unidad[gas]}` : " No hay registro"}</p>);
                 index++;
             }
 
@@ -152,7 +152,7 @@ function Calendario({ q, fecha, ubic, create, data, indi, setDesde, setHasta, do
             let firstIndex = index; // Esta variable sirve para darle un key a cada acordión, sin pasarnos del último índice
 
             while (index < data.length && data[index]["dia"].includes(ch)) {
-                info.push(<p><AiFillRightSquare className={colorIndice(data[index][indi])} /> {data[index]["zona"]}: {data[index][indi] ? `${data[index][indi]} ${unidad[indi]}` : "No hay registro"}</p>);
+                info.push(<p><AiFillRightSquare className={colorIndice(data[index][gas])} /> {data[index]["zona"]}: {data[index][gas] ? `${data[index][gas]} ${unidad[gas]}` : "No hay registro"}</p>);
                 index++;
             }
 
@@ -221,7 +221,7 @@ function Calendario({ q, fecha, ubic, create, data, indi, setDesde, setHasta, do
                     </div>
                 </Col>
                 <Col sm={12} lg={6} className="d-flex align-items-start justify-content-center">
-                    <DatePicker q={q} fecha={fecha} ubic={ubic} ind={indi} value={value} onChange={setValue} />
+                    <DatePicker q={q} fecha={fecha} ubic={ubic} ind={gas} value={value} onChange={setValue} />
                 </Col>
             </Row>
         </div>
