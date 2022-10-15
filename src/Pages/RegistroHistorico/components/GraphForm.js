@@ -1,11 +1,11 @@
 import moment from "moment";
-import React, { useState, useEffect, useRef } from "react";
-import { Form, Row, ButtonGroup, Button, Col, ToggleButton } from "react-bootstrap";
+import React, { useState, useEffect} from "react";
+import { Form, ButtonGroup, Button, Col, ToggleButton } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
-import { fetchSummaryData } from "../handlers/data";
-import { setSensorData } from "../redux/reducers";
-import { indicadores, idBlacklistpriv } from "../constants";
+import { fetchSummaryData } from "../../../handlers/data";
+import { setSensorData } from "../../../redux/reducers";
+import { indicadores, idBlacklistpriv } from "../../../constants";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
@@ -14,12 +14,11 @@ const systemOptions = [
 ];
 
 // Componente para la página de Registro Histórico
-function RHFiltros({
+function GraphForm({
   createQueryGraph,
   createQueryCal,
   radioValue,
   setRadioValue,
-  updateMainFiltros,
   startDate,
   endDate,
   startTime,
@@ -28,15 +27,13 @@ function RHFiltros({
   setEndDate,
   setStartTime,
   setEndTime,
+  location,
+  setLocation,
+  system,
+  setSystem,
+  gas,
+  setGas
 }) {
-  /*
-        Parámetros:
-            - createQueryGraph: función para crear query de la gráfica
-            - createQueryCal: función para crear query del calendario
-            - radioValue: sección seleccionada
-            - setRadioValue: función para cambiar el radioValue
-            - updateMainFiltros: función para updatear en el componente padre los inputs seleccionados
-    */
 
   const radios = [
     { name: "Grafica", value: "1" },
@@ -64,19 +61,16 @@ function RHFiltros({
     }
   }, [sensorDataLastUpdate, sensorData]);
 
-  const [system, setSystem] = useState(null);
-  const [sensors, setSensores] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [indOptions, setIndOptions] = useState(null);
-  const [indicador, setIndicador] = useState(null);
-  const [sensor, setSensor] = useState(null);
 
   const enforceValidGas = () => {
-      setIndicador(indicadores[0]);
+      setGas(indicadores[0]);
   };
 
   const setSystemValue = (system) => {
     enforceValidGas();
-    setSensor(null);
+    setLocation(null);
     setSystem(system);
   };
 
@@ -91,13 +85,12 @@ function RHFiltros({
       }
     });
 
-    setSensores(sensors);
+    setLocations(sensors);
     system.value === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores);
   }, [sensRaw, system]);
 
   // Función general para crear el query
   function createQuery() {
-    updateMainFiltros(sensor.value, indicador, system.value); // Actualiza los valores de los filtros en el componente padre
     if (radioValue === "1") {
       createQueryGraph();
     } else {
@@ -168,12 +161,10 @@ function RHFiltros({
             <p className="font-weight-bold">Ubicación</p>
             <Select
               className="mt-1"
-              options={sensors}
-              value={sensor}
+              options={locations}
               placeholder={"Ubicación"}
-              onChange={(value) => {
-                setSensor(value);
-              }}
+              value={location}
+              onChange={(e) => setLocation(e)}
             />
           </Col>
         </Form.Row>
@@ -183,13 +174,13 @@ function RHFiltros({
             <Select
               options={indOptions}
               placeholder={"Indicador"}
-              onChange={setIndicador}
-              value={indicador}
+              value={gas}
+              onChange={(e) => setGas(e)}
             />
           </Col>
           <Col xs={4}>
             <p className="font-weight-bold mb-2">Desde</p>
-            <div className="d-flex justify-content-between flex-row flex-wrap">
+            <div className="d-flex justify-content-between flex-row flex-wrap flex-lg-nowrap">
               <Form.Control
                 type="date"
                 required
@@ -205,7 +196,7 @@ function RHFiltros({
           </Col>
           <Col xs={4}>
             <p className="font-weight-bold mb-2">Hasta</p>
-            <div className="d-flex justify-content-between flex-row flex-wrap">
+            <div className="d-flex justify-content-between flex-row flex-wrap flex-lg-nowrap">
               <Form.Control
                 type="date"
                 required
@@ -234,4 +225,4 @@ function RHFiltros({
   );
 }
 
-export default RHFiltros;
+export default GraphForm;

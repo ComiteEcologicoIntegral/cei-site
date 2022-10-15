@@ -356,10 +356,6 @@ function Mapa() {
             })}
         </Wrapper>
       </div>
-      <Recomendaciones
-        selected={airQualityTags[airQualityIndex]}
-        isManual={true}
-      />
       <TablaCalidad gas={currentGas.name} />
     </div>
   );

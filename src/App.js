@@ -1,14 +1,14 @@
-import { lazy, Suspense } from "react";
-import "./App.css";
+import { Suspense } from "react";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import Header from "./components/Header.js";
 import Footer from "./components/Footer.js";
 import Loading from "./components/Loading.js";
-
-const Acerca = lazy(() => import("./Acerca"));
-const Mapa = lazy(() => import("./Mapa"));
-const Registro = lazy(() => import("./Registro"));
-const Compara = lazy(() => import("./Compara"));
+import Acerca from "./Acerca";
+import Mapa from "./Mapa";
+import Registro from "./Pages/RegistroHistorico";
+import Compara from "./Compara";
+import Recomendaciones from "./components/Recomendaciones.js";
+import "./App.css";
 
 function App() {
   return (
@@ -23,8 +23,9 @@ function App() {
             <Route exact path="/acerca" component={Acerca} />
           </Switch>
         </Suspense>
-        <Footer />
       </BrowserRouter>
+      <Recomendaciones selected="buena" isManual={true} />
+      <Footer />
     </div>
   );
 }

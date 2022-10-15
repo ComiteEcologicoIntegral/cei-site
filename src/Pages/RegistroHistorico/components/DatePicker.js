@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { apiUrl } from '../constants';
-import { criteria } from '../handlers/statusCriteria';
-import { unidad } from '../constants';
-import buildCalendar from './buildCalendar';
 import { Col, Row } from 'react-bootstrap';
 import { v4 } from 'uuid';
+import { apiUrl, unidad } from '../../../constants';
+import { criteria } from '../../../handlers/statusCriteria';
+import buildCalendar from './buildCalendar';
 
 const colors = ['rgb(240, 239, 239)',  //N/D
                 "rgb(76, 187, 23)", 

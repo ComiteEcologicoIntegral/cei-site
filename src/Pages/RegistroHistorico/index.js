@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
-import RHFiltros from "./components/RHFiltros";
+import React, { useState, useEffect, Suspense, lazy } from "react";
+import GraphForm from "./components/GraphForm";
 import Grafica from "./components/Grafica";
 import moment from "moment";
 import "moment/locale/es";
-import { apiUrl } from "./constants";
+import { apiUrl } from "../../constants";
 import { Modal } from "react-bootstrap";
-import Recomendaciones from "./components/Recomendaciones.js";
-
-const Calendario = lazy(() => import("./components/Calendario"));
+import Calendario from "./components/Calendario";
 
 function Registro() {
   // http://localhost:3000/location=Garc%C3%ADa&gas=PM25&system=G&start_date=08/02/2022/00:00:00&end_date=08/29/2022/00:00:00
@@ -21,13 +19,13 @@ function Registro() {
   const [noData, setNoData] = useState(false); // Desplegar mensaje si no se encontraron datos en la BD
 
   // Datos de los filtros
+  const [gas, setGas] = useState(null);
+  const [system, setSystem] = useState(null);
   const [startDate, setStartDate] = useState(moment());
   const [endDate, setEndDate] = useState(moment());
-  const [startTime, setStartTime] = useState({});
-  const [endTime, setEndTime] = useState({});
-  const gas = useRef({ value: "PM25" });
-  const ubicacion = useRef(null);
-  const system = useRef(null);
+  const [startTime, setStartTime] = useState("00:00:00");
+  const [endTime, setEndTime] = useState(moment().format("HH:mm").toString()+":00");
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     if (queryString) {
@@ -65,36 +63,24 @@ function Registro() {
     }
   }, [queryString]);
 
-  // Esta función es llamada por un componente hijo para actualizar los valores cada que cambian en los filtros
-  function updateMainFiltros(u, i, s) {
-    system.current = s;
-    ubicacion.current = u;
-    gas.current = i;
-  }
-
   // Crea el string del query para la gráfica
   function createQueryGraph() {
-    if (!ubicacion.current) {
+    if (!location) {
       alert("Selecciona una ubicación.");
       return;
     }
-    if (!startDate || !endDate) {
-      alert("Selecciona las fechas.");
-      return;
-    }
-
+    
     setLoading(true);
 
-    let desdeHoraString = startTime == null ? "00:00:00" : startTime;
-    let hastaHoraString = endTime == null ? "00:00:00" : endTime;
-
-    let queryStr = `location=${ubicacion.current.label}&gas=${gas.current.value}&system=${
-      system.current.opt
+    let queryStr = `location=${location.label}&gas=${gas.value}&system=${
+      system.opt
     }&start_date=${moment
       .utc(startDate)
-      .format("MM/DD/YYYY")}${"/"}${desdeHoraString}&end_date=${moment
+      .format("MM/DD/YYYY")}${"/"}${startTime}&end_date=${moment
       .utc(endDate)
-      .format("MM/DD/YYYY")}${"/"}${hastaHoraString}`;
+      .format("MM/DD/YYYY")}${"/"}${endTime}`;
+
+    console.log(queryStr);
 
     setQueryString(queryStr);
   }
@@ -104,35 +90,35 @@ function Registro() {
     // Ejemplo:
     // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
 
-    if (!ubicacion.current) {
-      alert("Selecciona una ubicación.");
-      return;
-    }
-
-    if (!initialDate || !endingDate) {
-      initialDate = startDate;
-      endingDate = endDate;
-    }
-
-    let queryStr = "ubic=";
-    queryStr += ubicacion.current.value;
-
-    queryStr +=
-      "&ind=" +
-      gas.current.value +
-      "&inicio=" +
-      initialDate.format("YYYY-MM-DD") +
-      "&fin=" +
-      endingDate.format("YYYY-MM-DD");
-
-    setQueryString(queryStr);
+    // if (!ubicacion.current) {
+    //   alert("Selecciona una ubicación.");
+    //   return;
+    // }
+    //
+    // if (!initialDate || !endingDate) {
+    //   initialDate = startDate;
+    //   endingDate = endDate;
+    // }
+    //
+    // let queryStr = "ubic=";
+    // queryStr += ubicacion.current.value;
+    //
+    // queryStr +=
+    //   "&ind=" +
+    //   gas.current.value +
+    //   "&inicio=" +
+    //   initialDate.format("YYYY-MM-DD") +
+    //   "&fin=" +
+    //   endingDate.format("YYYY-MM-DD");
+    //
+    // setQueryString(queryStr);
   }
 
   function getQueryStringToDownload() {
     if (queryString) {
       let queryStr = "location=";
 
-      queryStr += ubicacion.current.value;
+      queryStr += location.value;
       if (radioValue === "2") {
         // Para el calendario se descarga todo el mes
         queryStr +=
@@ -146,7 +132,7 @@ function Registro() {
         // Para la sección de la gráfica se descarga según las fechas seleccionadas
         queryStr +=
           "&gas=" +
-          gas.current.value +
+          gas.value +
           "&start_date=" +
           startDate.format("YYYY-MM-DD") +
           "&end_date=" +
@@ -201,12 +187,11 @@ function Registro() {
           <p>Revise los parametros e intente de nuevo.</p>
         </Modal.Body>
       </Modal>
-      <RHFiltros
+      <GraphForm
         createQueryGraph={createQueryGraph}
         createQueryCal={createQueryCal}
         radioValue={radioValue}
         setRadioValue={setRadioValue}
-        updateMainFiltros={updateMainFiltros}
         startDate={startDate}
         setStartDate={setStartDate}
         endDate={endDate}
@@ -215,6 +200,12 @@ function Registro() {
         setStartTime={setStartTime}
         endTime={endTime}
         setEndTime={setEndTime}
+        location={location}
+        setLocation={setLocation}
+        system={system}
+        setSystem={setSystem}
+        gas={gas}
+        setGas={setGas}
       />
       <div className="text-center">
         <img
@@ -238,10 +229,10 @@ function Registro() {
             <Calendario
               q={queryString}
               fecha={startDate}
-              ubic={ubicacion.current}
+              ubic={location}
               create={createQueryCal}
               data={calendarData}
-              indi={gas.current.value}
+              gas={gas ? gas.value : null}
               setDesde={setStartDate}
               setHasta={setEndDate}
               downloadFile={downloadFile}
@@ -249,7 +240,6 @@ function Registro() {
           </Suspense>
         </>
       )}
-      <Recomendaciones selected="buena" isManual={true} />
     </div>
   );
 }
