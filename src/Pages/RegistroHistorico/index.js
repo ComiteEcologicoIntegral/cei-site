@@ -90,28 +90,28 @@ function Registro() {
     // Ejemplo:
     // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
 
-    // if (!ubicacion.current) {
-    //   alert("Selecciona una ubicación.");
-    //   return;
-    // }
-    //
-    // if (!initialDate || !endingDate) {
-    //   initialDate = startDate;
-    //   endingDate = endDate;
-    // }
-    //
-    // let queryStr = "ubic=";
-    // queryStr += ubicacion.current.value;
-    //
-    // queryStr +=
-    //   "&ind=" +
-    //   gas.current.value +
-    //   "&inicio=" +
-    //   initialDate.format("YYYY-MM-DD") +
-    //   "&fin=" +
-    //   endingDate.format("YYYY-MM-DD");
-    //
-    // setQueryString(queryStr);
+    if (!location) {
+      alert("Selecciona una ubicación.");
+      return;
+    }
+
+    if (!initialDate || !endingDate) {
+      initialDate = startDate;
+      endingDate = endDate;
+    }
+
+    let queryStr = "ubic=";
+    queryStr += location.value;
+
+    queryStr +=
+      "&ind=" +
+      gas.value +
+      "&inicio=" +
+      initialDate.format("YYYY-MM-DD") +
+      "&fin=" +
+      endingDate.format("YYYY-MM-DD");
+
+    setQueryString(queryStr);
   }
 
   function getQueryStringToDownload() {
