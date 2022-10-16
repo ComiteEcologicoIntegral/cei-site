@@ -17,16 +17,16 @@ function Index() {
   const [system, setSystem] = useState(null);
   const [startDate, setStartDate] = useState(moment());
   const [endDate, setEndDate] = useState(moment());
-  const [startTime, setStartTime] = useState("00:00:00");
-  const [endTime, setEndTime] = useState(moment().format("HH:mm").toString() + ":00");
+  const [startTime, setStartTime] = useState(moment('00:00', 'HH:mm').format("HH:mm"));
+  const [endTime, setEndTime] = useState(moment().format("HH:mm"));
   const [location, setLocation] = useState(null);
 
   function createQuery() {
     let queryStr = `location=${location.label}&gas=${gas.value}&system=${
       system.opt
-    }&start_date=${moment.utc(startDate).format("MM/DD/YYYY")}${"/"}${startTime}&end_date=${moment
+    }&start_date=${moment.utc(startDate).format("MM/DD/YYYY")}/${startTime}:00&end_date=${moment
       .utc(endDate)
-      .format("MM/DD/YYYY")}${"/"}${endTime}`;
+      .format("MM/DD/YYYY")}/${endTime}:00`;
 
     return queryStr;
   }
@@ -35,26 +35,50 @@ function Index() {
     let invalidParams = [];
 
     if (!location) {
-      invalidParams.push("Ubicación");
+      invalidParams.push({
+        parameter: "Ubicación",
+        reason: "Ubicación no seleccionada"
+      });
     }
     if (!system) {
-      invalidParams.push("Sistema");
+      invalidParams.push({
+        parameter: "Sistema",
+        reason: "Sitema no seleccionado"
+      });
     }
     if (!gas) {
-      invalidParams.push("Gas");
+      invalidParams.push({
+        parameter: "Contaminante",
+        reason: "Contaminante no seleccionado"
+      });
+    }
+    if(moment().isBefore(endDate)) {
+      invalidParams.push({
+        parameter: "Hasta",
+        reason: `La fecha 'Hasta' no puede ser despues que hoy ${moment().format("DD MMM YYYY")}`
+      });
+    }
+    if(moment(endDate).isBefore(startDate)) {
+      invalidParams.push({
+        parameter: "Hasta",
+        reason: `La fecha 'Hasta' no puede ser antes que la fecha 'Desde' ${moment(startDate).format("DD MMM YYYY")}`
+      });
+    }
+    if(moment(endTime, "HH:mm") > moment("HH:mm")) {
+      alert("hey")
     }
 
     const areParamsValid = invalidParams.length === 0;
 
     if (!areParamsValid) {
       setError({
-        title: "Faltan parametros por llenar",
+        title: "Revisa los siguientes parametros",
         body: (
           <div>
-            <p>Por favor asegurate de seleccionar un valor para los siguientes parametros:</p>
+            <p>Por favor selecciona un valor válido para los siguientes parametros</p>
             <ul>
               {invalidParams.map((param, idx) => (
-                <li key={idx}>{param}</li>
+                <li key={idx}>{param.reason}</li>
               ))}
             </ul>
           </div>

@@ -1,8 +1,8 @@
-import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
+import moment from "moment";
 import { fetchSummaryData } from "../../../../../handlers/data";
 import { setSensorData } from "../../../../../redux/reducers";
 import { systemOptions, gasesOptions, idBlacklistpriv } from "../../../../../constants";
@@ -62,6 +62,11 @@ function GraphForm({
     setLocation(null);
     setSystem(system);
   };
+
+  function isEndTimeValid () {
+    let selectedTime = moment(endTime, "HH:mm");
+    return moment().isBefore(selectedTime);
+  }
 
   // Crear valores para el dropdown
   useEffect(() => {
@@ -134,6 +139,7 @@ function GraphForm({
                 required
                 value={moment(startDate).format("yyyy-MM-DD")}
                 onChange={(event) => setStartDate(moment(event.target.value))}
+                isInvalid={moment().isBefore(startDate)}
               ></Form.Control>
               <Form.Control
                 value={startTime}
@@ -150,11 +156,13 @@ function GraphForm({
                 required
                 value={moment(endDate).format("yyyy-MM-DD")}
                 onChange={(event) => setEndDate(event.target.value)}
+                isInvalid={moment(endDate).isBefore(startDate) || moment().isBefore(endDate)}
               ></Form.Control>
               <Form.Control
                 value={endTime}
                 onChange={(event) => setEndTime(event.target.value + ":00")}
                 type="time"
+                isInvalid={isEndTimeValid()}
               ></Form.Control>
             </div>
           </Col>
