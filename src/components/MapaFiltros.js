@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
-import { indicadores, idBlacklist, idBlacklistpriv } from '../constants'
+import { gasesOptions, idBlacklist, idBlacklistpriv } from '../constants'
 
 const systemOptions = [
     {value: "PurpleAir", label: 'PurpleAir', opt: 'P'},
@@ -44,16 +44,16 @@ const MapaFiltros = ({ onApply }) => {
             }));
     }, [sensorData, systemChosen]);
 
-    const [indOptions, setIndOptions] = useState(indicadores);
+    const [indOptions, setIndOptions] = useState(gasesOptions);
 
     useEffect(() => {
-        systemChosen.label === 'PurpleAir' ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores)
+        systemChosen.label === 'PurpleAir' ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions)
     }, [systemChosen]); // Updatea los gases disponibles cuando cambia la variable sistemas
 
     const [show, setShow] = useState(false);
     const [location, setLocation] = useState(null);
     const [interval, setInterval_] = useState(intervalos[0]);
-    const [gas, setGas] = useState(indicadores[0]);
+    const [gas, setGas] = useState(gasesOptions[0]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -68,7 +68,7 @@ const MapaFiltros = ({ onApply }) => {
         if(value.label === 'PurpleAir'){
             // Checar si esta seleccionado otro contaminante que no sea PM25
             if(gas.value !== 'PM25'){
-                setGas(indicadores[0]);
+                setGas(gasesOptions[0]);
             }
         }
     }

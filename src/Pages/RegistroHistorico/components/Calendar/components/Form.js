@@ -1,11 +1,11 @@
 import moment from "moment";
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Form, ButtonGroup, Button, Col, ToggleButton } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
-import { fetchSummaryData } from "../../../handlers/data";
-import { setSensorData } from "../../../redux/reducers";
-import { indicadores, idBlacklistpriv } from "../../../constants";
+import { fetchSummaryData } from "../../../../../handlers/data";
+import { setSensorData } from "../../../../../redux/reducers";
+import { indicadores, idBlacklistpriv } from "../../../../../constants";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
@@ -32,9 +32,8 @@ function GraphForm({
   system,
   setSystem,
   gas,
-  setGas
+  setGas,
 }) {
-
   const radios = [
     { name: "Grafica", value: "1" },
     { name: "Calendario", value: "2" },
@@ -65,7 +64,7 @@ function GraphForm({
   const [indOptions, setIndOptions] = useState(null);
 
   const enforceValidGas = () => {
-      setGas(indicadores[0]);
+    setGas(indicadores[0]);
   };
 
   const setSystemValue = (system) => {
@@ -100,26 +99,6 @@ function GraphForm({
 
   return (
     <div className="mt-5">
-      <div className="ta-center mb-5">
-        <h2>Registro Histórico</h2>
-        <p>Consulta los datos históricos de la calidad del aire</p>
-      </div>
-      <ButtonGroup toggle style={{ width: "100%" }}>
-        {radios.map((radio, idx) => (
-          <ToggleButton
-            className="toggle-vista"
-            key={idx}
-            type="radio"
-            variant="light"
-            name="radio"
-            value={radio.value}
-            checked={radioValue === radio.value}
-            onChange={(e) => setRadioValue(e.currentTarget.value)}
-          >
-            {radio.name}
-          </ToggleButton>
-        ))}
-      </ButtonGroup>
       <div>
         {radioValue === "1" && (
           <div className="mt-3">

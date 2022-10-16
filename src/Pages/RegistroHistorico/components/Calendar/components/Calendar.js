@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Accordion, Card } from 'react-bootstrap'
 import DatePicker from './DatePicker'
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
-import { getStatus } from '../../../handlers/statusCriteria';
+import { getStatus } from '../../../../../handlers/statusCriteria';
 import Select from 'react-select';
 import moment from 'moment'
-import './Calendario.css';
+import './Calendar.css';
 import 'moment/locale/es';
 
 const unidad = {
