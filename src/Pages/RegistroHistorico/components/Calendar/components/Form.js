@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchSummaryData } from "../../../../../handlers/data";
 import { setSensorData } from "../../../../../redux/reducers";
-import { indicadores, idBlacklistpriv } from "../../../../../constants";
+import { gasesOptions, idBlacklistpriv } from "../../../../../constants";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
@@ -14,31 +14,17 @@ const systemOptions = [
 ];
 
 // Componente para la página de Registro Histórico
-function GraphForm({
-  createQueryGraph,
-  createQueryCal,
-  radioValue,
-  setRadioValue,
-  startDate,
-  endDate,
-  startTime,
-  endTime,
-  setStartDate,
-  setEndDate,
-  setStartTime,
-  setEndTime,
-  location,
-  setLocation,
-  system,
-  setSystem,
+function CalendarForm({
   gas,
+  system,
+  location,
+  avgType,
+  setLocation,
+  setSystem,
   setGas,
+  setAvgType,
+  search,
 }) {
-  const radios = [
-    { name: "Grafica", value: "1" },
-    { name: "Calendario", value: "2" },
-  ];
-
   const dispatch = useDispatch();
   const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
 
@@ -62,9 +48,10 @@ function GraphForm({
 
   const [locations, setLocations] = useState([]);
   const [indOptions, setIndOptions] = useState(null);
+  const [avgOptions, setAvgOptions] = useState(null);
 
   const enforceValidGas = () => {
-    setGas(indicadores[0]);
+    setGas(gasesOptions[0]);
   };
 
   const setSystemValue = (system) => {
@@ -85,42 +72,19 @@ function GraphForm({
     });
 
     setLocations(sensors);
-    system.value === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores);
+    system.value === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions);
   }, [sensRaw, system]);
-
-  // Función general para crear el query
-  function createQuery() {
-    if (radioValue === "1") {
-      createQueryGraph();
-    } else {
-      createQueryCal();
-    }
-  }
 
   return (
     <div className="mt-5">
       <div>
-        {radioValue === "1" && (
-          <div className="mt-3">
-            <p>
-              Genera gráficas a partir de los registros de la calidad del aire del periodo que
-              desees.
-            </p>
-            <ol>
-              <li>Selecciona los filtros que deseas aplicar.</li>
-              <li>Selecciona la fecha inicial y fecha final de la gráfica.</li>
-            </ol>
-          </div>
-        )}
-        {radioValue === "2" && (
-          <div className="mt-3">
-            <p>Consulta y descarga los registros mensuales de la calidad del aire.</p>
-            <ol>
-              <li>Selecciona los filtros que deseas aplicar.</li>
-              <li>Selecciona el mes que desea conultar.</li>
-            </ol>
-          </div>
-        )}
+        <div className="mt-3">
+          <p>Consulta y descarga los registros mensuales de la calidad del aire.</p>
+          <ol>
+            <li>Selecciona los filtros que deseas aplicar.</li>
+            <li>Selecciona el mes que desea conultar.</li>
+          </ol>
+        </div>
       </div>
       <Form className="mb-3">
         <Form.Row className="mb-3 d-flex justify-content-evenly">
@@ -147,8 +111,8 @@ function GraphForm({
             />
           </Col>
         </Form.Row>
-        <Form.Row className="mb-3 d-flex justify-content-between">
-          <Col xs={4}>
+        <Form.Row className="mb-3 d-flex justify-content-evenly">
+          <Col xs={6}>
             <p className="font-weight-bold mb-2">Contaminante</p>
             <Select
               options={indOptions}
@@ -157,51 +121,32 @@ function GraphForm({
               onChange={(e) => setGas(e)}
             />
           </Col>
-          <Col xs={4}>
-            <p className="font-weight-bold mb-2">Desde</p>
-            <div className="d-flex justify-content-between flex-row flex-wrap flex-lg-nowrap">
-              <Form.Control
-                type="date"
-                required
-                value={moment(startDate).format("yyyy-MM-DD")}
-                onChange={(event) => setStartDate(moment(event.target.value))}
-              ></Form.Control>
-              <Form.Control
-                value={startTime}
-                onChange={(event) => setStartTime(event.target.value + ":00")}
-                type="time"
-              ></Form.Control>
-            </div>
-          </Col>
-          <Col xs={4}>
-            <p className="font-weight-bold mb-2">Hasta</p>
-            <div className="d-flex justify-content-between flex-row flex-wrap flex-lg-nowrap">
-              <Form.Control
-                type="date"
-                required
-                value={moment(endDate).format("yyyy-MM-DD")}
-                onChange={(event) => setEndDate(event.target.value)}
-              ></Form.Control>
-              <Form.Control
-                value={endTime}
-                onChange={(event) => setEndTime(event.target.value + ":00")}
-                type="time"
-              ></Form.Control>
-            </div>
+          <Col xs={6}>
+            <p className="font-weight-bold mb-2">Promedio/Índice</p>
+            <Select
+              options={avgOptions}
+              placeholder={"Tipo de promedio o indice"}
+              value={avgType}
+              onChange={(e) => setAvgType(e)}
+            />
           </Col>
         </Form.Row>
         <Form.Row>
           <Col className="col-boton">
-            <Button className="btn-aplicar" variant="primary" block onClick={() => createQuery()}>
+            <Button
+              className="btn-aplicar"
+              variant="primary"
+              block
+              onClick={() => search()}
+            >
               Graficar
             </Button>
           </Col>
         </Form.Row>
       </Form>
-
       <hr className="mt-2 mb-4" />
     </div>
   );
 }
 
-export default GraphForm;
+export default CalendarForm;

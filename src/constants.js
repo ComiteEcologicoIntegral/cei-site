@@ -50,6 +50,7 @@ export const unidad = {
   NO2: "ppm",
   SO2: "ppm",
 };
+
 export const idBlacklist = [
   "P36757",
   "P47305",
