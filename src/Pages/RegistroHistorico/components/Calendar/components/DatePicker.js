@@ -63,28 +63,11 @@ const DatePicker = ({ ubic, ind, selectedDate, onChange }) => {
   }, [selectedDate, ubic]);
 
   useEffect(() => {
-    function countDays() {
-      let tmpDayCount = {
-        Good: 0,
-        Acceptable: 0,
-        Bad: 0,
-        SuperBad: 0,
-        ExtremelyBad: 0,
-      };
-
-      calendar.forEach((week) => {
-        week.forEach((day) => {
-          let status = getDayStatus(day);
-          tmpDayCount[status]++;
-        });
-      });
-
-      setDayCount(tmpDayCount);
-    }
-
+    console.log("outside");
     var tmpSeries = []; // Datos
 
     if (dataHM && dataHM.length > 0) {
+      console.log("here inside");
       /* EJEMPLO DEL FORMATO
         series:[
             {
@@ -145,9 +128,27 @@ const DatePicker = ({ ubic, ind, selectedDate, onChange }) => {
 
       tmpSeries.push({ ...seriesItem });
       setSeries(tmpSeries);
-      countDays();
     }
-  });
+  }, [dataHM]);
+
+  useEffect(() => {
+    let tmpDayCount = {
+      Good: 0,
+      Acceptable: 0,
+      Bad: 0,
+      SuperBad: 0,
+      ExtremelyBad: 0,
+    };
+
+    calendar.forEach((week) => {
+      week.forEach((day) => {
+        let status = getDayStatus(day);
+        tmpDayCount[status]++;
+      });
+    });
+
+    setDayCount(tmpDayCount);
+  }, [series]);
 
   function isSelected(day) {
     return selectedDate.isSame(day, "day");
@@ -270,7 +271,11 @@ const DatePicker = ({ ubic, ind, selectedDate, onChange }) => {
               <div className="day" onClick={() => !afterToday(day) && onChange(day)}>
                 <div
                   className={dayStyles(day)}
-                  style={{ backgroundColor: colors[getDayStatus(day)], borderRadius: "5px" }}
+                  style={{
+                    backgroundColor: colors[getDayStatus(day)],
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
                   key={v4()}
                 >
                   {day.format("D")}
