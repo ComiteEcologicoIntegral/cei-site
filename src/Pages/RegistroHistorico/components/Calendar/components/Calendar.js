@@ -43,7 +43,7 @@ const anios = [
 ]
 
 // Componente para la página de Registro Histórico
-function Calendario({ q, fecha, ubic, create, data, gas, setDesde, setHasta, downloadFile }) {
+function Calendario({location, data, gas, selectedDate, month, year, setMonth, setYear, setSelectedDate, downloadFile}) {
     /* 
         Parámetros:
             - q : query creado en los filtros
@@ -76,30 +76,6 @@ function Calendario({ q, fecha, ubic, create, data, gas, setDesde, setHasta, dow
         }
     }
 
-    const [value, setValue] = useState(moment()); // Valor del día que está seleccionado en el calendario, se inicializa con el dia actual
-
-    // Para resetear los valores si es que fueron utilizados en la sección de la gráfica:
-    useEffect(() => {
-        setDesde(value);
-        setHasta(value);
-    }, []);
-
-    // Valores de los dropdowns para navegar más rápido a otra fecha, inicializados con la fecha actual
-    const [inMes, setInMes] = useState(new Date().getMonth() + 1);
-    const [inAnio, setInAnio] = useState(anios[anios.length - 1].value);
-
-    useEffect(() => {
-        setDesde(value);
-        setHasta(value);
-        if (data || q) { // Solo se crea y ejecuta el query si ya se ha dado click en el botón Aplicar
-            create(value, value);
-        }
-    }, [value]); // Cada que cambia el dia seleccionado, se actualizan los datos para crear el query
-
-    useEffect(() => {
-        let f = new Date(`${inMes}/${value.clone().format('DD')}/${inAnio}`); // Nos colocamos en el primer dia del mes para evitar que al moverte al siguiente mes, se coloque en un día futuro o inexistente
-        setValue(moment(f));
-    }, [inMes, inAnio]); // Cada que cambia un valor de los dropdowns, cambiamos el valor del día seleccionado
 
     // Cuando ya se hizo el fetch para traer datos:
     let dataCol1 = [];
@@ -194,7 +170,7 @@ function Calendario({ q, fecha, ubic, create, data, gas, setDesde, setHasta, dow
                                 <Select
                                     options={meses}
                                     placeholder={'Mes'}
-                                    onChange={(target) => setInMes(target.value)}
+                                    onChange={(target) => setMonth(target.value)}
                                     defaultValue={meses[new Date().getMonth()]}
                                 />
                             </Col>
@@ -202,13 +178,13 @@ function Calendario({ q, fecha, ubic, create, data, gas, setDesde, setHasta, dow
                                 <Select
                                     options={anios}
                                     placeholder={'Año'}
-                                    onChange={(target) => setInAnio(target.value)}
+                                    onChange={(target) => setYear(target.value)}
                                     defaultValue={anios[anios.length - 1]}
                                 />
                             </Col>
                         </Row>
                         <div className="detalles">
-                            <h4>{value && value.format("DD/MM/YYYY")} Detalle por hora</h4>
+                            <h4>{selectedDate.format("DD/MM/YYYY")} Detalle por hora</h4>
                             <Row>
                                 <Col sm={6}>
                                     {dataCol1}
@@ -221,7 +197,7 @@ function Calendario({ q, fecha, ubic, create, data, gas, setDesde, setHasta, dow
                     </div>
                 </Col>
                 <Col sm={12} lg={6} className="d-flex align-items-start justify-content-center">
-                    <DatePicker q={q} fecha={fecha} ubic={ubic} ind={gas} value={value} onChange={setValue} />
+                    <DatePicker ubic={location} ind={gas} selectedDate={selectedDate} onChange={setSelectedDate} month={month}/>
                 </Col>
             </Row>
         </div>

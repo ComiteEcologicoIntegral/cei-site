@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ButtonGroup, ToggleButton } from "react-bootstrap";
 import Graph from "./components/Graph"
-// import Calendar from "./components/Calendar"
+import Calendar from "./components/Calendar"
 import "./index.css";
 
 export default function Index() {
@@ -35,7 +35,7 @@ export default function Index() {
           ))}
         </ButtonGroup>
       </div>
-      {selected === "1" ? <Graph /> : ""}
+      {selected === "1" ? <Graph /> : <Calendar />}
     </div>
   );
 }
