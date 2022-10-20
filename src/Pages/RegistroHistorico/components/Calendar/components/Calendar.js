@@ -7,7 +7,6 @@ import {
   isSameDay,
 } from "../../../../../utils/PopulateDateRange";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
 import { criteria, getStatus } from "../../../../../handlers/statusCriteria";
@@ -67,19 +66,6 @@ const anios = [
 
 // Componente para la página de Registro Histórico
 function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
-  /* 
-        Parámetros:
-            - q : query creado en los filtros
-            - create: función para crear query
-            - data: datos para mostrar en el desglose de horas
-            - indi: gas seleccionado en los filtros
-            - setDesde: función para cambiar el State de la fecha de inicio para pedir los datos
-            - setHasta: función para cambiar el State de la fecha fin
-            - downloadFile: función para descargar los datos mostrados
-    */
-
-  // Función para obtener la clase a la que pertenece según la medida
-  // Dicha clase es para darle el color según el nivel de riesgo
   function colorIndice(medida) {
     let val = getStatus(gas, medida);
 
@@ -99,9 +85,10 @@ function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
     }
   }
 
-  // Datos calendario
   const [value, onChange] = useState(new Date());
   const [datesOfTheMonth, setMonthDates] = useState(populateDateRange(beginOfMonth, endOfMonth));
+  const [hourCards, setHoursCards] = useState([]);
+  const [dayCount, setDayCount] = useState(null);
 
   useEffect(() => {
     const currentMonth = datesOfTheMonth[0].getMonth();
@@ -116,101 +103,116 @@ function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
     setSelectedDate(moment(value));
   }, [value]);
 
-  const getDayStatus = useCallback(
-    (date) => {
-      if (dataHM && date.getDate() < dataHM.length) {
-        const dayAverage = dataHM[date.getDate()].prom;
+  useEffect(() => {
+    let tmpDayCount = {
+      Good: 0,
+      Acceptable: 0,
+      Bad: 0,
+      SuperBad: 0,
+      ExtremelyBad: 0,
+    };
 
-        if (dayAverage < 0) {
-          return "no-data";
-        }
-        if (dayAverage < criteria["Aire y Salud"][gas][0]) {
-          return "good";
-        }
-        if (dayAverage < criteria["Aire y Salud"][gas][1]) {
-          return "acceptable";
-        }
-        if (dayAverage < criteria["Aire y Salud"][gas][2]) {
-          return "bad";
-        }
-        if (dayAverage < criteria["Aire y Salud"][gas][3]) {
-          return "super-bad";
-        }
-        if (dayAverage > criteria["Aire y Salud"][gas][3]) {
-          return "extremly-bad";
-        }
+    datesOfTheMonth.forEach((date) => {
+      let status = getDateStatus(date);
+      tmpDayCount[status]++;
+    });
+
+    setDayCount(tmpDayCount);
+  }, [datesOfTheMonth, dataHM]);
+
+  function getDateStatus(date) {
+    if (!dataHM || date.getDate() >= dataHM.length) return;
+    const dayAverage = dataHM[date.getDate()].prom;
+    if (dayAverage < 0) {
+      return "NoData";
+    }
+    if (dayAverage < criteria["Aire y Salud"][gas][0]) {
+      return "Good";
+    }
+    if (dayAverage < criteria["Aire y Salud"][gas][1]) {
+      return "Acceptable";
+    }
+    if (dayAverage < criteria["Aire y Salud"][gas][2]) {
+      return "Bad";
+    }
+    if (dayAverage < criteria["Aire y Salud"][gas][3]) {
+      return "Super-bad";
+    }
+    if (dayAverage > criteria["Aire y Salud"][gas][3]) {
+      return "Extremly-bad";
+    }
+  }
+
+  const statusClassName = {
+    Good: "good",
+    Acceptable: "acceptable",
+    Bad: "bad",
+    SuperBad: "super-bad",
+    ExtremelyBad: "extremly-bad",
+    NoData: "no-data",
+  };
+
+  const getDateClassName = useCallback(
+    (date) => {
+      let dayStatus = getDateStatus(date);
+      if (dayStatus !== undefined) {
+        return statusClassName[dayStatus];
       }
       return "no-data";
     },
     [dataHM]
   );
 
-  // Cuando ya se hizo el fetch para traer datos:
-  let dataCol1 = [];
-  let dataCol2 = [];
-  let index = 0;
-  let currHour = 0;
+  useEffect(() => {
+    if (!data || data.length === 0) return;
 
-  if (data && data.length !== 0) {
-    // Primera columna (horas de 00:00 a 11:00)
-    while (currHour < 24 && index < data.length) {
-      let ch = "T" + currHour.toString().padStart(2, 0) + ":";
-      let info = [];
+    let ans = [];
 
-      let firstIndex = index;
-
-      // Junta los datos de la misma hora aunque sean de diferente sensor para ponerlos en un mismo acordión
-      while (index < data.length && data[index]["dia"].includes(ch)) {
-        // Se crea un p tag con un bullet de color, ubicación, medida registrada y unidad
-        info.push(
-          <p key={index}>
-            <AiFillRightSquare className={colorIndice(data[index][gas])} />
-            {data[index]["zona"]}:{" "}
-            {data[index][gas] ? ` ${data[index][gas]} ${unidad[gas]}` : " No hay registro"}
-          </p>
-        );
-        index++;
-      }
-
-      dataCol1.push(
-        <Accordion key={data[firstIndex].Registros_id} id={data[firstIndex].Registros_id}>
+    for (let currHour = 0; currHour < 24 && currHour < data.length; currHour++) {
+      ans.push(
+        <Accordion key={data[currHour].Registros_id} id={data[currHour].Registros_id}>
           <Card>
             <Card.Header>
               <Accordion.Toggle
                 as={Button}
                 className="hora"
                 variant="link"
-                eventKey={data[firstIndex].Registros_id}
+                eventKey={data[currHour].Registros_id}
               >
                 <AiFillCaretDown color="lightgray" /> {currHour.toString().padStart(2, 0)}:00
               </Accordion.Toggle>
             </Card.Header>
-            <Accordion.Collapse eventKey={data[firstIndex].Registros_id}>
-              <Card.Body>{info}</Card.Body>
+            <Accordion.Collapse eventKey={data[currHour].Registros_id}>
+              <Card.Body>
+                <p key={currHour}>
+                  <AiFillRightSquare className={colorIndice(data[currHour][gas])} />
+                  {data[currHour]["zona"]}
+                  {data[currHour][gas]
+                    ? ` ${data[currHour][gas]} ${unidad[gas]}`
+                    : " No hay registro"}
+                </p>
+              </Card.Body>
             </Accordion.Collapse>
           </Card>
         </Accordion>
       );
-
-      currHour++;
     }
-  }
+    setHoursCards(ans);
+  }, [data]);
 
-  let firstColumn = dataCol1.slice(0, 12);
-  let secondColumn = dataCol1.slice(12, 24);
+  let firstColumn = hourCards.slice(0, 12);
+  let secondColumn = hourCards.slice(12, 24);
 
   const tileClassName = useCallback(
     ({ date, view }) => {
       // Check if a date React-Calendar wants to check is on the list of dates to add class to
-      if (
-        datesOfTheMonth.find((dDate) => {
-          return isSameDay(dDate, date);
-        })
-      ) {
-        return getDayStatus(date);
+      if (datesOfTheMonth.find((dDate) => isSameDay(dDate, date))) {
+        return getDateClassName(date);
+      } else {
+        return "out-of-range";
       }
     },
-    [datesOfTheMonth, getDayStatus]
+    [datesOfTheMonth, getDateClassName]
   );
 
   return (
@@ -220,13 +222,13 @@ function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
           <div>
             <div className="detalles">
               <p>
-                Detalle por hora del día
+                Detalle por hora del día{" "}
                 <span className="current-day">{value.toLocaleDateString("es-MX", dateFormat)}</span>
               </p>
-              {data ? (
+              {data && data.length > 0 ? (
                 <div className="d-flex justify-content-evenly">
-                  {firstColumn.length > 0 && <div>{firstColumn}</div> }
-                  {secondColumn.length > 0 && <div>{secondColumn}</div> }
+                  {firstColumn.length > 0 && <div>{firstColumn}</div>}
+                  {secondColumn.length > 0 && <div>{secondColumn}</div>}
                 </div>
               ) : (
                 "No hay datos para este día"
@@ -234,13 +236,35 @@ function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
             </div>
           </div>
         </Col>
-        <Col sm={12} lg={6}>
+        <Col className="calendar-container" sm={12} lg={6}>
           <Calendar onChange={onChange} value={value} tileClassName={tileClassName} />
-          <Button className="btn mt-4" onClick={downloadFile}>
-            Descargar datos del mes
-          </Button>
+          {dayCount && (
+            <div className="day-count">
+              <h4 className="mt-4">Conteo de días</h4>
+              <DayBullet count={dayCount.Good} text="Buena" type={statusClassName.Good} />
+              <DayBullet
+                count={dayCount.Acceptable}
+                text="Aceptable"
+                type={statusClassName.Acceptable}
+              />
+              <DayBullet count={dayCount.Bad} text="Mala" type={statusClassName.Bad} />
+              <DayBullet
+                count={dayCount.SuperBad}
+                text="Muy mala"
+                type={statusClassName.SuperBad}
+              />
+              <DayBullet
+                count={dayCount.ExtremelyBad}
+                text="Extremadamente mala"
+                type={statusClassName.ExtremelyBad}
+              />
+            </div>
+          )}
         </Col>
       </Row>
+      <Button className="btn mt-4" onClick={downloadFile}>
+        Descargar datos del mes
+      </Button>
     </div>
   );
 }
