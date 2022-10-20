@@ -5,6 +5,18 @@ import Form from "./components/Form";
 import { apiUrl } from "../../../../constants";
 import { Modal } from "react-bootstrap";
 import Calendar from "./components/Calendar";
+import {
+  populateDateRange,
+  getFirstDayOfMonth,
+  getLastDayOfMonth,
+} from "../../../../utils/PopulateDateRange";
+
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getUTCFullYear();
+let beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
+let endOfMonth = getLastDayOfMonth(currentYear, currentMonth);
+
+const dateFormat = { day: "numeric", month: "2-digit", year: "numeric" };
 
 function CalendarWrapper() {
   // http://localhost:3000/location=Garc%C3%ADa&gas=PM25&system=G&start_date=08/02/2022/00:00:00&end_date=08/29/2022/00:00:00
@@ -17,8 +29,8 @@ function CalendarWrapper() {
   const [location, setLocation] = useState(null);
   const [avgType, setAvgType] = useState(null);
 
-  // Datos calendario
-  const [selectedDate, setSelectedDate] = useState(moment()); // Valor del día que está seleccionado en el calendario, se inicializa con el dia actual
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [datesOfTheMonth, setMonthDates] = useState(populateDateRange(beginOfMonth, endOfMonth));
 
   const [dataHM, setDataHM] = useState(null);
 
@@ -26,16 +38,20 @@ function CalendarWrapper() {
     if (location && gas) fetchData();
   }, [selectedDate]);
 
-  // Crea el string del query para el calendario
-  function createQuery(initialDate, endingDate) {
-    // Ejemplo:
-    // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
+  useEffect(() => {
+    const currentMonth = datesOfTheMonth[0].getMonth();
+    const currentYear = datesOfTheMonth[0].getUTCFullYear();
+    const selectedMonth = selectedDate.getMonth();
+    const selectedYear = selectedDate.getUTCFullYear();
 
-    if (!location) {
-      alert("Selecciona una ubicación.");
-      return;
+    if (currentMonth !== selectedMonth || currentYear !== selectedYear) {
+      console.log("another month");
+      setMonthDates(populateDateRange(getFirstDayOfMonth(selectedYear, selectedMonth)));
     }
+  }, [selectedDate]);
 
+  // Crea el string del query para el calendario
+  function createHoursQuery() {
     let queryStr = "ubic=";
     queryStr += location.value;
 
@@ -43,34 +59,47 @@ function CalendarWrapper() {
       "&ind=" +
       gas.value +
       "&inicio=" +
-      initialDate.format("YYYY-MM-DD") +
+      selectedDate.toISOString().split("T")[0] +
       "&fin=" +
-      endingDate.format("YYYY-MM-DD");
+      selectedDate.toISOString().split("T")[0];
 
     return queryStr;
   }
 
-  const fetchData = () => {
-    // Data by hour
+  function createCalendarQuery() {
+    currentMonth = selectedDate.getMonth();
+    currentYear = selectedDate.getUTCFullYear();
+    beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
+    endOfMonth = getLastDayOfMonth(currentYear, currentMonth);
+
+    let startDateString = beginOfMonth.toISOString().split("T")[0];
+    let endDateString = endOfMonth.toISOString().split("T")[0];
+
+
     let queryStr =
       "ubic=" +
       location.value +
       "&ind=" +
       gas.value +
       "&inicio=" +
-      selectedDate.clone().startOf("month").format("YYYY-MM-DD") +
+      startDateString +
       "&fin=" +
-      selectedDate.clone().endOf("month").format("YYYY-MM-DD");
+      endDateString;
 
-    fetch(`${apiUrl}/prom-data?${queryStr}`)
+    return queryStr;
+  }
+
+  const fetchData = () => {
+    // Data for calendar
+    let calendarQueryString = createCalendarQuery();
+    fetch(`${apiUrl}/prom-data?${calendarQueryString}`)
       .then((response) => response.json())
       .then((json) => setDataHM(json))
       .catch((e) => console.log(e));
 
-    // Data for calendar
-    let queryString = createQuery(selectedDate, selectedDate);
-    // Sección calendario
-    fetch(`${apiUrl}/datos-fecha?${queryString}`)
+    // Data by hour
+    let hourQueryString = createHoursQuery();
+    fetch(`${apiUrl}/datos-fecha?${hourQueryString}`)
       .then((response) => response.json())
       .then((json) => setCalendarData(json));
   };
@@ -148,9 +177,10 @@ function CalendarWrapper() {
         gas={gas ? gas.value : null}
         downloadFile={downloadFile}
         selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
+        datesOfTheMonth={datesOfTheMonth}
         fetchData={fetchData}
         dataHM={dataHM}
+        setSelectedDate={setSelectedDate}
       />
     </div>
   );
