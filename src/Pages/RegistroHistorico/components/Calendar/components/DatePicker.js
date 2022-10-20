@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import { v4 } from "uuid";
 import { apiUrl, unidad } from "../../../../../constants";
+import moment from "moment";
 import { criteria } from "../../../../../handlers/statusCriteria";
 import buildCalendar from "./buildCalendar";
 import "./DatePicker.css";
@@ -28,46 +29,26 @@ const DayBullet = (props) => {
 };
 
 // Componente para el calendario en la página de Registro Histórico
-const DatePicker = ({ ubic, ind, selectedDate, onChange }) => {
+const DatePicker = ({ month, year, location, gas, selectedDate, dataHM, onChange }) => {
   /* 
         Se siguió este tutorial : https://youtu.be/5jRrVqRWqsM
     */
 
   const [calendar, setCalendar] = useState([]);
-  const [dataHM, setDataHM] = useState(null);
   const [dayCount, setDayCount] = useState(null);
   const [series, setSeries] = useState([]);
+  const [beginOfMonth, setBeginOfMonth] = useState(moment().startOf("month"));
 
   // build calendar
   let queryStr = "";
   useEffect(() => {
-    setCalendar(buildCalendar(selectedDate));
-
-    if (ubic && selectedDate) {
-      // Creamos query, sacando los datos de todo el mes
-      queryStr =
-        "ubic=" +
-        ubic.value +
-        "&ind=" +
-        ind +
-        "&inicio=" +
-        selectedDate.clone().startOf("month").format("YYYY-MM-DD") +
-        "&fin=" +
-        selectedDate.clone().endOf("month").format("YYYY-MM-DD");
-
-      fetch(`${apiUrl}/prom-data?${queryStr}`)
-        .then((response) => response.json())
-        .then((json) => setDataHM(json))
-        .catch((e) => console.log(e));
-    }
-  }, [selectedDate, ubic]);
+    setCalendar(buildCalendar(beginOfMonth));
+  }, [beginOfMonth]);
 
   useEffect(() => {
-    console.log("outside");
     var tmpSeries = []; // Datos
 
     if (dataHM && dataHM.length > 0) {
-      console.log("here inside");
       /* EJEMPLO DEL FORMATO
         series:[
             {
@@ -175,19 +156,19 @@ const DatePicker = ({ ubic, ind, selectedDate, onChange }) => {
         if (y < 0) {
           return "NoData";
         }
-        if (y < criteria["Aire y Salud"][ind][0]) {
+        if (y < criteria["Aire y Salud"][gas][0]) {
           return "Good";
         }
-        if (y < criteria["Aire y Salud"][ind][1]) {
+        if (y < criteria["Aire y Salud"][gas][1]) {
           return "Acceptable";
         }
-        if (y < criteria["Aire y Salud"][ind][2]) {
+        if (y < criteria["Aire y Salud"][gas][2]) {
           return "Bad";
         }
-        if (y < criteria["Aire y Salud"][ind][3]) {
+        if (y < criteria["Aire y Salud"][gas][3]) {
           return "SuperBad";
         }
-        if (y > criteria["Aire y Salud"][ind][3]) {
+        if (y > criteria["Aire y Salud"][gas][3]) {
           return "ExtremelyBad";
         }
       }
@@ -200,7 +181,7 @@ const DatePicker = ({ ubic, ind, selectedDate, onChange }) => {
       const x = series[0]["data"][day.format("D") - 1];
       if (typeof x !== "undefined") {
         const y = x["y"].toFixed(2);
-        return y + " " + unidad[ind];
+        return y + " " + unidad[gas];
       }
     }
     return "N/D";
