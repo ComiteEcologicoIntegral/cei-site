@@ -65,7 +65,7 @@ const anios = [
 ];
 
 // Componente para la página de Registro Histórico
-function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
+function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate, dataHM, downloadFile }) {
   function colorIndice(medida) {
     let val = getStatus(gas, medida);
 
@@ -85,23 +85,8 @@ function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
     }
   }
 
-  const [value, onChange] = useState(new Date());
-  const [datesOfTheMonth, setMonthDates] = useState(populateDateRange(beginOfMonth, endOfMonth));
   const [hourCards, setHoursCards] = useState([]);
   const [dayCount, setDayCount] = useState(null);
-
-  useEffect(() => {
-    const currentMonth = datesOfTheMonth[0].getMonth();
-    const currentYear = datesOfTheMonth[0].getUTCFullYear();
-    const selectedMonth = value.getMonth();
-    const selectedYear = value.getUTCFullYear();
-
-    if (currentMonth !== selectedMonth || currentYear !== selectedYear) {
-      setMonthDates(populateDateRange(getFirstDayOfMonth(selectedYear, selectedMonth)));
-    }
-
-    setSelectedDate(moment(value));
-  }, [value]);
 
   useEffect(() => {
     let tmpDayCount = {
@@ -223,7 +208,7 @@ function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
             <div className="detalles">
               <p>
                 Detalle por hora del día{" "}
-                <span className="current-day">{value.toLocaleDateString("es-MX", dateFormat)}</span>
+                <span className="current-day">{selectedDate.toLocaleDateString("es-MX", dateFormat)}</span>
               </p>
               {data && data.length > 0 ? (
                 <div className="d-flex justify-content-evenly">
@@ -237,7 +222,7 @@ function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
           </div>
         </Col>
         <Col className="calendar-container" sm={12} lg={6}>
-          <Calendar onChange={onChange} value={value} tileClassName={tileClassName} />
+          <Calendar onChange={setSelectedDate} value={selectedDate} tileClassName={tileClassName} />
           {dayCount && (
             <div className="day-count">
               <h4 className="mt-4">Conteo de días</h4>
