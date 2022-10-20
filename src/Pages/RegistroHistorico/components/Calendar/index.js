@@ -18,16 +18,11 @@ function CalendarWrapper() {
   const [avgType, setAvgType] = useState(null);
   
   // Datos calendario
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
-  const [year, setYear] = useState(new Date().getUTCFullYear());
   const [selectedDate, setSelectedDate] = useState(moment()); // Valor del día que está seleccionado en el calendario, se inicializa con el dia actual
 
-  useEffect(() => {
-    let f = new Date(`${month}/${selectedDate.clone().format("DD")}/${year}`); // Nos colocamos en el primer dia del mes para evitar que al moverte al siguiente mes, se coloque en un día futuro o inexistente
-    setSelectedDate(moment(f));
-  }, [month, year]); // Cada que cambia un valor de los dropdowns, cambiamos el valor del día seleccionado
+  const [dataHM, setDataHM] = useState(null);
 
-  // Crea el string del query para el calendario
+    // Crea el string del query para el calendario
   function createQuery(initialDate, endingDate) {
     // Ejemplo:
     // http://127.0.0.1:8000/datos-fecha?ubic=PA39362&ind=PM25&inicio=2020-10-05&fin=2020-10-06
@@ -52,12 +47,28 @@ function CalendarWrapper() {
   }
 
   const fetchData = () => {
+    // Data by hour
+    let queryStr =
+        "ubic=" +
+        location.value +
+        "&ind=" +
+        gas.value +
+        "&inicio=" +
+        selectedDate.clone().startOf("month").format("YYYY-MM-DD") +
+        "&fin=" +
+        selectedDate.clone().endOf("month").format("YYYY-MM-DD");
+
+      fetch(`${apiUrl}/prom-data?${queryStr}`)
+        .then((response) => response.json())
+        .then((json) => setDataHM(json))
+        .catch((e) => console.log(e));
+
+    // Data for calendar 
     let queryString = createQuery(moment(), moment());
     // Sección calendario
     fetch(`${apiUrl}/datos-fecha?${queryString}`)
       .then((response) => response.json())
       .then((json) => {
-        console.log({ json });
         setCalendarData(json);
       });
   };
@@ -134,13 +145,11 @@ function CalendarWrapper() {
           location={location}
           data={calendarData}
           gas={gas ? gas.value : null}
-          month={month}
-          year={year}
-          setMonth={setMonth}
-          setYear={setYear}
           downloadFile={downloadFile}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
+          fetchData={fetchData}
+          dataHM={dataHM}
         />
       </Suspense>
     </div>

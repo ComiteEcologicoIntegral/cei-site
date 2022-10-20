@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Accordion, Card } from 'react-bootstrap'
+import { apiUrl } from "../../../../../constants";
 import DatePicker from './DatePicker'
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
 import { getStatus } from '../../../../../handlers/statusCriteria';
@@ -43,7 +44,7 @@ const anios = [
 ]
 
 // Componente para la página de Registro Histórico
-function Calendario({location, data, gas, selectedDate, month, year, setMonth, setYear, setSelectedDate, downloadFile}) {
+function Calendario({location, data, gas, dataHM, downloadFile, fetchData}) {
     /* 
         Parámetros:
             - q : query creado en los filtros
@@ -76,12 +77,28 @@ function Calendario({location, data, gas, selectedDate, month, year, setMonth, s
         }
     }
 
+// Datos calendario
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getUTCFullYear());
+  const [selectedDate, setSelectedDate] = useState(moment()); // Valor del día que está seleccionado en el calendario, se inicializa con el dia actual
 
-    // Cuando ya se hizo el fetch para traer datos:
+  useEffect(() => {
+    let newSelectedDate = moment();
+    newSelectedDate.month(month-1);
+    newSelectedDate.year(year);
+    setSelectedDate(newSelectedDate);
+  }, [month, year]); // Cada que cambia un valor de los dropdowns, cambiamos el valor del día seleccionado
+
+  useEffect(() => {
+    if (location && gas)fetchData();
+  }, [selectedDate]);
+
+  // Cuando ya se hizo el fetch para traer datos:
     let dataCol1 = [];
     let dataCol2 = [];
     let index = 0;
     let currHour = 0;
+
 
     if (data && data.length !== 0) {
         // Primera columna (horas de 00:00 a 11:00)
@@ -153,10 +170,7 @@ function Calendario({location, data, gas, selectedDate, month, year, setMonth, s
 
             currHour++;
         }
-    } else {
-        dataCol1.push(<p>No hay datos para este día</p>);
     }
-
 
     return (
         <div className="container mb-10">
@@ -185,19 +199,19 @@ function Calendario({location, data, gas, selectedDate, month, year, setMonth, s
                         </Row>
                         <div className="detalles">
                             <h4>{selectedDate.format("DD/MM/YYYY")} Detalle por hora</h4>
-                            <Row>
+                            { data ? ( <Row>
                                 <Col sm={6}>
                                     {dataCol1}
                                 </Col>
                                 <Col sm={6}>
                                     {dataCol2}
                                 </Col>
-                            </Row>
+                            </Row> ) : "No hay datos para este día"}
                         </div>
                     </div>
                 </Col>
                 <Col sm={12} lg={6} className="d-flex align-items-start justify-content-center">
-                    <DatePicker ubic={location} ind={gas} selectedDate={selectedDate} onChange={setSelectedDate} month={month}/>
+                    <DatePicker month={month} year={year} location={location} gas={gas} selectedDate={selectedDate} dataHM={dataHM} onChange={setSelectedDate} />
                 </Col>
             </Row>
         </div>

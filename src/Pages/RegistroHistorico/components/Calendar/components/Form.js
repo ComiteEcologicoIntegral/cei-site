@@ -139,7 +139,7 @@ function CalendarForm({
               block
               onClick={() => search()}
             >
-              Graficar
+              Obtener datos
             </Button>
           </Col>
         </Form.Row>
