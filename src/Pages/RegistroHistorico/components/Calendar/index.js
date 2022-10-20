@@ -68,11 +68,12 @@ function CalendarWrapper() {
       .catch((e) => console.log(e));
 
     // Data for calendar
-    let queryString = createQuery(moment(), moment());
+    let queryString = createQuery(selectedDate, selectedDate);
     // Sección calendario
     fetch(`${apiUrl}/datos-fecha?${queryString}`)
       .then((response) => response.json())
       .then((json) => {
+        console.log({json});
         setCalendarData(json);
       });
   };
@@ -144,18 +145,16 @@ function CalendarWrapper() {
         setAvgType={setAvgType}
         search={fetchData}
       />
-      {calendarData && (
-        <Calendar
-          location={location}
-          data={calendarData}
-          gas={gas ? gas.value : null}
-          downloadFile={downloadFile}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          fetchData={fetchData}
-          dataHM={dataHM}
-        />
-      )}
+      <Calendar
+        location={location}
+        data={calendarData}
+        gas={gas ? gas.value : null}
+        downloadFile={downloadFile}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+        fetchData={fetchData}
+        dataHM={dataHM}
+      />
     </div>
   );
 }

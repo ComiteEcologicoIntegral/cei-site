@@ -7,7 +7,7 @@ import {
   isSameDay,
 } from "../../../../../utils/PopulateDateRange";
 import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
+import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
 import { criteria, getStatus } from "../../../../../handlers/statusCriteria";
@@ -66,16 +66,7 @@ const anios = [
 ];
 
 // Componente para la página de Registro Histórico
-function Calendario({
-  location,
-  data,
-  gas,
-  selectedDate,
-  setSelectedDate,
-  dataHM,
-  downloadFile,
-  fetchData,
-}) {
+function Calendario({ data, gas, setSelectedDate, dataHM, downloadFile }) {
   /* 
         Parámetros:
             - q : query creado en los filtros
@@ -113,6 +104,15 @@ function Calendario({
   const [datesOfTheMonth, setMonthDates] = useState(populateDateRange(beginOfMonth, endOfMonth));
 
   useEffect(() => {
+    const currentMonth = datesOfTheMonth[0].getMonth();
+    const currentYear = datesOfTheMonth[0].getUTCFullYear();
+    const selectedMonth = value.getMonth();
+    const selectedYear = value.getUTCFullYear();
+
+    if (currentMonth !== selectedMonth || currentYear !== selectedYear) {
+      setMonthDates(populateDateRange(getFirstDayOfMonth(selectedYear, selectedMonth)));
+    }
+
     setSelectedDate(moment(value));
   }, [value]);
 
@@ -145,10 +145,6 @@ function Calendario({
     [dataHM]
   );
 
-  useEffect(() => {
-    console.log("dataHM changed");
-  }, [dataHM]);
-
   // Cuando ya se hizo el fetch para traer datos:
   let dataCol1 = [];
   let dataCol2 = [];
@@ -157,7 +153,7 @@ function Calendario({
 
   if (data && data.length !== 0) {
     // Primera columna (horas de 00:00 a 11:00)
-    while (currHour < 12 && index < data.length) {
+    while (currHour < 24 && index < data.length) {
       let ch = "T" + currHour.toString().padStart(2, 0) + ":";
       let info = [];
 
@@ -198,47 +194,10 @@ function Calendario({
 
       currHour++;
     }
-
-    // Segunda columna (horas de 12:00 a 23:00)
-    while (currHour < 24 && index < data.length) {
-      let ch = "T" + currHour.toString().padStart(2, 0);
-      let info = [];
-
-      let firstIndex = index; // Esta variable sirve para darle un key a cada acordión, sin pasarnos del último índice
-
-      while (index < data.length && data[index]["dia"].includes(ch)) {
-        info.push(
-          <p key={index}>
-            <AiFillRightSquare className={colorIndice(data[index][gas])} /> {data[index]["zona"]}:{" "}
-            {data[index][gas] ? `${data[index][gas]} ${unidad[gas]}` : "No hay registro"}
-          </p>
-        );
-        index++;
-      }
-
-      dataCol2.push(
-        <Accordion key={data[firstIndex].Registros_id} id={data[firstIndex].Registros_id}>
-          <Card>
-            <Card.Header>
-              <Accordion.Toggle
-                as={Button}
-                className="hora"
-                variant="link"
-                eventKey={data[firstIndex].Registros_id}
-              >
-                <AiFillCaretDown color="lightgray" /> {currHour.toString().padStart(2, 0)}:00
-              </Accordion.Toggle>
-            </Card.Header>
-            <Accordion.Collapse eventKey={data[firstIndex].Registros_id}>
-              <Card.Body>{info}</Card.Body>
-            </Accordion.Collapse>
-          </Card>
-        </Accordion>
-      );
-
-      currHour++;
-    }
   }
+
+  let firstColumn = dataCol1.slice(0, 12);
+  let secondColumn = dataCol1.slice(12, 24);
 
   const tileClassName = useCallback(
     ({ date, view }) => {
@@ -259,27 +218,27 @@ function Calendario({
       <Row className="mb-5">
         <Col sm={12} lg={6}>
           <div>
-            <Button className="btn btn-light mb-4 mt-4" block onClick={downloadFile}>
-              Descargar datos del mes
-            </Button>
             <div className="detalles">
               <p>
-                Detalle por hora del día{" "}
+                Detalle por hora del día
                 <span className="current-day">{value.toLocaleDateString("es-MX", dateFormat)}</span>
               </p>
               {data ? (
-                <Row>
-                  <Col sm={6}>{dataCol1}</Col>
-                  <Col sm={6}>{dataCol2}</Col>
-                </Row>
+                <div className="d-flex justify-content-evenly">
+                  {firstColumn.length > 0 && <div>{firstColumn}</div> }
+                  {secondColumn.length > 0 && <div>{secondColumn}</div> }
+                </div>
               ) : (
                 "No hay datos para este día"
               )}
             </div>
           </div>
         </Col>
-        <Col sm={12} lg={6} className="d-flex align-items-start justify-content-center">
+        <Col sm={12} lg={6}>
           <Calendar onChange={onChange} value={value} tileClassName={tileClassName} />
+          <Button className="btn mt-4" onClick={downloadFile}>
+            Descargar datos del mes
+          </Button>
         </Col>
       </Row>
     </div>
