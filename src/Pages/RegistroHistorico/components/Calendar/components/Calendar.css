@@ -1,111 +1,111 @@
-.calendar {
-    width:75%;
-}
-
-.calendar .day {
-    color: rgb(255, 255, 255);
-    position: relative;
-    width: calc(100% / 7);
-    height: 30px;
-    display: inline-block;
-    background-color: white;
-    padding: 4px;
-    text-align: center;
-}
-
-.calendar .day span {
-    display: none;
-    position: absolute;
-    top: -5px;
-    left: 60px;
-    width: 125px;
-    padding: 5px;
-    z-index: 100;
-    background: #000;
-    color: #fff;
-}
-
-.calendar .day span:before{
-    content:'';
-    display:block;
-    width:0;
-    height:0;
-    position:absolute;
-    
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent; 
-    border-right:8px solid black;
-    left:-8px;
-    
-    top:7px;
-}
-
-.calendar :hover.day {
-    font-size: 99%; /* this is just for IE */
-}
-
-.calendar .day:hover.day span {
-    display: block;
-}
-
-.calendar .selected {
-    filter: brightness(75%)
-}
-
-.calendar .today {
-    background-color: rgb(255, 255, 255);
-}
-
-.calendar .month {
-    display: none;
-    margin: 0;
-    padding: 0;
-    width: 0;
-    height: 0;
-}
-
-.calendar .after {
-    color: lightgrey;
-    display: none;
-}
-
-.cal-header {
-    background-color: lightskyblue;
-    border-radius: 5px 5px 0 0;
-    padding:5px 20px;
-}
-
-.current {
-    text-align: center;
-    font-weight: bold;
-}
-.next {
-    text-align: end;
-    cursor: pointer;
-}
-
-.previous {
-    cursor: pointer;
-}
-
-.day-names {
-    margin-bottom: 6px;
-    background-color: rgb(241, 241, 241);
-
-}
-
-.weekday {
-    font-weight: 500;
-    position: relative;
-    width: calc(100% / 7);
-    display: inline-block;
-    padding: 5px;
-    margin: 0;
-    box-sizing: border-box;
-    z-index: 1;
-    text-align: center;
-    border-radius: 5px;
-}
+/* .calendar { */
+/*     width:75%; */
+/* } */
+/*  */
+/* .calendar .day { */
+/*     color: rgb(255, 255, 255); */
+/*     position: relative; */
+/*     width: calc(100% / 7); */
+/*     height: 30px; */
+/*     display: inline-block; */
+/*     background-color: white; */
+/*     padding: 4px; */
+/*     text-align: center; */
+/* } */
+/*  */
+/* .calendar .day span { */
+/*     display: none; */
+/*     position: absolute; */
+/*     top: -5px; */
+/*     left: 60px; */
+/*     width: 125px; */
+/*     padding: 5px; */
+/*     z-index: 100; */
+/*     background: #000; */
+/*     color: #fff; */
+/* } */
+/*  */
+/* .calendar .day span:before{ */
+/*     content:''; */
+/*     display:block; */
+/*     width:0; */
+/*     height:0; */
+/*     position:absolute; */
+/*      */
+/*     border-top: 8px solid transparent; */
+/*     border-bottom: 8px solid transparent;  */
+/*     border-right:8px solid black; */
+/*     left:-8px; */
+/*      */
+/*     top:7px; */
+/* } */
+/*  */
+/* .calendar :hover.day { */
+/*     font-size: 99%; [> this is just for IE <] */
+/* } */
+/*  */
+/* .calendar .day:hover.day span { */
+/*     display: block; */
+/* } */
+/*  */
+/* .calendar .selected { */
+/*     filter: brightness(75%) */
+/* } */
+/*  */
+/* .calendar .today { */
+/*     background-color: rgb(255, 255, 255); */
+/* } */
+/*  */
+/* .calendar .month { */
+/*     display: none; */
+/*     margin: 0; */
+/*     padding: 0; */
+/*     width: 0; */
+/*     height: 0; */
+/* } */
+/*  */
+/* .calendar .after { */
+/*     color: lightgrey; */
+/*     display: none; */
+/* } */
+/*  */
+/* .cal-header { */
+/*     background-color: lightskyblue; */
+/*     border-radius: 5px 5px 0 0; */
+/*     padding:5px 20px; */
+/* } */
+/*  */
+/* .current { */
+/*     text-align: center; */
+/*     font-weight: bold; */
+/* } */
+/* .next { */
+/*     text-align: end; */
+/*     cursor: pointer; */
+/* } */
+/*  */
+/* .previous { */
+/*     cursor: pointer; */
+/* } */
+/*  */
+/* .day-names { */
+/*     margin-bottom: 6px; */
+/*     background-color: rgb(241, 241, 241); */
+/*  */
+/* } */
+/*  */
+/* .weekday { */
+/*     font-weight: 500; */
+/*     position: relative; */
+/*     width: calc(100% / 7); */
+/*     display: inline-block; */
+/*     padding: 5px; */
+/*     margin: 0; */
+/*     box-sizing: border-box; */
+/*     z-index: 1; */
+/*     text-align: center; */
+/*     border-radius: 5px; */
+/* } */
 
 /******* DETALLES ******/
 
@@ -143,4 +143,35 @@
 
 .hora {
     color: black !important; 
+}
+
+.current-day {
+    font-weight: bold;
+}
+
+.green-days {
+    background-color: gray;
+}
+
+.no-data {
+    background-color: rgb(240, 239, 239);
+}
+
+.good {
+    background-color: rgb(76, 187, 23);
+}
+
+.acceptable {
+    background-color: rgb(253, 218, 13);
+}
+
+.bad {
+    background-color: rgb(254,90,29);
+}
+ 
+.super-bad {
+    background-color: rgb(238, 75, 43);
+}
+.extremly-bad {
+    background-color: rgb(143, 63, 151);
 }
