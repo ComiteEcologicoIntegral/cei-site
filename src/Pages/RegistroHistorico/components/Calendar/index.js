@@ -72,10 +72,7 @@ function CalendarWrapper() {
     // Sección calendario
     fetch(`${apiUrl}/datos-fecha?${queryString}`)
       .then((response) => response.json())
-      .then((json) => {
-        console.log({json});
-        setCalendarData(json);
-      });
+      .then((json) => setCalendarData(json));
   };
 
   function getQueryStringToDownload() {
