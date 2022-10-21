@@ -1,7 +1,7 @@
 export function populateDateRange(startDate, endDate) {
   let diff = (endDate - startDate) / 864e5;
   const datesFromStartToEnd = Array.from({ length: diff + 1 }, (_, i) => {
-    const date = new Date();
+    const date = new Date(startDate.getTime());
     date.setDate(startDate.getDate() + i);
     return date;
   });
