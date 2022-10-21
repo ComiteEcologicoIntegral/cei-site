@@ -35,18 +35,39 @@ function CalendarWrapper() {
   const [dataHM, setDataHM] = useState(null);
 
   useEffect(() => {
-    if (location && gas) fetchData();
+    if (location && gas) {
+      console.log({ selectedDate });
+      fetchData();
+    }
   }, [selectedDate]);
 
   useEffect(() => {
-    const currentMonth = datesOfTheMonth[0].getMonth();
-    const currentYear = datesOfTheMonth[0].getUTCFullYear();
     const selectedMonth = selectedDate.getMonth();
     const selectedYear = selectedDate.getUTCFullYear();
+    beginOfMonth = getFirstDayOfMonth(selectedYear, selectedMonth);
+    endOfMonth = getLastDayOfMonth(selectedYear, selectedMonth);
+    console.log("here at  the use effect");
+    if (datesOfTheMonth && datesOfTheMonth.length !== 0) {
+      const currentMonth = datesOfTheMonth[0].getMonth();
+      const currentYear = datesOfTheMonth[0].getUTCFullYear();
+      if (currentMonth !== selectedMonth || currentYear !== selectedYear) {
+        let newMonths = populateDateRange(beginOfMonth, endOfMonth);
+        setMonthDates(newMonths);
+      }
+    } else {
+      setMonthDates(populateDateRange(beginOfMonth, endOfMonth));
+    }
+  }, [selectedDate]);
 
-    if (currentMonth !== selectedMonth || currentYear !== selectedYear) {
-      console.log("another month");
-      setMonthDates(populateDateRange(getFirstDayOfMonth(selectedYear, selectedMonth)));
+  useEffect(() => {
+    if (location && gas) {
+      fetchData();
+    }
+  }, [datesOfTheMonth]);
+
+  useEffect(() => {
+    if (location && gas) {
+      fetchDataByHour();
     }
   }, [selectedDate]);
 
@@ -75,7 +96,6 @@ function CalendarWrapper() {
     let startDateString = beginOfMonth.toISOString().split("T")[0];
     let endDateString = endOfMonth.toISOString().split("T")[0];
 
-
     let queryStr =
       "ubic=" +
       location.value +
@@ -89,19 +109,32 @@ function CalendarWrapper() {
     return queryStr;
   }
 
-  const fetchData = () => {
+  const fetchCalendarData = () => {
     // Data for calendar
     let calendarQueryString = createCalendarQuery();
     fetch(`${apiUrl}/prom-data?${calendarQueryString}`)
       .then((response) => response.json())
-      .then((json) => setDataHM(json))
+      .then((json) => {
+        // console.log("calendar", json);
+        setDataHM(json);
+      })
       .catch((e) => console.log(e));
+  };
 
+  const fetchDataByHour = () => {
     // Data by hour
     let hourQueryString = createHoursQuery();
     fetch(`${apiUrl}/datos-fecha?${hourQueryString}`)
       .then((response) => response.json())
-      .then((json) => setCalendarData(json));
+      .then((json) => {
+        // console.log("hour", json);
+        setCalendarData(json);
+      });
+  };
+
+  const fetchData = () => {
+    fetchCalendarData();
+    fetchDataByHour();
   };
 
   function getQueryStringToDownload() {
