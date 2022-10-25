@@ -1,7 +1,7 @@
 import React, {useRef, useMemo, useState, useEffect} from 'react'
 import { Form, Col, Row } from 'react-bootstrap'
 import Select from 'react-select';
-import { systemOptions, indicadores, idBlacklistpriv } from '../constants';
+import { systemOptions, gasesOptions, idBlacklistpriv } from '../constants';
 import moment from 'moment'
 import { string } from 'prop-types';
 
@@ -12,11 +12,11 @@ const ComparaFiltros = (props) => {
     
     // Datos de cada input:
     const [system, setSystem] = useState("PurpleAir");
-    const [indOptions, setIndOptions] = useState(indicadores)
+    const [indOptions, setIndOptions] = useState(gasesOptions)
     const [location, setLocation] = useState(null)
-    const [indicador, setIndicador] = useState(indicadores[0])
+    const [indicador, setIndicador] = useState(gasesOptions[0])
     const ubic = useRef(sensores[0].zona ? sensores[0].zona : null);
-    const ind = useRef(indicadores[0].value);
+    const ind = useRef(gasesOptions[0].value);
     const desde = useRef(null);
     const hasta = useRef(null);
     const desdeHora = useRef('00:00:00');
@@ -26,7 +26,7 @@ const ComparaFiltros = (props) => {
     const minFecha=useRef("2010-01-04");
 
     useEffect(() => {
-        system === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores)
+        system === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions)
     }, [system]);
 
     const sensorOptions = useMemo(() => {
@@ -90,7 +90,7 @@ const ComparaFiltros = (props) => {
         if(value.label === 'PurpleAir'){
             // Checar si esta seleccionado otro contaminante que no sea PM25
             if(indicador.value !== 'PM25'){
-                setIndicador(indicadores[0])
+                setIndicador(gasesOptions[0])
                 // console.log(indicadores)
                 // indicador.current = indicadores[0];
             }

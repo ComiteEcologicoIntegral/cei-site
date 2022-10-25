@@ -29,12 +29,11 @@ export const gases = [
 // Opciones del dropdown de sistemas:
 export const systemOptions = [
   { value: "PurpleAir", label: "PurpleAir", opt: "P" },
-  { value: "Sinaica", label: "Sinaica", opt: "G" },
-  { value: "AireNuevoLeon", label: "AireNuevoLeon", opt: "G" },
+  { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G" },
 ];
 
 // Opciones del dropdown de gases:
-export const indicadores = [
+export const gasesOptions = [
   { value: "PM25", label: "PM2.5" },
   { value: "PM10", label: "PM10" },
   { value: "O3", label: "O3" },
@@ -51,6 +50,7 @@ export const unidad = {
   NO2: "ppm",
   SO2: "ppm",
 };
+
 export const idBlacklist = [
   "P36757",
   "P47305",

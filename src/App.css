@@ -299,44 +299,6 @@ button, button:focus {
 }
 
 
-/***** FILTROS REGISTRO HISTORICO ******/
-
-.btn-outline-light {
-  color:var(--color-black);
-}
-
-.toggle-vista.btn-light.active {
-  background-color: var(--color-darkgreen) !important;
-  color:white !important;
-  border-radius: 0px;
-  z-index: 0;
-}
-
-.loading {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 100px;
-  height: 100px;
-  margin: 5px 20px;
-}
-
-.loading-default {
-  min-width: 300px;
-  max-width: 500px;
-  min-height: 300px;
-  max-height: 500px;
-  margin-top: 10%;
-  margin-bottom: 10%;
-}
-
-.col-boton {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-}
-
 /****** COMPARA FILTROS ****/
 .compara-filtros {
   background-color:rgba(70,130,180,0.5);

@@ -1,48 +1,31 @@
-import moment from "moment";
-import React, { useState, useEffect, useRef } from "react";
-import { Form, Row, ButtonGroup, Button, Col, ToggleButton } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Form, Button, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
-import { fetchSummaryData } from "../handlers/data";
-import { setSensorData } from "../redux/reducers";
-import { indicadores, idBlacklistpriv } from "../constants";
+import moment from "moment";
+import { fetchSummaryData } from "../../../../../handlers/data";
+import { setSensorData } from "../../../../../redux/reducers";
+import { systemOptions, gasesOptions, idBlacklistpriv } from "../../../../../constants";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
-const systemOptions = [
-  { value: "PurpleAir", label: "PurpleAir", opt: "P" },
-  { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G" },
-];
-
 // Componente para la página de Registro Histórico
-function RHFiltros({
-  createQueryGraph,
-  createQueryCal,
-  radioValue,
-  setRadioValue,
-  updateMainFiltros,
+function GraphForm({
   startDate,
   endDate,
   startTime,
   endTime,
+  location,
+  system,
+  gas,
   setStartDate,
   setEndDate,
   setStartTime,
   setEndTime,
+  setLocation,
+  setSystem,
+  setGas,
+  fetchGraphData,
 }) {
-  /*
-        Parámetros:
-            - createQueryGraph: función para crear query de la gráfica
-            - createQueryCal: función para crear query del calendario
-            - radioValue: sección seleccionada
-            - setRadioValue: función para cambiar el radioValue
-            - updateMainFiltros: función para updatear en el componente padre los inputs seleccionados
-    */
-
-  const radios = [
-    { name: "Grafica", value: "1" },
-    { name: "Calendario", value: "2" },
-  ];
-
   const dispatch = useDispatch();
   const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
 
@@ -64,21 +47,26 @@ function RHFiltros({
     }
   }, [sensorDataLastUpdate, sensorData]);
 
-  const [system, setSystem] = useState(null);
-  const [sensors, setSensores] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [indOptions, setIndOptions] = useState(null);
-  const [indicador, setIndicador] = useState(null);
-  const [sensor, setSensor] = useState(null);
 
   const enforceValidGas = () => {
-      setIndicador(indicadores[0]);
+    setGas(gasesOptions[0]);
   };
 
   const setSystemValue = (system) => {
-    enforceValidGas();
-    setSensor(null);
+    if (gas) {
+      enforceValidGas();
+    }
+
+    setLocation(null);
     setSystem(system);
   };
+
+  function isEndTimeValid () {
+    let selectedTime = moment(endTime, "HH:mm");
+    return moment().isBefore(selectedTime);
+  }
 
   // Crear valores para el dropdown
   useEffect(() => {
@@ -91,64 +79,22 @@ function RHFiltros({
       }
     });
 
-    setSensores(sensors);
-    system.value === "PurpleAir" ? setIndOptions([indicadores[0]]) : setIndOptions(indicadores);
+    setLocations(sensors);
+    system.value === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions);
   }, [sensRaw, system]);
-
-  // Función general para crear el query
-  function createQuery() {
-    updateMainFiltros(sensor.value, indicador, system.value); // Actualiza los valores de los filtros en el componente padre
-    if (radioValue === "1") {
-      createQueryGraph();
-    } else {
-      createQueryCal();
-    }
-  }
 
   return (
     <div className="mt-5">
-      <div className="ta-center mb-5">
-        <h2>Registro Histórico</h2>
-        <p>Consulta los datos históricos de la calidad del aire</p>
-      </div>
-      <ButtonGroup toggle style={{ width: "100%" }}>
-        {radios.map((radio, idx) => (
-          <ToggleButton
-            className="toggle-vista"
-            key={idx}
-            type="radio"
-            variant="light"
-            name="radio"
-            value={radio.value}
-            checked={radioValue === radio.value}
-            onChange={(e) => setRadioValue(e.currentTarget.value)}
-          >
-            {radio.name}
-          </ToggleButton>
-        ))}
-      </ButtonGroup>
       <div>
-        {radioValue === "1" && (
-          <div className="mt-3">
-            <p>
-              Genera gráficas a partir de los registros de la calidad del aire del periodo que
-              desees.
-            </p>
-            <ol>
-              <li>Selecciona los filtros que deseas aplicar.</li>
-              <li>Selecciona la fecha inicial y fecha final de la gráfica.</li>
-            </ol>
-          </div>
-        )}
-        {radioValue === "2" && (
-          <div className="mt-3">
-            <p>Consulta y descarga los registros mensuales de la calidad del aire.</p>
-            <ol>
-              <li>Selecciona los filtros que deseas aplicar.</li>
-              <li>Selecciona el mes que desea conultar.</li>
-            </ol>
-          </div>
-        )}
+        <div className="mt-3">
+          <p>
+            Genera gráficas a partir de los registros de la calidad del aire del periodo que desees.
+          </p>
+          <ol>
+            <li>Selecciona los filtros que deseas aplicar.</li>
+            <li>Selecciona la fecha inicial y fecha final de la gráfica.</li>
+          </ol>
+        </div>
       </div>
       <Form className="mb-3">
         <Form.Row className="mb-3 d-flex justify-content-evenly">
@@ -168,12 +114,10 @@ function RHFiltros({
             <p className="font-weight-bold">Ubicación</p>
             <Select
               className="mt-1"
-              options={sensors}
-              value={sensor}
+              options={locations}
               placeholder={"Ubicación"}
-              onChange={(value) => {
-                setSensor(value);
-              }}
+              value={location}
+              onChange={(e) => setLocation(e)}
             />
           </Col>
         </Form.Row>
@@ -183,18 +127,19 @@ function RHFiltros({
             <Select
               options={indOptions}
               placeholder={"Indicador"}
-              onChange={setIndicador}
-              value={indicador}
+              value={gas}
+              onChange={(e) => setGas(e)}
             />
           </Col>
           <Col xs={4}>
             <p className="font-weight-bold mb-2">Desde</p>
-            <div className="d-flex justify-content-between flex-row flex-wrap">
+            <div className="d-flex justify-content-between flex-row flex-wrap flex-lg-nowrap">
               <Form.Control
                 type="date"
                 required
                 value={moment(startDate).format("yyyy-MM-DD")}
                 onChange={(event) => setStartDate(moment(event.target.value))}
+                isInvalid={moment().isBefore(startDate)}
               ></Form.Control>
               <Form.Control
                 value={startTime}
@@ -205,24 +150,31 @@ function RHFiltros({
           </Col>
           <Col xs={4}>
             <p className="font-weight-bold mb-2">Hasta</p>
-            <div className="d-flex justify-content-between flex-row flex-wrap">
+            <div className="d-flex justify-content-between flex-row flex-wrap flex-lg-nowrap">
               <Form.Control
                 type="date"
                 required
                 value={moment(endDate).format("yyyy-MM-DD")}
                 onChange={(event) => setEndDate(event.target.value)}
+                isInvalid={moment(endDate).isBefore(startDate) || moment().isBefore(endDate)}
               ></Form.Control>
               <Form.Control
                 value={endTime}
                 onChange={(event) => setEndTime(event.target.value + ":00")}
                 type="time"
+                isInvalid={isEndTimeValid()}
               ></Form.Control>
             </div>
           </Col>
         </Form.Row>
         <Form.Row>
           <Col className="col-boton">
-            <Button className="btn-aplicar" variant="primary" block onClick={() => createQuery()}>
+            <Button
+              className="btn-aplicar"
+              variant="primary"
+              block
+              onClick={() => fetchGraphData()}
+            >
               Graficar
             </Button>
           </Col>
@@ -234,4 +186,4 @@ function RHFiltros({
   );
 }
 
-export default RHFiltros;
+export default GraphForm;
