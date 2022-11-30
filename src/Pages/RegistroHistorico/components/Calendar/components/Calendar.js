@@ -202,6 +202,14 @@ function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate,
 
   return (
     <div className="container mb-10">
+      <div className="mb-3">
+        Para visualizar la informacion desglosada por hora da click en el dia
+        que deseas y los datos se verán en la parte izquierda. Para cambiar de 
+        mes puedes usar las flechas de la parte superior o puedes dar click en 
+        el mes actual y cambiar a la vista de mes (se vuelve a la vista por dia 
+        haciendo click en un mes). Al cambiar de mes haz click en un dia de ese 
+        mes para que se carguen los datos
+      </div>
       <Row className="mb-5">
         <Col sm={12} lg={6}>
           <div>
@@ -261,16 +269,9 @@ function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate,
           )}
         </Col>
       </Row>
-      <div className="info d-flex justify-content-between">
-        <Button className="btn mt-4" onClick={downloadFile}>
-          Descargar datos del mes
-        </Button>
-        <div>
-          Para visualizar la informacion desglosada por hora da click en el dia
-          que deseas y los datos se verán en la parte izquierda. Para cambiar de
-          mes haz click en un dia de ese mes para que se carguen los datos
-        </div>
-      </div>
+      <Button className="btn mt-4" onClick={downloadFile}>
+        Descargar datos del mes
+      </Button>
     </div>
   );
 }
