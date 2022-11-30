@@ -125,7 +125,7 @@ function CalendarForm({
             <p className="font-weight-bold mb-2">Promedio/Índice</p>
             <Select
               options={avgOptions}
-              placeholder={"Tipo de promedio o indice"}
+              placeholder={"Promedio de 24 horas"}
               value={avgType}
               onChange={(e) => setAvgType(e)}
             />

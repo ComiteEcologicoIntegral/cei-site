@@ -202,13 +202,23 @@ function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate,
 
   return (
     <div className="container mb-10">
+      <div className="mb-3">
+        Para visualizar la informacion desglosada por hora da click en el dia
+        que deseas y los datos se verán en la parte izquierda. Para cambiar de 
+        mes puedes usar las flechas de la parte superior o puedes dar click en 
+        el mes actual y cambiar a la vista de mes (se vuelve a la vista por dia 
+        haciendo click en un mes). Al cambiar de mes haz click en un dia de ese 
+        mes para que se carguen los datos
+      </div>
       <Row className="mb-5">
         <Col sm={12} lg={6}>
           <div>
             <div className="detalles">
               <p>
                 Detalle por hora del día{" "}
-                <span className="current-day">{selectedDate.toLocaleDateString("es-MX", dateFormat)}</span>
+                <span className="current-day">
+                  {selectedDate.toLocaleDateString("es-MX", dateFormat)}
+                </span>
               </p>
               {data && data.length > 0 ? (
                 <div className="d-flex justify-content-evenly">
@@ -222,17 +232,29 @@ function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate,
           </div>
         </Col>
         <Col className="calendar-container" sm={12} lg={6}>
-          <Calendar onChange={setSelectedDate} value={selectedDate} tileClassName={tileClassName} />
+          <Calendar
+            onChange={setSelectedDate}
+            value={selectedDate}
+            tileClassName={tileClassName}
+          />
           {dayCount && (
             <div className="day-count">
               <h4 className="mt-4">Conteo de días</h4>
-              <DayBullet count={dayCount.Good} text="Buena" type={statusClassName.Good} />
+              <DayBullet
+                count={dayCount.Good}
+                text="Buena"
+                type={statusClassName.Good}
+              />
               <DayBullet
                 count={dayCount.Acceptable}
                 text="Aceptable"
                 type={statusClassName.Acceptable}
               />
-              <DayBullet count={dayCount.Bad} text="Mala" type={statusClassName.Bad} />
+              <DayBullet
+                count={dayCount.Bad}
+                text="Mala"
+                type={statusClassName.Bad}
+              />
               <DayBullet
                 count={dayCount.SuperBad}
                 text="Muy mala"
