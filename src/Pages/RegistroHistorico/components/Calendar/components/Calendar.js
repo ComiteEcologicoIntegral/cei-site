@@ -6,7 +6,7 @@ import {
   getLastDayOfMonth,
   isSameDay,
 } from "../../../../../utils/PopulateDateRange";
-import Calendar from "react-calendar";
+import ReactCalendar from "react-calendar";
 import moment from "moment";
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
 import { criteria, getStatus } from "../../../../../handlers/statusCriteria";
@@ -65,7 +65,7 @@ const anios = [
 ];
 
 // Componente para la página de Registro Histórico
-function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate, dataHM, downloadFile }) {
+function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDate, datesOfTheMonth, downloadFile }) {
   function colorIndice(medida) {
     let val = getStatus(gas, medida);
 
@@ -97,17 +97,21 @@ function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate,
       ExtremelyBad: 0,
     };
 
+    console.log({ datesOfTheMonth })
+
     datesOfTheMonth.forEach((date) => {
       let status = getDateStatus(date);
       tmpDayCount[status]++;
     });
 
     setDayCount(tmpDayCount);
-  }, [datesOfTheMonth, dataHM]);
+  }, [datesOfTheMonth, calendarData]);
 
   function getDateStatus(date) {
-    if (!dataHM || date.getDate() >= dataHM.length) return;
-    const dayAverage = dataHM[date.getDate()].prom;
+    console.log("get status for day ", date.getDate());
+    if (!calendarData || date.getDate() > calendarData.length) return;
+    console.log("there is info");
+    const dayAverage = calendarData[date.getDate()-1].movil;
     if (dayAverage < 0) {
       return "NoData";
     }
@@ -145,35 +149,35 @@ function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate,
       }
       return "no-data";
     },
-    [dataHM]
+    [calendarData]
   );
 
   useEffect(() => {
-    if (!data || data.length === 0) return;
+    if (!dataByHour || dataByHour.length === 0) return;
 
     let ans = [];
 
-    for (let currHour = 0; currHour < 24 && currHour < data.length; currHour++) {
+    for (let currHour = 0; currHour < 24 && currHour < dataByHour.length; currHour++) {
       ans.push(
-        <Accordion key={data[currHour].Registros_id} id={data[currHour].Registros_id}>
+        <Accordion key={dataByHour[currHour].Registros_id} id={dataByHour[currHour].Registros_id}>
           <Card>
             <Card.Header>
               <Accordion.Toggle
                 as={Button}
                 className="hora"
                 variant="link"
-                eventKey={data[currHour].Registros_id}
+                eventKey={dataByHour[currHour].Registros_id}
               >
                 <AiFillCaretDown color="lightgray" /> {currHour.toString().padStart(2, 0)}:00
               </Accordion.Toggle>
             </Card.Header>
-            <Accordion.Collapse eventKey={data[currHour].Registros_id}>
+            <Accordion.Collapse eventKey={dataByHour[currHour].Registros_id}>
               <Card.Body>
                 <p key={currHour}>
-                  <AiFillRightSquare className={colorIndice(data[currHour][gas])} />
-                  {data[currHour]["zona"]}
-                  {data[currHour][gas]
-                    ? ` ${data[currHour][gas]} ${unidad[gas]}`
+                  <AiFillRightSquare className={colorIndice(dataByHour[currHour][gas])} />
+                  {dataByHour[currHour]["zona"]}
+                  {dataByHour[currHour][gas]
+                    ? ` ${dataByHour[currHour][gas]} ${unidad[gas]}`
                     : " No hay registro"}
                 </p>
               </Card.Body>
@@ -183,7 +187,7 @@ function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate,
       );
     }
     setHoursCards(ans);
-  }, [data]);
+  }, [dataByHour]);
 
   let firstColumn = hourCards.slice(0, 12);
   let secondColumn = hourCards.slice(12, 24);
@@ -220,7 +224,7 @@ function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate,
                   {selectedDate.toLocaleDateString("es-MX", dateFormat)}
                 </span>
               </p>
-              {data && data.length > 0 ? (
+              {dataByHour && dataByHour.length > 0 ? (
                 <div className="d-flex justify-content-evenly">
                   {firstColumn.length > 0 && <div>{firstColumn}</div>}
                   {secondColumn.length > 0 && <div>{secondColumn}</div>}
@@ -232,7 +236,7 @@ function Calendario({ data, gas, selectedDate, datesOfTheMonth, setSelectedDate,
           </div>
         </Col>
         <Col className="calendar-container" sm={12} lg={6}>
-          <Calendar
+          <ReactCalendar
             onChange={setSelectedDate}
             value={selectedDate}
             tileClassName={tileClassName}

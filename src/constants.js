@@ -51,6 +51,12 @@ export const unidad = {
   SO2: "ppm",
 };
 
+export const normOptions = [
+  { value: "ssa", label: "ssa" },
+  { value: "semarnat", label: "semarnat" },
+  { value: "oms", label: "oms" }
+]
+
 export const idBlacklist = [
   "P36757",
   "P47305",

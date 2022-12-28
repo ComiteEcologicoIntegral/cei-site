@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchSummaryData } from "../../../../../handlers/data";
 import { setSensorData } from "../../../../../redux/reducers";
-import { gasesOptions, idBlacklistpriv } from "../../../../../constants";
+import { gasesOptions, idBlacklistpriv, normOptions } from "../../../../../constants";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
@@ -25,30 +25,14 @@ function CalendarForm({
   setAvgType,
   search,
 }) {
+
   const dispatch = useDispatch();
   const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
 
   const [sensRaw, setSensRaw] = useState(null);
-
-  useEffect(() => {
-    // TODO: convertir a hook
-    const diff = sensorDataLastUpdate ? moment().diff(sensorDataLastUpdate, "minutes") : 999;
-
-    if (diff > 60) {
-      fetchSummaryData()
-        .then((data) => {
-          dispatch(setSensorData(data));
-          setSensRaw(data);
-        })
-        .catch((err) => console.error(err));
-    } else {
-      setSensRaw(sensorData);
-    }
-  }, [sensorDataLastUpdate, sensorData]);
-
   const [locations, setLocations] = useState([]);
   const [indOptions, setIndOptions] = useState(null);
-  const [avgOptions, setAvgOptions] = useState(null);
+  const [avgOptions, setAvgOptions] = useState(normOptions);
 
   const enforceValidGas = () => {
     setGas(gasesOptions[0]);
@@ -74,6 +58,22 @@ function CalendarForm({
     setLocations(sensors);
     system.value === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions);
   }, [sensRaw, system]);
+
+  useEffect(() => {
+    // TODO: convertir a hook
+    const diff = sensorDataLastUpdate ? moment().diff(sensorDataLastUpdate, "minutes") : 999;
+
+    if (diff > 60) {
+      fetchSummaryData()
+        .then((data) => {
+          dispatch(setSensorData(data));
+          setSensRaw(data);
+        })
+        .catch((err) => console.error(err));
+    } else {
+      setSensRaw(sensorData);
+    }
+  }, [sensorDataLastUpdate, sensorData]);
 
   return (
     <div className="mt-5">

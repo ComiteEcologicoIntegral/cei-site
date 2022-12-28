@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import "moment/locale/es";
 import Form from "./components/Form";
@@ -16,26 +16,24 @@ let currentYear = new Date().getUTCFullYear();
 let beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
 let endOfMonth = getLastDayOfMonth(currentYear, currentMonth);
 
-const dateFormat = { day: "numeric", month: "2-digit", year: "numeric" };
-
 function CalendarWrapper() {
   // http://localhost:3000/location=Garc%C3%ADa&gas=PM25&system=G&start_date=08/02/2022/00:00:00&end_date=08/29/2022/00:00:00
-  const [calendarData, setCalendarData] = useState(null);
+  const [dataByHour, setDataByHour] = useState(null);
   const [noData, setNoData] = useState(false); // Desplegar mensaje si no se encontraron datos en la BD
 
   // Datos de los filtros
-  const [gas, setGas] = useState(null);
   const [system, setSystem] = useState(null);
   const [location, setLocation] = useState(null);
+  const [contaminant, setContaminant] = useState(null);
   const [avgType, setAvgType] = useState(null);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [datesOfTheMonth, setMonthDates] = useState(populateDateRange(beginOfMonth, endOfMonth));
 
-  const [dataHM, setDataHM] = useState(null);
+  const [calendarData, setCalendarData] = useState(null);
 
   useEffect(() => {
-    if (location && gas) {
+    if (location && contaminant) {
       console.log({ selectedDate });
       fetchData();
     }
@@ -47,12 +45,14 @@ function CalendarWrapper() {
     beginOfMonth = getFirstDayOfMonth(selectedYear, selectedMonth);
     endOfMonth = getLastDayOfMonth(selectedYear, selectedMonth);
     console.log("here at  the use effect");
+
+    // If dates of the month are already populated only repopulate them if selectedMonth or selectedYear have changed
     if (datesOfTheMonth && datesOfTheMonth.length !== 0) {
       const currentMonth = datesOfTheMonth[0].getMonth();
       const currentYear = datesOfTheMonth[0].getUTCFullYear();
       if (currentMonth !== selectedMonth || currentYear !== selectedYear) {
-        let newMonths = populateDateRange(beginOfMonth, endOfMonth);
-        setMonthDates(newMonths);
+        let newMonthDates = populateDateRange(beginOfMonth, endOfMonth);
+        setMonthDates(newMonthDates);
       }
     } else {
       setMonthDates(populateDateRange(beginOfMonth, endOfMonth));
@@ -60,25 +60,25 @@ function CalendarWrapper() {
   }, [selectedDate]);
 
   useEffect(() => {
-    if (location && gas) {
+    if (location && contaminant) {
       fetchData();
     }
   }, [datesOfTheMonth]);
 
   useEffect(() => {
-    if (location && gas) {
+    if (location && contaminant) {
       fetchDataByHour();
     }
   }, [selectedDate]);
 
   // Crea el string del query para el calendario
-  function createHoursQuery() {
+  function getDataByHourQueryString() {
     let queryStr = "ubic=";
     queryStr += location.value;
 
     queryStr +=
       "&ind=" +
-      gas.value +
+      contaminant.value +
       "&inicio=" +
       selectedDate.toISOString().split("T")[0] +
       "&fin=" +
@@ -87,7 +87,7 @@ function CalendarWrapper() {
     return queryStr;
   }
 
-  function createCalendarQuery() {
+  function getCalendarQueryString() {
     currentMonth = selectedDate.getMonth();
     currentYear = selectedDate.getUTCFullYear();
     beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
@@ -100,35 +100,36 @@ function CalendarWrapper() {
       "ubic=" +
       location.value +
       "&ind=" +
-      gas.value +
+      contaminant.value +
       "&inicio=" +
       startDateString +
       "&fin=" +
-      endDateString;
+      endDateString +
+      "&norm=" +
+      avgType.value;
 
     return queryStr;
   }
 
   const fetchCalendarData = () => {
     // Data for calendar
-    let calendarQueryString = createCalendarQuery();
-    fetch(`${apiUrl}/prom-data?${calendarQueryString}`)
+    let calendarQueryString = getCalendarQueryString();
+    fetch(`${apiUrl}/prom-data-norms?${calendarQueryString}`)
       .then((response) => response.json())
       .then((json) => {
-        // console.log("calendar", json);
-        setDataHM(json);
+        console.log("calendar", json);
+        setCalendarData(json);
       })
       .catch((e) => console.log(e));
   };
 
   const fetchDataByHour = () => {
     // Data by hour
-    let hourQueryString = createHoursQuery();
+    let hourQueryString = getDataByHourQueryString();
     fetch(`${apiUrl}/datos-fecha?${hourQueryString}`)
       .then((response) => response.json())
       .then((json) => {
-        // console.log("hour", json);
-        setCalendarData(json);
+        setDataByHour(json);
       });
   };
 
@@ -144,7 +145,7 @@ function CalendarWrapper() {
     // Para el calendario se descarga todo el mes
     queryStr +=
       "&gas=" +
-      gas.value +
+      contaminant.value +
       "&start_date=" +
       moment().startOf("month").format("YYYY-MM-DD") +
       "&end_date=" +
@@ -194,26 +195,24 @@ function CalendarWrapper() {
         </Modal.Body>
       </Modal>
       <Form
-        gas={gas}
+        gas={contaminant}
         system={system}
         location={location}
         avgType={avgType}
-        setGas={setGas}
+        setGas={setContaminant}
         setSystem={setSystem}
         setLocation={setLocation}
         setAvgType={setAvgType}
         search={fetchData}
       />
       <Calendar
-        location={location}
-        data={calendarData}
-        gas={gas ? gas.value : null}
-        downloadFile={downloadFile}
+        calendarData={calendarData}
+        dataByHour={dataByHour}
+        gas={contaminant ? contaminant.value : null}
         selectedDate={selectedDate}
-        datesOfTheMonth={datesOfTheMonth}
-        fetchData={fetchData}
-        dataHM={dataHM}
         setSelectedDate={setSelectedDate}
+        datesOfTheMonth={datesOfTheMonth}
+        downloadFile={downloadFile}
       />
     </div>
   );
