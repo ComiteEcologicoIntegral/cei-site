@@ -195,7 +195,7 @@ function CalendarWrapper() {
         </Modal.Body>
       </Modal>
       <Form
-        gas={contaminant}
+        contaminant={contaminant}
         system={system}
         location={location}
         avgType={avgType}

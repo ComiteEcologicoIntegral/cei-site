@@ -97,8 +97,6 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
       ExtremelyBad: 0,
     };
 
-    console.log({ datesOfTheMonth })
-
     datesOfTheMonth.forEach((date) => {
       let status = getDateStatus(date);
       tmpDayCount[status]++;
@@ -108,9 +106,7 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
   }, [datesOfTheMonth, calendarData]);
 
   function getDateStatus(date) {
-    console.log("get status for day ", date.getDate());
     if (!calendarData || date.getDate() > calendarData.length) return;
-    console.log("there is info");
     const dayAverage = calendarData[date.getDate()-1].movil;
     if (dayAverage < 0) {
       return "NoData";

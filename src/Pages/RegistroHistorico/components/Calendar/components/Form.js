@@ -15,7 +15,7 @@ const systemOptions = [
 
 // Componente para la página de Registro Histórico
 function CalendarForm({
-  gas,
+  contaminant,
   system,
   location,
   avgType,
@@ -32,7 +32,7 @@ function CalendarForm({
   const [sensRaw, setSensRaw] = useState(null);
   const [locations, setLocations] = useState([]);
   const [indOptions, setIndOptions] = useState(null);
-  const [avgOptions, setAvgOptions] = useState(normOptions);
+  const [avgOptions, setAvgOptions] = useState(null);
 
   const enforceValidGas = () => {
     setGas(gasesOptions[0]);
@@ -74,6 +74,12 @@ function CalendarForm({
       setSensRaw(sensorData);
     }
   }, [sensorDataLastUpdate, sensorData]);
+
+  useEffect(() => {
+    if (!contaminant) return;
+    setAvgType(normOptions[contaminant.value][0]);
+    setAvgOptions(normOptions[contaminant.value]);
+  }, [contaminant]);
 
   return (
     <div className="mt-5">
@@ -117,7 +123,7 @@ function CalendarForm({
             <Select
               options={indOptions}
               placeholder={"Indicador"}
-              value={gas}
+              value={contaminant}
               onChange={(e) => setGas(e)}
             />
           </Col>
