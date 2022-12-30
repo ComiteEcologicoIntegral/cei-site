@@ -1,23 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Button, Col, Row, Accordion, Card } from "react-bootstrap";
 import {
-  populateDateRange,
-  getFirstDayOfMonth,
-  getLastDayOfMonth,
   isSameDay,
 } from "../../../../../utils/PopulateDateRange";
 import ReactCalendar from "react-calendar";
-import moment from "moment";
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
 import { criteria, getStatus } from "../../../../../handlers/statusCriteria";
 import "./Calendar.css";
 import "./DayBullet.css";
-
-const currentMonth = new Date().getMonth();
-const currentYear = new Date().getUTCFullYear();
-
-const beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
-const endOfMonth = getLastDayOfMonth(currentYear, currentMonth);
 
 const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
 
@@ -40,34 +30,10 @@ const unidad = {
   SO2: "ppm",
 };
 
-// Valores para los dropdowns:
-const meses = [
-  { value: "1", label: "enero" },
-  { value: "2", label: "febrero" },
-  { value: "3", label: "marzo" },
-  { value: "4", label: "abril" },
-  { value: "5", label: "mayo" },
-  { value: "6", label: "junio" },
-  { value: "7", label: "julio" },
-  { value: "8", label: "agosto" },
-  { value: "9", label: "septiembre" },
-  { value: "10", label: "octubre" },
-  { value: "11", label: "noviembre" },
-  { value: "12", label: "diciembre" },
-];
-
-const anios = [
-  { value: "2018", label: "2018" },
-  { value: "2019", label: "2019" },
-  { value: "2020", label: "2020" },
-  { value: "2021", label: "2021" },
-  { value: "2022", label: "2022" },
-];
-
 // Componente para la página de Registro Histórico
-function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDate, datesOfTheMonth, downloadFile }) {
+function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDate, datesOfTheMonth, downloadFile, avgType }) {
   function colorIndice(medida) {
-    let val = getStatus(gas, medida);
+    let val = getStatus(gas, medida, avgType.value);
 
     switch (val) {
       case 0:
@@ -111,19 +77,19 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
     if (dayAverage < 0) {
       return "NoData";
     }
-    if (dayAverage < criteria["Aire y Salud"][gas][0]) {
+    if (dayAverage < criteria[avgType.value][gas][0]) {
       return "Good";
     }
-    if (dayAverage < criteria["Aire y Salud"][gas][1]) {
+    if (dayAverage < criteria[avgType.value][gas][1]) {
       return "Acceptable";
     }
-    if (dayAverage < criteria["Aire y Salud"][gas][2]) {
+    if (dayAverage < criteria[avgType.value][gas][2]) {
       return "Bad";
     }
-    if (dayAverage < criteria["Aire y Salud"][gas][3]) {
+    if (dayAverage < criteria[avgType.value][gas][3]) {
       return "Super-bad";
     }
-    if (dayAverage > criteria["Aire y Salud"][gas][3]) {
+    if (dayAverage > criteria[avgType.value][gas][3]) {
       return "Extremly-bad";
     }
   }

@@ -44,7 +44,6 @@ function CalendarWrapper() {
     const selectedYear = selectedDate.getUTCFullYear();
     beginOfMonth = getFirstDayOfMonth(selectedYear, selectedMonth);
     endOfMonth = getLastDayOfMonth(selectedYear, selectedMonth);
-    console.log("here at  the use effect");
 
     // If dates of the month are already populated only repopulate them if selectedMonth or selectedYear have changed
     if (datesOfTheMonth && datesOfTheMonth.length !== 0) {
@@ -213,6 +212,7 @@ function CalendarWrapper() {
         setSelectedDate={setSelectedDate}
         datesOfTheMonth={datesOfTheMonth}
         downloadFile={downloadFile}
+        avgType={avgType}
       />
     </div>
   );
