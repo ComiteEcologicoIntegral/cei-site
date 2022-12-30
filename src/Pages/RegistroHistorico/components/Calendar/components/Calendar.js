@@ -30,7 +30,6 @@ const unidad = {
   SO2: "ppm",
 };
 
-// Componente para la página de Registro Histórico
 function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDate, datesOfTheMonth, downloadFile, avgType }) {
   function colorIndice(medida) {
     let val = getStatus(gas, medida, avgType.value);
@@ -199,6 +198,7 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
         </Col>
         <Col className="calendar-container" sm={12} lg={6}>
           <ReactCalendar
+            locale={"es-MX"}
             onChange={setSelectedDate}
             value={selectedDate}
             tileClassName={tileClassName}
