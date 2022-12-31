@@ -34,7 +34,6 @@ function CalendarWrapper() {
 
   useEffect(() => {
     if (location && contaminant) {
-      console.log({ selectedDate });
       fetchData();
     }
   }, [selectedDate]);
@@ -116,7 +115,6 @@ function CalendarWrapper() {
     fetch(`${apiUrl}/prom-data-norms?${calendarQueryString}`)
       .then((response) => response.json())
       .then((json) => {
-        console.log("calendar", json);
         setCalendarData(json);
       })
       .catch((e) => console.log(e));
