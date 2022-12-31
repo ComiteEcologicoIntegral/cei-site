@@ -1,4 +1,5 @@
 import { apiUrl } from "../constants";
+import { idBlacklistpriv } from "../constants";
 
 const retry = (fn, ms = 1000, retries = 5) =>
   new Promise((resolve, reject) => {
@@ -33,3 +34,18 @@ const fetchSummaryDataFn = () =>
 export const fetchSummaryData = () => {
   return retry(fetchSummaryDataFn);
 };
+
+export const getSensorLocationsBySystem = (system) => {
+  return new Promise((resolve, reject) => {
+    fetchSummaryData()
+      .then((data) => {
+        let locations = [];
+        data.forEach((element) => {
+          if (system.value === element.Sistema && !idBlacklistpriv.includes(element.Sensor_id)) {
+            locations.push({value: element.Sensor_id, label: element.Zona});
+          }
+          resolve(locations);
+        })
+      }).catch((err) => reject(err));
+  });
+}

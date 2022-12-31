@@ -1,11 +1,8 @@
-import moment from "moment";
 import React, { useState, useEffect } from "react";
-import { Form, ButtonGroup, Button, Col, ToggleButton } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { Form, Button, Col } from "react-bootstrap";
 import Select from "react-select";
-import { fetchSummaryData } from "../../../../../handlers/data";
-import { setSensorData } from "../../../../../redux/reducers";
-import { gasesOptions, idBlacklistpriv, normOptions } from "../../../../../constants";
+import { getSensorLocationsBySystem } from "../../../../../handlers/data";
+import { gasesOptions, normOptions } from "../../../../../constants";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
@@ -25,11 +22,6 @@ function CalendarForm({
   setAvgType,
   search,
 }) {
-
-  const dispatch = useDispatch();
-  const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
-
-  const [sensRaw, setSensRaw] = useState(null);
   const [locations, setLocations] = useState([]);
   const [indOptions, setIndOptions] = useState(null);
   const [avgOptions, setAvgOptions] = useState(null);
@@ -44,36 +36,16 @@ function CalendarForm({
     setSystem(system);
   };
 
-  // Crear valores para el dropdown
   useEffect(() => {
-    if (!sensRaw || !system) return;
-
-    let sensors = [];
-    sensRaw.forEach((element) => {
-      if (system.value === element.Sistema && !idBlacklistpriv.includes(element.Sensor_id)) {
-        sensors.push({ value: element.Sensor_id, label: element.Zona });
-      }
-    });
-
-    setLocations(sensors);
-    system.value === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions);
-  }, [sensRaw, system]);
-
-  useEffect(() => {
-    // TODO: convertir a hook
-    const diff = sensorDataLastUpdate ? moment().diff(sensorDataLastUpdate, "minutes") : 999;
-
-    if (diff > 60) {
-      fetchSummaryData()
-        .then((data) => {
-          dispatch(setSensorData(data));
-          setSensRaw(data);
-        })
-        .catch((err) => console.error(err));
-    } else {
-      setSensRaw(sensorData);
+    // TODO: change this to not make a fetch every time system changes
+    if (!system) return;
+    getSensorLocationsBySystem(system).then((locations) => {
+      setLocations(locations);
     }
-  }, [sensorDataLastUpdate, sensorData]);
+    );
+    system.value === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions);
+  }, [system]);
+  
 
   useEffect(() => {
     if (!contaminant) return;

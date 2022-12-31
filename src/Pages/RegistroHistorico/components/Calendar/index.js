@@ -125,11 +125,9 @@ function CalendarWrapper() {
   const fetchDataByHour = () => {
     // Data by hour
     let hourQueryString = getDataByHourQueryString();
-    //console.log("fetching data by hour " + hourQueryString);
     fetch(`${apiUrl}/datos-fecha?${hourQueryString}`)
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
         setDataByHour(json);
       });
   };
