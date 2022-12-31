@@ -175,11 +175,11 @@
 }
 
 .bad {
-  background-color: orange;
+  background-color: rgb(254, 0, 0);
 }
 
 .super-bad {
-  background-color: rgb(209, 0, 0);
+  background-color: rgb(166, 0, 0);
 }
 
 .extremely-bad {
