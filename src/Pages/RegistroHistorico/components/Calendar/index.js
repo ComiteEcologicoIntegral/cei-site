@@ -9,6 +9,7 @@ import {
   populateDateRange,
   getFirstDayOfMonth,
   getLastDayOfMonth,
+  toLocalISOTime
 } from "../../../../utils/PopulateDateRange";
 
 let currentMonth = new Date().getMonth();
@@ -71,16 +72,17 @@ function CalendarWrapper() {
 
   // Crea el string del query para el calendario
   function getDataByHourQueryString() {
-    let queryStr = "ubic=";
-    queryStr += location.value;
 
-    queryStr +=
+    let currentISOTime = toLocalISOTime(selectedDate).split("T")[0];
+
+    let queryStr = "ubic=" +
+      location.value +
       "&ind=" +
       contaminant.value +
       "&inicio=" +
-      selectedDate.toISOString().split("T")[0] +
+      currentISOTime +
       "&fin=" +
-      selectedDate.toISOString().split("T")[0];
+      currentISOTime;
 
     return queryStr;
   }
@@ -123,9 +125,11 @@ function CalendarWrapper() {
   const fetchDataByHour = () => {
     // Data by hour
     let hourQueryString = getDataByHourQueryString();
+    //console.log("fetching data by hour " + hourQueryString);
     fetch(`${apiUrl}/datos-fecha?${hourQueryString}`)
       .then((response) => response.json())
       .then((json) => {
+        console.log(json);
         setDataByHour(json);
       });
   };
