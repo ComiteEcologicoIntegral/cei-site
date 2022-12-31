@@ -120,38 +120,32 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
 
     for (let currHour = 0; currHour < 24 && currHour < dataByHour.length; currHour++) {
       ans.push(
-        <Accordion key={dataByHour[currHour].Registros_id} id={dataByHour[currHour].Registros_id}>
-          <Card>
-            <Card.Header>
-              <Accordion.Toggle
-                as={Button}
-                className="hora"
-                variant="link"
-                eventKey={dataByHour[currHour].Registros_id}
-              >
-                <AiFillCaretDown color="lightgray" /> {currHour.toString().padStart(2, 0)}:00
-              </Accordion.Toggle>
-            </Card.Header>
-            <Accordion.Collapse eventKey={dataByHour[currHour].Registros_id}>
-              <Card.Body>
-                <p key={currHour}>
-                  <AiFillRightSquare className={colorIndice(dataByHour[currHour][gas])} />
-                  {dataByHour[currHour]["zona"]}
-                  {dataByHour[currHour][gas]
-                    ? ` ${dataByHour[currHour][gas]} ${unidad[gas]}`
-                    : " No hay registro"}
-                </p>
-              </Card.Body>
-            </Accordion.Collapse>
-          </Card>
-        </Accordion>
+        <Card key={currHour}>
+          <Card.Header>
+            <Accordion.Toggle
+              as={Button}
+              className="hora"
+              variant="link"
+              eventKey={currHour.toString()}
+            >
+              <AiFillCaretDown color="lightgray" /> {currHour.toString().padStart(2, '0')}:00
+            </Accordion.Toggle>
+          </Card.Header>
+          <Accordion.Collapse eventKey={currHour.toString()}>
+            <Card.Body>
+              <p>
+                <AiFillRightSquare className={colorIndice(dataByHour[currHour][gas])} />
+                {dataByHour[currHour][gas]
+                  ? ` ${dataByHour[currHour][gas]} ${unidad[gas]}`
+                  : " No hay registro"}
+              </p>
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
       );
     }
     setHoursCards(ans);
   }, [dataByHour]);
-
-  let firstColumn = hourCards.slice(0, 12);
-  let secondColumn = hourCards.slice(12, 24);
 
   const tileClassName = useCallback(
     ({ date, view }) => {
@@ -177,23 +171,17 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
       </div>
       <Row className="mb-5">
         <Col sm={12} lg={6}>
-          <div>
-            <div className="detalles">
-              <p>
-                Detalle por hora del día{" "}
-                <span className="current-day">
-                  {selectedDate.toLocaleDateString("es-MX", dateFormat)}
-                </span>
-              </p>
-              {dataByHour && dataByHour.length > 0 ? (
-                <div className="d-flex justify-content-evenly">
-                  {firstColumn.length > 0 && <div>{firstColumn}</div>}
-                  {secondColumn.length > 0 && <div>{secondColumn}</div>}
-                </div>
-              ) : (
-                "No hay datos para este día"
-              )}
-            </div>
+          <div className="detalles">
+            <p>
+              Detalle por hora del día
+              <span className="current-day"> {selectedDate.toLocaleDateString("es-MX", dateFormat)} </span>
+            </p>
+            {calendarData && <p>
+              Promedio del día: <span className={getDateClassName(selectedDate)}>{ calendarData[selectedDate.getDate() - 1 ].movil.toPrecision(5) }</span>
+            </p>}
+            <Accordion>
+              {hourCards}
+            </Accordion>
           </div>
         </Col>
         <Col className="calendar-container" sm={12} lg={6}>

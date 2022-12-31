@@ -21,3 +21,8 @@ export function isSameDay(d1, d2) {
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate();
 }
+
+export function toLocalISOTime(date) {
+  var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+  return (new Date(date - tzoffset)).toISOString().slice(0, -1);
+}
