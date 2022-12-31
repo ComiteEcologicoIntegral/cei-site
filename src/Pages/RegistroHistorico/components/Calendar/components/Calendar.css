@@ -108,9 +108,7 @@
   font-size: 0.75em;
   font-weight: bold;
 }
-.react-calendar__month-view__days__day--weekend {
-  color: #d10000;
-}
+
 .react-calendar__month-view__days__day--neighboringMonth {
   color: #757575;
 }
@@ -181,7 +179,7 @@
 }
 
 .super-bad {
-  background-color: red;
+  background-color: rgb(209, 0, 0);
 }
 
 .extremely-bad {
