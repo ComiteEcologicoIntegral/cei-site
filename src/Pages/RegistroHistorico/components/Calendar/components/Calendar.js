@@ -86,10 +86,10 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
       return "Bad";
     }
     if (dayAverage < criteria[avgType.value][gas][3]) {
-      return "Super-bad";
+      return "SuperBad";
     }
     if (dayAverage > criteria[avgType.value][gas][3]) {
-      return "Extremly-bad";
+      return "ExtremelyBad";
     }
   }
 
@@ -98,7 +98,7 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
     Acceptable: "acceptable",
     Bad: "bad",
     SuperBad: "super-bad",
-    ExtremelyBad: "extremly-bad",
+    ExtremelyBad: "extremely-bad",
     NoData: "no-data",
   };
 

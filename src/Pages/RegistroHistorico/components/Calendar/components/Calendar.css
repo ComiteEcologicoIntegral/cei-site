@@ -177,14 +177,14 @@
 }
 
 .bad {
-  background-color: rgb(254, 90, 29);
+  background-color: orange;
 }
 
 .super-bad {
-  background-color: rgb(238, 75, 43);
+  background-color: red;
 }
 
-.extremly-bad {
+.extremely-bad {
   background-color: rgb(143, 63, 151);
 }
 
