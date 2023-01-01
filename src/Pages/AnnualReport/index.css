@@ -1,0 +1,28 @@
+table, th, td {
+  border: 1px solid;
+}
+
+.no-data {
+  color: black !important;
+  background-color: rgb(240, 239, 239);
+}
+
+.good {
+  background-color: rgb(76, 187, 23);
+}
+
+.acceptable {
+  background-color: rgb(253, 218, 13);
+}
+
+.bad {
+  background-color: rgb(254, 0, 0);
+}
+
+.super-bad {
+  background-color: rgb(166, 0, 0);
+}
+
+.extremely-bad {
+  background-color: rgb(143, 63, 151);
+}

@@ -158,7 +158,9 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
     },
     [datesOfTheMonth, getDateClassName]
   );
-
+  
+  const dayData = calendarData ? calendarData[selectedDate.getDate() - 1] : null; 
+  const dayAverageInfo = <span className={getDateClassName(selectedDate)}>{dayData && dayData.movil ? dayData.movil.toPrecision(5) : "ND"}</span>;
   return (
     <div className="container mb-10">
       <div className="mb-3">
@@ -177,7 +179,7 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
               <span className="current-day"> {selectedDate.toLocaleDateString("es-MX", dateFormat)} </span>
             </p>
             {calendarData && <p>
-              Promedio del día: <span className={getDateClassName(selectedDate)}>{ calendarData[selectedDate.getDate() - 1 ].movil.toPrecision(5) }</span>
+              Promedio del día: {dayAverageInfo}
             </p>}
             <Accordion>
               {hourCards}
@@ -187,7 +189,10 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
         <Col className="calendar-container" sm={12} lg={6}>
           <ReactCalendar
             locale={"es-MX"}
-            onChange={setSelectedDate}
+            onChange={(date) => {
+              console.log(date);
+              setSelectedDate(date);
+            }}
             value={selectedDate}
             tileClassName={tileClassName}
           />
