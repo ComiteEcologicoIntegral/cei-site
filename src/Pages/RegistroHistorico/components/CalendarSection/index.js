@@ -17,8 +17,7 @@ let currentYear = new Date().getUTCFullYear();
 let beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
 let endOfMonth = getLastDayOfMonth(currentYear, currentMonth);
 
-function CalendarWrapper() {
-  // http://localhost:3000/location=Garc%C3%ADa&gas=PM25&system=G&start_date=08/02/2022/00:00:00&end_date=08/29/2022/00:00:00
+function CalendarSection() {
   const [dataByHour, setDataByHour] = useState(null);
   const [noData, setNoData] = useState(false); // Desplegar mensaje si no se encontraron datos en la BD
 
@@ -119,7 +118,10 @@ function CalendarWrapper() {
       .then((json) => {
         setCalendarData(json);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => { 
+        console.log(e) 
+        setNoData(true);
+      });
   };
 
   const fetchDataByHour = () => {
@@ -129,6 +131,10 @@ function CalendarWrapper() {
       .then((response) => response.json())
       .then((json) => {
         setDataByHour(json);
+      })
+      .catch((e) => { 
+        console.log(e) 
+        setNoData(true);
       });
   };
 
@@ -218,4 +224,4 @@ function CalendarWrapper() {
   );
 }
 
-export default CalendarWrapper;
+export default CalendarSection;

@@ -30,7 +30,7 @@ const unidad = {
   SO2: "ppm",
 };
 
-function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDate, datesOfTheMonth, downloadFile, avgType }) {
+function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate, datesOfTheMonth, downloadFile, avgType }) {
   function colorIndice(medida) {
     let val = getStatus(gas, medida, avgType.value);
 
@@ -235,4 +235,4 @@ function Calendario({ calendarData, dataByHour, gas, selectedDate, setSelectedDa
   );
 }
 
-export default Calendario;
+export default Calendar;
