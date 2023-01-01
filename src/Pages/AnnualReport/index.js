@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useCallback} from 'react'
-import {Form, Button, Col} from "react-bootstrap";
+import React, {useState, useEffect } from 'react'
+import {Form, Col} from "react-bootstrap";
 import Select from "react-select";
 import {getSensorLocationsBySystem} from '../../handlers/data';
-import { populateDateRange, getFirstDayOfMonth, getLastDayOfMonth, toLocalISOTime } from '../../utils/PopulateDateRange';
-import { gasesOptions, apiUrl } from "../../constants";
-import { criteria } from "../../handlers/statusCriteria";
+import { populateDateRange, getFirstDayOfMonth, getLastDayOfMonth } from '../../utils/PopulateDateRange';
+import { gasesOptions, apiUrl, normOptions } from "../../constants";
+import { getDateStatusClassName } from "../../handlers/statusCriteria";
 import "./index.css";
 
 export default function AnnualReport() {
@@ -29,13 +29,19 @@ const months = [
   ];
 
   const [locations, setLocations] = useState([]);
+  const [avgType, setAvgType] = useState([]);
   const [month, setMonth] = useState(months[0]);
   const [year, setYear] = useState(years[0]);
   const [monthDates, setMonthDates] = useState([]);
   const [contaminant, setContaminant] = useState(gasesOptions[0]);
   const [monthData, setMonthData] = useState({});
+  const [avgOptions, setAvgOptions] = useState(null);
 
-  
+  useEffect(() => {
+    if (!contaminant) return;
+    setAvgType(normOptions[contaminant.value][0]);
+    setAvgOptions(normOptions[contaminant.value]);
+  }, [contaminant]);
 
   useEffect(() => {
     getSensorLocationsBySystem(REPORT_SYSTEM).then((data) => {
@@ -69,7 +75,8 @@ const months = [
       startDateString +
       "&fin=" +
       endDateString +
-      "&norm=semarnat";
+      "&norm=" +
+      avgType.value;
 
     return queryStr;
   }
@@ -102,51 +109,15 @@ const months = [
       }
       setMonthData(tmpMonthData);
     });
-  }, [monthDates, locations, contaminant]);
+  }, [monthDates, locations, contaminant, avgType]);
 
   function getDateStatus(date, location) {
     if (!monthData[location.label] || !date || date.getDate() > monthData[location.label].length) return;
     const dayAverage = monthData[location.label][date.getDate()-1].movil;
     if (dayAverage === "") return;
-    if (dayAverage < 0) {
-      return "NoData";
-    }
-    if (dayAverage < criteria["semarnat"][contaminant.value][0]) {
-      return "Good";
-    }
-    if (dayAverage < criteria["semarnat"][contaminant.value][1]) {
-      return "Acceptable";
-    }
-    if (dayAverage < criteria["semarnat"][contaminant.value][2]) {
-      return "Bad";
-    }
-    if (dayAverage < criteria["semarnat"][contaminant.value][3]) {
-      return "SuperBad";
-    }
-    if (dayAverage > criteria["semarnat"][contaminant.value][3]) {
-      return "ExtremelyBad";
-    }
+    let ans = getDateStatusClassName(dayAverage, contaminant.value, avgType.value); 
+    return ans;
   }
-
-  const statusClassName = {
-    Good: "good",
-    Acceptable: "acceptable",
-    Bad: "bad",
-    SuperBad: "super-bad",
-    ExtremelyBad: "extremely-bad",
-    NoData: "no-data",
-  };
-
-  const getDateClassName = useCallback(
-    (date, location) => {
-      let dayStatus = getDateStatus(date, location);
-      if (dayStatus !== undefined) {
-        return statusClassName[dayStatus];
-      }
-      return "no-data";
-    },
-    [monthData]
-  );
 
   return (
     <div>
@@ -181,6 +152,15 @@ const months = [
               onChange={(value) => setContaminant(value)}
             />
           </Col>
+          <Col xs={6}>
+            <p className="font-weight-bold mb-2">Promedio/Índice</p>
+            <Select
+              options={avgOptions}
+              placeholder={"Promedio de 24 horas"}
+              value={avgType}
+              onChange={(e) => setAvgType(e)}
+            />
+          </Col>
         </Form.Row>
       </Form>
       <table>
@@ -195,8 +175,7 @@ const months = [
           const monthDataForLocation = monthData[location.label];
           if (!monthDataForLocation) return;
           const dayAvgs = monthDataForLocation.map((data, i) => {
-          
-            return(<td className={getDateClassName(monthDates[i], location)}>{data.movil ? data.movil.toPrecision(4) : "ND"}</td>);
+            return(<td className={getDateStatus(monthDates[i], location)}>{data.movil ? data.movil.toPrecision(4) : "ND"}</td>);
           });
           return(<tr><td>{location.label}</td>{dayAvgs}</tr>);
         }
