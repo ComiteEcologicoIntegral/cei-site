@@ -5,7 +5,7 @@ import {
 } from "../../../../../utils/PopulateDateRange";
 import ReactCalendar from "react-calendar";
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
-import { criteria, getStatus } from "../../../../../handlers/statusCriteria";
+import { criteria, getStatus, getDateStatusClassName, statusClassName } from "../../../../../handlers/statusCriteria";
 import "./Calendar.css";
 import "./DayBullet.css";
 
@@ -31,87 +31,30 @@ const unidad = {
 };
 
 function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate, datesOfTheMonth, downloadFile, avgType }) {
-  function colorIndice(medida) {
-    let val = getStatus(gas, medida, avgType.value);
-
-    switch (val) {
-      case 0:
-        return "bueno";
-      case 1:
-        return "acept";
-      case 2:
-        return "mala";
-      case 3:
-        return "muymala";
-      case 4:
-        return "extmala";
-      default:
-        return "no-data";
-    }
-  }
 
   const [hourCards, setHoursCards] = useState([]);
   const [dayCount, setDayCount] = useState(null);
 
   useEffect(() => {
+    if (!calendarData) return;
     let tmpDayCount = {
-      Good: 0,
-      Acceptable: 0,
-      Bad: 0,
-      SuperBad: 0,
-      ExtremelyBad: 0,
+      good: 0,
+      acceptable: 0,
+      bad: 0,
+      "super-bad": 0,
+      "extremely-bad": 0,
     };
 
     datesOfTheMonth.forEach((date) => {
-      let status = getDateStatus(date);
-      tmpDayCount[status]++;
+      if (calendarData[date.getDate() - 1]) {
+        let status = getDateStatusClassName(calendarData[date.getDate() - 1].movil, gas, avgType.value);      
+        tmpDayCount[status]++;
+      }
     });
 
     setDayCount(tmpDayCount);
   }, [datesOfTheMonth, calendarData]);
 
-  function getDateStatus(date) {
-    if (!calendarData || date.getDate() > calendarData.length) return;
-    const dayAverage = calendarData[date.getDate()-1].movil;
-    if (dayAverage < 0) {
-      return "NoData";
-    }
-    if (dayAverage < criteria[avgType.value][gas][0]) {
-      return "Good";
-    }
-    if (dayAverage < criteria[avgType.value][gas][1]) {
-      return "Acceptable";
-    }
-    if (dayAverage < criteria[avgType.value][gas][2]) {
-      return "Bad";
-    }
-    if (dayAverage < criteria[avgType.value][gas][3]) {
-      return "SuperBad";
-    }
-    if (dayAverage > criteria[avgType.value][gas][3]) {
-      return "ExtremelyBad";
-    }
-  }
-
-  const statusClassName = {
-    Good: "good",
-    Acceptable: "acceptable",
-    Bad: "bad",
-    SuperBad: "super-bad",
-    ExtremelyBad: "extremely-bad",
-    NoData: "no-data",
-  };
-
-  const getDateClassName = useCallback(
-    (date) => {
-      let dayStatus = getDateStatus(date);
-      if (dayStatus !== undefined) {
-        return statusClassName[dayStatus];
-      }
-      return "no-data";
-    },
-    [calendarData]
-  );
 
   useEffect(() => {
     if (!dataByHour || dataByHour.length === 0) return;
@@ -134,7 +77,7 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
           <Accordion.Collapse eventKey={currHour.toString()}>
             <Card.Body>
               <p>
-                <AiFillRightSquare className={colorIndice(dataByHour[currHour][gas])} />
+                <AiFillRightSquare style={{color: "white"}} className={getDateStatusClassName(dataByHour[currHour][gas], gas, avgType.value)} />
                 {dataByHour[currHour][gas]
                   ? ` ${dataByHour[currHour][gas]} ${unidad[gas]}`
                   : " No hay registro"}
@@ -146,6 +89,14 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
     }
     setHoursCards(ans);
   }, [dataByHour]);
+
+  const getDateClassName = useCallback(
+    (date) => {
+      if (!calendarData || !calendarData[date.getDate() - 1] || !avgType.value) { 
+        return; 
+      }
+      return getDateStatusClassName(calendarData[date.getDate() - 1].movil, gas, avgType.value);
+    }, [calendarData]);
 
   const tileClassName = useCallback(
     ({ date, view }) => {
@@ -190,7 +141,6 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
           <ReactCalendar
             locale={"es-MX"}
             onChange={(date) => {
-              console.log(date);
               setSelectedDate(date);
             }}
             value={selectedDate}
@@ -200,27 +150,27 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
             <div className="day-count">
               <h4 className="mt-4">Conteo de días</h4>
               <DayBullet
-                count={dayCount.Good}
+                count={dayCount.good}
                 text="Buena"
                 type={statusClassName.Good}
               />
               <DayBullet
-                count={dayCount.Acceptable}
+                count={dayCount.acceptable}
                 text="Aceptable"
                 type={statusClassName.Acceptable}
               />
               <DayBullet
-                count={dayCount.Bad}
+                count={dayCount.bad}
                 text="Mala"
                 type={statusClassName.Bad}
               />
               <DayBullet
-                count={dayCount.SuperBad}
+                count={dayCount["super-bad"]}
                 text="Muy mala"
                 type={statusClassName.SuperBad}
               />
               <DayBullet
-                count={dayCount.ExtremelyBad}
+                count={dayCount["extremely-bad"]}
                 text="Extremadamente mala"
                 type={statusClassName.ExtremelyBad}
               />

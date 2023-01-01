@@ -25,6 +25,17 @@ export const criteria = {
   },
 };
 
+
+export const statusClassName = {
+  Good: "good",
+  Acceptable: "acceptable",
+  Bad: "bad",
+  SuperBad: "super-bad",
+  ExtremelyBad: "extremely-bad",
+  NoData: "no-data",
+};
+
+
 export const airQualityTags = ["buena", "acept", "mala", "muy", "ext"];
 
 export const getStatus = (gas, value, norm = "ssa") => {
@@ -38,3 +49,25 @@ export const getStatus = (gas, value, norm = "ssa") => {
 
   return 0;
 };
+
+export function getDateStatusClassName(avg, gas, norm) {
+    const dayAverage = avg;
+    if (dayAverage < 0) {
+      return statusClassName.NoData;
+    }
+    else if (dayAverage < criteria[norm][gas][0]) {
+      return statusClassName.Good;
+    }
+    else if (dayAverage < criteria[norm][gas][1]) {
+      return statusClassName.Acceptable;
+    }
+    else if (dayAverage < criteria[norm][gas][2]) {
+      return statusClassName.Bad;
+    }
+    else if (dayAverage < criteria[norm][gas][3]) {
+      return statusClassName.SuperBad;
+    }
+    else {
+      return statusClassName.ExtremelyBad;
+    }
+  }
