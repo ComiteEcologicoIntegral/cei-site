@@ -5,7 +5,7 @@ import {
 } from "../../../../../utils/PopulateDateRange";
 import ReactCalendar from "react-calendar";
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
-import { criteria, getStatus, getDateStatusClassName, statusClassName } from "../../../../../handlers/statusCriteria";
+import { getDateStatusClassName, statusClassName } from "../../../../../handlers/statusCriteria";
 import "./Calendar.css";
 import "./DayBullet.css";
 
@@ -43,6 +43,7 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
       bad: 0,
       "super-bad": 0,
       "extremely-bad": 0,
+      "no-data":0
     };
 
     datesOfTheMonth.forEach((date) => {
@@ -173,6 +174,11 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
                 count={dayCount["extremely-bad"]}
                 text="Extremadamente mala"
                 type={statusClassName.ExtremelyBad}
+              />
+              <DayBullet
+                count={dayCount["no-data"]}
+                text="No hay datos"
+                type={statusClassName.NoData}
               />
             </div>
           )}

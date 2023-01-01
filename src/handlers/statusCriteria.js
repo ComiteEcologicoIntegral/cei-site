@@ -51,20 +51,19 @@ export const getStatus = (gas, value, norm = "ssa") => {
 };
 
 export function getDateStatusClassName(avg, gas, norm) {
-    const dayAverage = avg;
-    if (dayAverage < 0) {
+    if (avg < 0 || !avg || avg === "") {
       return statusClassName.NoData;
     }
-    else if (dayAverage < criteria[norm][gas][0]) {
+    else if (avg < criteria[norm][gas][0]) {
       return statusClassName.Good;
     }
-    else if (dayAverage < criteria[norm][gas][1]) {
+    else if (avg < criteria[norm][gas][1]) {
       return statusClassName.Acceptable;
     }
-    else if (dayAverage < criteria[norm][gas][2]) {
+    else if (avg < criteria[norm][gas][2]) {
       return statusClassName.Bad;
     }
-    else if (dayAverage < criteria[norm][gas][3]) {
+    else if (avg < criteria[norm][gas][3]) {
       return statusClassName.SuperBad;
     }
     else {
