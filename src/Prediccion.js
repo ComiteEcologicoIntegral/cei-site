@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from "react";
-import "moment/locale/es";
 
 function Prediccion() {
     
