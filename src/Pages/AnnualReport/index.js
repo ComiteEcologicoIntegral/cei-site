@@ -147,11 +147,11 @@ export default function AnnualReport() {
             />
           </Col>
           <Col xs={6}>
-            <p className="font-weight-bold">Anio</p>
+            <p className="font-weight-bold">Año</p>
             <Select
               className="mt-1"
               options={years}
-              placeholder={"Anio"}
+              placeholder={"Año"}
               value={year}
               onChange={(year) => setYear(year)}
             />
