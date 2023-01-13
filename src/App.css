@@ -425,3 +425,49 @@ footer {
 }
 
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
+.predictionTable th,.predictionTable tr,.predictionTable td,.predictionTable{
+  border: 12px solid white;
+  border-radius: 90px;
+}
+.colorAir{
+  background-color: #CAE365;
+}
+.predictionTable th{
+  margin: 12px 12px 12px 12px;
+  padding: 12px 12px 12px 12px;
+  text-align: center;
+}
+.predictionTable tr{
+  margin: 12px 12px 12px 12px;
+  padding: 12px 12px 12px 12px;
+  text-align: center;
+}
+th.superTableSpace{
+  margin: 12px 12px 12px 12px !important; 
+  padding: 12px 120px 12px 120px !important;
+}
+#table-wrapper {
+  position:relative;
+}
+#table-scroll {
+  width: auto;
+  overflow:auto;  
+  margin-top:20px;
+}
+#table-wrapper table {
+  height:100%;
+}
+.titleH{
+  background-color: #F4EAE4;
+}
+.tableDiv{
+  margin: auto;
+}
+.predictionTable{
+  margin: auto;
+}
+.stationName{
+  margin: auto;
+  text-align: center;
+}
