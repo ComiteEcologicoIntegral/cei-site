@@ -67,7 +67,7 @@ function Prediccion() {
               <th style={{ backgroundColor: "#F2811D" }}></th>
             </tr>
             <tr>
-              <th class="titleH" align="center">Tarde 6:00 pm - 12:00 am</th>
+              <th class="titleH" align="center">Noche 6:00 pm - 12:00 am</th>
               <th style={{ backgroundColor: "#F22233" }}></th>
               <th style={{ backgroundColor: "#F22233" }}></th>
               <th style={{ backgroundColor: "#F22233" }}></th>
