@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {Form, Col, Button} from "react-bootstrap";
 import Select from "react-select";
+import {TailSpin} from 'react-loader-spinner';
 import {getSensorLocationsBySystem} from '../../handlers/data';
 import {populateDateRange, getFirstDayOfMonth, getLastDayOfMonth} from '../../utils/PopulateDateRange';
 import {gasesOptions, apiUrl, normOptions} from "../../constants";
@@ -47,6 +48,9 @@ export default function AnnualReport() {
   const [contaminantTable, setContaminantTable] = useState(null);
   const [monthTable, setMonthTable] = useState(null);
   const [yearTable, setYearTable] = useState(null);
+
+  // helpers
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getSensorLocationsBySystem(REPORT_SYSTEM).then((data) => {
@@ -106,6 +110,13 @@ export default function AnnualReport() {
   }
 
   const handleClick = () => {
+    console.log("handleClick")
+    if (isLoading) {
+      return;
+    }
+    console.log("after if")
+
+    setIsLoading(true);
 
     setMonthData(null);
 
@@ -130,6 +141,7 @@ export default function AnnualReport() {
         tmpMonthData[locations[i].label] = results[i];
       }
       setMonthData(tmpMonthData);
+      setIsLoading(false);
     });
   }
 
@@ -176,10 +188,22 @@ export default function AnnualReport() {
             />
           </Col>
         </Form.Row>
-        <Button onClick={handleClick}>
+        <Button onClick={handleClick} disabled={isLoading}>
           Obtener datos
         </Button>
       </Form>
+      {isLoading &&
+        <TailSpin
+          height="80"
+          width="80"
+          color="#4fa94d"
+          ariaLabel="tail-spin-loading"
+          radius="1"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+      }
       {monthData &&
         <div className="annual-report-table">
           <h4>Tabla para contaminante {contaminantTable.label} con la norma {avgTypeTable.label}. {monthTable.label} {yearTable.label}</h4>
