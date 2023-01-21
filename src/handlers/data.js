@@ -41,7 +41,7 @@ export const getSensorLocationsBySystem = (system) => {
       .then((data) => {
         let locations = [];
         data.forEach((element) => {
-          if (system.value === element.Sistema && !idBlacklistpriv.includes(element.Sensor_id)) {
+          if (system === element.Sistema && !idBlacklistpriv.includes(element.Sensor_id)) {
             locations.push({value: element.Sensor_id, label: element.Zona});
           }
           resolve(locations);
