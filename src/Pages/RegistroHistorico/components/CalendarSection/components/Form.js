@@ -39,7 +39,7 @@ function CalendarForm({
   useEffect(() => {
     // TODO: change this to not make a fetch every time system changes
     if (!system) return;
-    getSensorLocationsBySystem(system).then((locations) => {
+    getSensorLocationsBySystem(system.value).then((locations) => {
       setLocations(locations);
     }
     );
