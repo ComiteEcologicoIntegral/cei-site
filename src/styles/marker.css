@@ -16,12 +16,6 @@
     padding: 5px 0;
 }
 
-.data-label2 {
-    padding: 5px 0;
-    display: flex;
-    justify-content: space-between;
-}
-
 /* Etiqueta del valor del indicador */
 .rt-data-row > div {
     width: 12ch;
@@ -78,32 +72,36 @@
     border-radius: 0%;
 }
 
-.marker-0 {
+.marker-good {
     background-color: var(--color-buena);
     color: var(--color-buena-d);
 }
 
-.marker-1 {
+.marker-acceptable {
     background-color: var(--color-acept);
     color: var(--color-acept-d);
 }
 
-.marker-2 {
+.marker-bad {
     background-color: var(--color-mala);
     color: var(--color-mala-d);
 }
 
-.marker-3 {
+.marker-super-bad {
     background-color: var(--color-muymala);
     color: var(--color-muymala-d);
 }
 
-.marker-4 {
+.marker-extremely-bad {
     background-color: var(--color-extmala);
     color: var(--color-extmala-d);
 }
 
-.marker-99 {
+.marker-no-data {
     background-color: var(--color-nodata);
     color: var(--color-nodata-d);
 }
+
+/*.gas-data {*/
+    /*margin: 5px;*/
+/*}*/

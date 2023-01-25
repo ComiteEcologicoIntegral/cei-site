@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from "react";
-import Recomendaciones from "./components/Recomendaciones.js";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
@@ -7,7 +6,7 @@ import Legend from "./components/MapLegend/MapLegend"
 import { TablaCalidad } from "./components/TablaCalidad.js";
 
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
-import { getStatus, airQualityTags } from "./handlers/statusCriteria.js";
+import { getStatus, getStatusClassName } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 import { Spinner } from "react-bootstrap";
 import moment from "moment";
@@ -42,61 +41,6 @@ function Mapa() {
     [map]
   );
 
-  const airQualityIndex = useMemo(() => {
-    if (sensorData == null) {
-      return 0;
-    }
-
-    let highestAirQualityIndex = 0;
-
-    const filteredSensors = sensorData.filter(
-      (sensor) =>
-        typeof sensor.Longitud === "number" &&
-        typeof sensor.Latitud === "number" &&
-        !mapBlacklist.includes(sensor.Sistema) &&
-        !idBlacklist.includes(sensor.Sensor_id)
-    );
-
-    filteredSensors.map((data) => {
-      const { name: gasName, units: gasUnits } = currentGas;
-
-      let preValue = 0;
-      // Presenta el value del indicador de calidad del aire
-      const prefix = "ICAR_";
-      // Checar el mas alto de los O3
-      preValue =
-        gasName === "O3"
-          ? data.Sistema === "AireNuevoLeon"
-            ? data[`${prefix}O3_1h`] >= data[`${prefix}O3_8h`]
-              ? data[`${prefix}O3_1h`]
-              : data[`${prefix}O3_8h`]
-            : data[`${prefix}${gasName}`]
-          : data[`${prefix}${gasName}`];
-
-      // Si no hay ICAR desplegar la concentración
-      if (preValue === -1) {
-        preValue = null;
-      }
-
-      if (typeof preValue === "number") {
-        if (gasName === "NO2" || gasName === "SO2") {
-          preValue = +preValue.toFixed(4);
-        } else {
-          preValue = +preValue.toFixed(2);
-        }
-      }
-
-      const value = typeof preValue === "number" ? preValue : "ND";
-
-      const gasStatus = getStatus(gasName, value);
-      if (gasStatus > highestAirQualityIndex) {
-        highestAirQualityIndex = gasStatus;
-      }
-    });
-
-    return highestAirQualityIndex;
-  }, [sensorData, currentGas]);
-
   //Diccionario para pasar de Sensor_id a nombre de estacion
   const ANLKeys_dict = {
     ANL1: "SURESTE",
@@ -115,7 +59,28 @@ function Mapa() {
     ANL15: "PESQUERIA",
   };
 
+  const getValue = (preValue, gasName) => {
+    if (!preValue || typeof preValue !== "number" || preValue < 0) {
+      return null;
+    }
+
+    let ans;
+    if (gasName === "NO2" || gasName === "SO2") {
+      ans = +preValue.toFixed(4);
+    } else {
+      ans = +preValue.toFixed(2);
+    }
+    return ans;
+  }
+
+  const filterND = (data) => {
+    return typeof data === "undefined" || data === null
+            ? "N/D"
+            : data.toString()
+  }
+
   const markers = useMemo(() => {
+    // TODO: sensors should be filtered by the backend
     const filteredSensors = sensorData.filter(
       (sensor) =>
         typeof sensor.Longitud === "number" &&
@@ -127,71 +92,59 @@ function Mapa() {
     const resultingData = filteredSensors.map((data) => {
       const { name: gasName, units: gasUnits } = currentGas;
 
-      let preValue = null;
       /* Current Interval === 0 -> Presenta el value del indicador de calidad del aire */
+      let dataKey;
       if (currentInterval === 0) {
-        // Presenta el value del indicador de calidad del aire
-        const prefix = "ICAR_";
-        // Checar el mas alto de los O3
-        preValue =
-          gasName === "O3"
-            ? data.Sistema === "AireNuevoLeon"
-              ? data[`${prefix}O3_1h`] >= data[`${prefix}O3_8h`]
-                ? data[`${prefix}O3_1h`]
-                : data[`${prefix}O3_8h`]
-              : data[`${prefix}${gasName}`]
-            : data[`${prefix}${gasName}`];
-
-        // Si no hay ICAR desplegar la concentración
-        if (preValue === -1) {
-          preValue = null;
-        }
-      } else if (currentInterval === 1) {
-        // Current Interval === 1 -> Presenta el value de la concentracion horaria
-        // Presenta el value de la concentracion (tiempo real)
-        preValue =
-          gasName === "PM25"
-            ? data.Sistema === "PurpleAir"
-              ? data["PM25_Promedio"]
-              : data[gasName]
-            : data[gasName];
-      }
-
-      if (typeof preValue === "number") {
-        if (gasName === "NO2" || gasName === "SO2") {
-          preValue = +preValue.toFixed(4);
-        } else {
-          preValue = +preValue.toFixed(2);
+        dataKey = `ICAR_${gasName}`;
+        if (data.Sistema === "AireNuevoLeon" && gasName === "O3") {
+          if (data[`${dataKey}_1h`] >= data[`${dataKey}_8h`]) {
+            dataKey += "_1h";
+          }
+          else {
+            dataKey += "_8h";
+          }
         }
       }
-
-      const value = typeof preValue === "number" ? preValue : "ND";
+      else if (currentInterval === 1) {
+        dataKey = gasName;
+        if (gasName === "PM25") {
+          dataKey += "_Promedio";
+        }
+      }
+      
+      const intValue = getValue(data[dataKey], gasName);
+      const value = intValue ? intValue : "ND";
 
       return {
         currentLocation,
         ICAR_PM25: +data.ICAR_PM25,
+        OMS_PM25: +data.OMS_PM25,
+        AQI_PM25: +data.AQI_PM25,
         ICAR_PM10: +data.ICAR_PM10,
+        OMS_PM10: +data.OMS_PM10,
+        AQI_PM10: +data.AQI_PM10,
         ICAR_O3_8h: +data.ICAR_O3_8h,
         ICAR_O3_1h: +data.ICAR_O3_1h,
+        OMS_O3: +data.OMS_O3,
+        AQI_O3: +data.AQI_O3,
         ICAR_CO: +data.ICAR_CO,
+        OMS_CO: +data.OMS_CO,
+        AQI_CO: +data.AQI_CO,
         ICAR_NO2: +data.ICAR_NO2,
+        OMS_NO2: +data.OMS_NO2,
+        AQI_NO2: +data.AQI_NO2,
         ICAR_SO2: +data.ICAR_SO2,
+        OMS_SO2: +data.OMS_SO2,
+        AQI_SO2: +data.AQI_SO2,
         sensor_id: data.Sensor_id,
-        humedad:
-          typeof data.Humedad_R === "undefined" || data.Humedad_R === null
-            ? "N/D"
-            : data.Humedad_R.toString(),
-        temperatura:
-          typeof data.Temperatura_C === "undefined" ||
-          data.Temperatura_C === null
-            ? "N/D"
-            : data.Temperatura_C.toString(),
+        humedad: filterND(data.Humedad_R),
+        temperatura: filterND(data.Temperatura_C),
         position: [data.Latitud, data.Longitud],
         current: {
           indicator: currentGas.label ? currentGas.label : gasName,
           label: value,
           units: gasUnits,
-          status: value !== "ND" ? getStatus(gasName, value) : 99,
+          status: getStatusClassName(intValue, gasName, "ssa"),
           ref: "#",
         },
         lastUpdate: moment.utc(data.Dia).local(),
@@ -215,9 +168,9 @@ function Mapa() {
             colName = "PM25_Promedio";
           return {
             label: label ? label : name,
-            units,
-            value: typeof data[colName] === "number" ? data[colName] : "ND",
-            status: data[colName] ? getStatus(name, data[colName]) : 99,
+            units: units,
+            value: filterND(data[colName]),
+            status: getStatusClassName(data[colName], name, "ssa"),
             ref: "#",
           };
         }),
@@ -297,16 +250,6 @@ function Mapa() {
           margin: "0 auto",
         }}
       >
-        {/* {errorSensorData && (
-          <div
-            className="position-absolute w-100 end-0 p-2"
-            style={{ zIndex: 100 }}
-          >
-            <div class="alert alert-danger" role="alert">
-              Ocurrió un error al cargar los datos.
-            </div>
-          </div>
-        )} */}
         {loadingSensorData && (
           <div
             className="w-100 h-100 d-flex position-absolute"
@@ -326,11 +269,12 @@ function Mapa() {
         <Wrapper whenCreated={setMap} {...mapDefaultProps}>
           {!loadingSensorData &&
             markers.map((markerProps, idx) => {
-              if (currentGas.name === "PM25") {
+              if (currentGas.name === "PM25" || !markerProps.isPurpleAir) {
                 return (
                   <Marcador
                     map={map}
                     key={idx}
+                    isPurpleAir={markerProps.isPurpleAir}
                     {...markerProps}
                     label={markerProps.current.label}
                     indicator={markerProps.current.indicator}
@@ -338,21 +282,7 @@ function Mapa() {
                     shape={markerProps.isPurpleAir ? "square" : "round"}
                   />
                 );
-              } else {
-                if (!markerProps.isPurpleAir) {
-                  return (
-                    <Marcador
-                      map={map}
-                      key={idx}
-                      {...markerProps}
-                      label={markerProps.current.label}
-                      indicator={markerProps.current.indicator}
-                      status={markerProps.current.status}
-                      shape={markerProps.isPurpleAir ? "square" : "round"}
-                    />
-                  );
-                }
-              }
+              } 
             })}
         </Wrapper>
       </div>
