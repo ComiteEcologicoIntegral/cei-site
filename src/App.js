@@ -4,7 +4,7 @@ import Header from "./components/Header.js";
 import Footer from "./components/Footer.js";
 import Loading from "./components/Loading.js";
 import Acerca from "./Acerca";
-import Prediccion from "./Prediccion";
+import Prediccion from "./Pages/Prediccion";
 import Mapa from "./Mapa";
 import Registro from "./Pages/RegistroHistorico";
 import ReporteAnual from "./Pages/AnnualReport";

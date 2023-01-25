@@ -1,25 +1,12 @@
-import React from "react";
-import "./App.css";
-
-function Prediccion() {
-    
-  return (
-    <div className="container mt-5">
-      <div className="ta-center mb-5">
-        <h2>Predicción</h2>
-        <p>Consulta la predicción de la calidad del aire</p>
-      </div>
-      <hr className="mb-4" />
-      <div>
-        <p>Pasos para generar la predicción:</p>
-        <ol>
-          <li>
-            Selecciona los filtros que deseas aplicar.
-            </li>
-          </ol>
-      </div>
-      <div class="tableDiv">
-        <h3 class="stationName">Global - Estación</h3>
+import React from "react"
+function TablePred({
+    title
+}){
+    console.log(title)
+    return (
+        <div>
+           <div class="tableDiv">
+        <h3 class="stationName">{title}</h3>
         <div id="table-wrapper">
         <div id="table-scroll">
         <table class="predictionTable">
@@ -81,7 +68,7 @@ function Prediccion() {
         </div>
       </div>
       </div>
-    </div>
-  );
+    </div> 
+    );
 }
-export default Prediccion;
+export default TablePred;
