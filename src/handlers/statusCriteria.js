@@ -50,7 +50,7 @@ export const getStatus = (gas, value, norm = "ssa") => {
   return 0;
 };
 
-export function getDateStatusClassName(avg, gas, norm) {
+export function getStatusClassName(avg, gas, norm) {
     if (avg < 0 || !avg || avg === "") {
       return statusClassName.NoData;
     }
