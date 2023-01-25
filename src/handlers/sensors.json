@@ -76,6 +76,17 @@
         "Sistema": "Sinaica",
         "Bot_id": 1
     },
+	    {
+        "Sensor_id": "ANL16",
+        "Zona": "Mitras",
+        "Calle": "MISSION ALLENDE"
+        "Municipio": "Monterrey",
+	"CP": 66023,
+	"Longitud": 25.78,
+	"Latitud": 100.46,
+	"Sistema": "Sinaica",
+	"Bot_id": 1
+    },
     {
         "Sensor_id": "ANL2",
         "Zona": "San Nicolás",
@@ -678,6 +689,17 @@
 		"CP": null,
 		"Longitud": null,
 		"Latitud": null,
+		"Sistema": "Sinaica",
+		"Bot_id": 1
+	},
+	{
+		"Sensor_id": "S16",
+		"Zona": "Mitras",
+		"Calle": "MISION ALLENDE",
+		"Municipio": "Monterrey",   
+		"CP": 66023,
+		"Longitud": 25.78,
+		"Latitud": 100.46,
 		"Sistema": "Sinaica",
 		"Bot_id": 1
 	},
