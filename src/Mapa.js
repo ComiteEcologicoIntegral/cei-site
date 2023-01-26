@@ -113,6 +113,7 @@ function Mapa() {
     ANL12: "CENTRO",
     ANL13: "SURESTE2",
     ANL15: "PESQUERIA",
+    ANL16: "MITRAS"
   };
 
   const markers = useMemo(() => {
