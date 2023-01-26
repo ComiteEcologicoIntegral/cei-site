@@ -31,6 +31,7 @@ export default function AnnualReport() {
     {value: 2020, label: 2020},
     {value: 2021, label: 2021},
     {value: 2022, label: 2022},
+    {value: 2023, label: 2023},
   ];
 
   // dropdowns
@@ -53,7 +54,7 @@ export default function AnnualReport() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    getSensorLocationsBySystem(REPORT_SYSTEM).then((data) => {
+    getSensorLocationsBySystem(REPORT_SYSTEM.value).then((data) => {
       setLocations(data);
     });
   }, [])
@@ -110,11 +111,9 @@ export default function AnnualReport() {
   }
 
   const handleClick = () => {
-    console.log("handleClick")
     if (isLoading) {
       return;
     }
-    console.log("after if")
 
     setIsLoading(true);
 
@@ -135,12 +134,14 @@ export default function AnnualReport() {
       promises.push(fetchCalendarData(location));
     });
 
+
     Promise.all(promises).then((results) => {
       let tmpMonthData = {}
       for (let i = 0; i < results.length; ++i) {
         tmpMonthData[locations[i].label] = results[i];
       }
       setMonthData(tmpMonthData);
+
       setIsLoading(false);
     });
   }
