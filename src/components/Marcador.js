@@ -229,7 +229,6 @@ function Marcador({
               </Col>
             </Row>
             {labels.map(({label, status, value, units}, idx) => {
-              console.log(label);
               if (isPurpleAir && label !="PM2.5") {
                 return;
               }
