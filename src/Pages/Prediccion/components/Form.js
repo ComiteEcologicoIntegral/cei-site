@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import Select from "react-select";
 import { getSensorLocationsBySystem } from "../../../handlers/data";
-import { gasesOptions, normOptions } from "../../../constants";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
-  { value: "PurpleAir", label: "PurpleAir", opt: "P" },
+  //{ value: "PurpleAir", label: "PurpleAir", opt: "P" },
   { value: "AireNuevoLeon", label: "AireNuevoLeon", opt: "G" },
 ];
 

@@ -5,7 +5,7 @@ import {
 } from "../../../../../utils/PopulateDateRange";
 import ReactCalendar from "react-calendar";
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
-import { getDateStatusClassName, statusClassName } from "../../../../../handlers/statusCriteria";
+import { getStatusClassName, statusClassName } from "../../../../../handlers/statusCriteria";
 import "./Calendar.css";
 import "./DayBullet.css";
 
@@ -48,7 +48,7 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
 
     datesOfTheMonth.forEach((date) => {
       if (calendarData[date.getDate() - 1]) {
-        let status = getDateStatusClassName(calendarData[date.getDate() - 1].movil, gas, avgType.value);      
+        let status = getStatusClassName(calendarData[date.getDate() - 1].movil, gas, avgType.value);      
         tmpDayCount[status]++;
       }
     });
@@ -78,7 +78,7 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
           <Accordion.Collapse eventKey={currHour.toString()}>
             <Card.Body>
               <p>
-                <AiFillRightSquare style={{color: "white"}} className={getDateStatusClassName(dataByHour[currHour][gas], gas, avgType.value)} />
+                <AiFillRightSquare style={{color: "white"}} className={getStatusClassName(dataByHour[currHour][gas], gas, avgType.value)} />
                 {dataByHour[currHour][gas]
                   ? ` ${dataByHour[currHour][gas]} ${unidad[gas]}`
                   : " No hay registro"}
@@ -96,7 +96,7 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
       if (!calendarData || !calendarData[date.getDate() - 1] || !avgType.value) { 
         return; 
       }
-      return getDateStatusClassName(calendarData[date.getDate() - 1].movil, gas, avgType.value);
+      return getStatusClassName(calendarData[date.getDate() - 1].movil, gas, avgType.value);
     }, [calendarData]);
 
   const tileClassName = useCallback(

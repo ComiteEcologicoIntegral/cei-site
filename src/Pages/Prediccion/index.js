@@ -2,6 +2,7 @@ import "../../App.css";
 import React, { useState } from "react";
 import Form from "./components/Form";
 import Table from "./components/Table";
+//import { apiUrl } from "../../constants";
 
 function Prediccion() {
   const [system, setSystem] = useState(null);
@@ -11,6 +12,17 @@ function Prediccion() {
   const fetchData = () => {
     setIsShown(true)
     setTitle(location.label)
+    {/*
+    fetch(`${apiUrl}/get-location-prediction?${location.label}`)
+      .then((response) => response.json())
+      .then((json) => {
+        setCalendarData(json);
+      })
+      .catch((e) => { 
+        console.log(e) 
+        setNoData(true);
+      });
+      */}
   };
   return (
     <div className="container mt-5">
