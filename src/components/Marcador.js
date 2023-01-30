@@ -3,20 +3,18 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Link } from "react-router-dom";
-
 import { Marker, Popup } from "react-leaflet";
-import { Button, Form, Col, Row } from "react-bootstrap";
+import { Button, Container, Col, Row } from "react-bootstrap";
 import moment from "moment";
-import { getStatus } from "../handlers/statusCriteria";
+import {getStatusClassName} from "../handlers/statusCriteria";
 
 const fixedValues = {
-  ICAR_PM25: 2,
-  ICAR_PM10: 0,
-  ICAR_O3: 3,
-  ICAR_CO: 2,
-  ICAR_NO2: 4,
-  ICAR_SO2: 4,
+  PM25: 2,
+  PM10: 0,
+  O3: 3,
+  CO: 2,
+  NO2: 4,
+  SO2: 4,
 };
 
 const isDataValid = (data) => data >= 0;
@@ -59,12 +57,24 @@ const renderMarker = (label, status, shape = "round", currentLocation, locationS
 function Marcador({
   currentLocation,
   ICAR_PM25,
+  OMS_PM25,
+  AQI_PM25,
   ICAR_PM10,
+  OMS_PM10,
+  AQI_PM10,
   ICAR_O3_8h,
   ICAR_O3_1h,
+  OMS_O3,
+  AQI_O3,
   ICAR_CO,
+  OMS_CO,
+  AQI_CO,
   ICAR_NO2,
+  OMS_NO2,
+  AQI_NO2,
   ICAR_SO2,
+  OMS_SO2,
+  AQI_SO2,
   sensor_id,
   humedad,
   temperatura,
@@ -79,6 +89,7 @@ function Marcador({
   lastUpdate,
   map,
   shape = "round",
+  isPurpleAir,
   ...props
 }) {
   const marker = useMemo(() => document.createElement("div"), []);
@@ -86,28 +97,51 @@ function Marcador({
 
   const values = {
     ICAR_PM25,
+    OMS_PM25,
+    AQI_PM25,
     ICAR_PM10,
+    OMS_PM10,
+    AQI_PM10,
     ICAR_O3_8h,
     ICAR_O3_1h,
+    OMS_O3,
+    AQI_O3,
     ICAR_CO,
+    OMS_CO,
+    AQI_CO,
     ICAR_NO2,
+    OMS_NO2,
+    AQI_NO2,
     ICAR_SO2,
-  };
+    OMS_SO2,
+    AQI_SO2,
+};
 
-  const getValue = (label) => {
-    if (label === "O3") {
-      return Math.max(values[`ICAR_O3_8h`], values[`ICAR_O3_1h`]);
-    }
-    return values[`ICAR_${label}`];
-  };
+  
+  const getICARValue = (label) => {
+    const getValue = (label) => {
+      if (label === "O3") {
+        return Math.max(values[`ICAR_O3_8h`], values[`ICAR_O3_1h`]);
+      }
+      return values[`ICAR_${label}`];
+    };
 
-  const getGasDataValue = (label) => {
     let ans = getValue(label);
     if (!isDataValid(ans)) {
       return "ND";
     }
-    return ans.toFixed(fixedValues[`ICAR_${label}`]);
+    return ans.toFixed(fixedValues[label]);
   };
+
+  const getOMSValue = (label) => {
+    let ans = values[`OMS_${label}`];
+    return ans.toFixed(fixedValues);
+  }
+
+  const getAQIValue = (label) => {
+    let ans = values[`AQI_${label}`];
+    return ans.toFixed(fixedValues);
+  }
 
   const updateMarker = useCallback(
     (label_, status_, currentLocation_, locationStr_) => {
@@ -130,15 +164,6 @@ function Marcador({
     updateMarker(label, status, currentLocation, locationStr);
   }, [label, status, updateMarker, currentLocation, locationStr]);
 
-  function getStatusColor(label) {
-    let gasValue = getValue(label);
-
-    if (!isDataValid(gasValue)) {
-      return 99;
-    }
-    return getStatus(label, gasValue);
-  }
-
   if (!icon) return null;
 
   return (
@@ -148,11 +173,7 @@ function Marcador({
       icon={icon}
       {...props}
     >
-      <Popup
-        onMouseOver={(e) => {
-          console.log("Hola");
-        }}
-      >
+      <Popup maxWidth={1700}>
         <div className="px-3 py-2">
           <div
             className={`rounded marker-${current.status}`}
@@ -165,11 +186,18 @@ function Marcador({
             {current.indicator}: {current.label} {current.units}
           </div>
 
-          <div className="data-label">
-            <small className="text-muted">Ubicación</small>
-            <br />
-            <data>{locationStr}</data>
-          </div>
+          <Row className="data-label">
+            <Col xs={5}>
+              <small className="text-muted">Ubicación</small>
+              <br />
+              <data>{locationStr}</data>
+            </Col>
+            <Col xs={5}>
+              <small className="text-muted">Concentración horaria</small>
+              <br />
+              <data><time>{moment(lastUpdate).format("LL, LT")}</time></data>
+            </Col>
+          </Row>
 
           <Row className="data-label">
             <Col xs={5}>
@@ -184,111 +212,57 @@ function Marcador({
             </Col>
           </Row>
 
-          <div className="data-label">
-            <small className="text-muted">Concentración horaria</small>
-            <br />
-            <time>{moment(lastUpdate).format("LL, LT")}</time>
-          </div>
-
-          <Row className="d-flex justify-content-between">
-            <Col xs={3}></Col>
-            <Col xs={5}>
-              <small className="text-muted">Concentración horaria</small>
-            </Col>
-            <Col xs={4}>
-              <small className="text-muted">ICAR*</small>
-            </Col>
-          </Row>
-
-          <Form>
-            {labels.map(({ label, status, value, units }, idx) =>
-              sensor_id[0] === "P" ? (
-                label === "PM2.5" ? (
-                  <Form.Row key={idx} className="d-flex justify-content-between  mb-1 ">
-                    <Col xs={3}>
-                      <Link
-                        to={{
-                          pathname: "registro",
-                          search: `?gas=${label}`,
-                        }}
-                      >
-                        {label}
-                      </Link>
-                    </Col>
-                    <Col
-                      className={`d-flex justify-content-between px-1 rounded marker-${status}`}
-                      xs={5}
-                    >
-                      <span>{value}</span>
-                      <span>{units}</span>
-                    </Col>
-                    <Col
-                      className={`d-flex justify-content-between px-1 rounded marker-${getStatusColor(
-                        label.replace(".", "")
-                      )}`}
-                      xs={3}
-                    >
-                      {label === "PM2.5" ? (
-                        ICAR_PM25 === "-1.00" ? (
-                          <span>{"ND"}</span>
-                        ) : ICAR_PM25 === "0.00" ? (
-                          <span>{"ND"}</span>
-                        ) : (
-                          <span>{ICAR_PM25.toFixed(2)}</span>
-                        )
-                      ) : (
-                        <span>{"ND"}</span>
-                      )}
-                    </Col>
-                  </Form.Row>
-                ) : null
-              ) : (
-                <Form.Row key={idx} className="d-flex justify-content-between  mb-1 ">
-                  <Col xs={3}>
-                    <Link
-                      to={{
-                        pathname: "registro",
-                        search: `?gas=${label}`,
-                      }}
-                    >
-                      {label}
-                    </Link>
-                  </Col>
-                  <Col
-                    className={`d-flex justify-content-between px-1 rounded marker-${status}`}
-                    xs={5}
-                  >
-                    <span>{value}</span>
-                    <span>{units}</span>
-                  </Col>
-                  <Col
-                    className={`d-flex justify-content-between px-1 rounded marker-${getStatusColor(
-                      label.replace(".", "")
-                    )}`}
-                    xs={3}
-                  >
-                    <span>{getGasDataValue(label.replace(".", ""))}</span>
-                  </Col>
-                </Form.Row>
-              )
+          <Container style={{padding: 0, width: "350px"}}>
+            <Row className="flex-nowrap">
+              <Col xs={2} className="px-1 m-1"></Col>
+              <Col xs={3} className="px-1 m-1">
+                <small className="text-muted m-1">Concentración horaria</small>
+              </Col>
+              <Col xs={2} className="px-1 m-1">
+                <small className="text-muted m-1">ICAR*</small>
+              </Col>
+              <Col xs={2} className="px-1 m-1">
+                <small className="text-muted m-1">OMS</small>
+              </Col>
+              <Col xs={2} className="px-1 m-1">
+                <small className="text-muted m-1">EPA AQI</small>
+              </Col>
+            </Row>
+            {labels.map(({label, status, value, units}, idx) => {
+              console.log(label);
+              if (isPurpleAir && label !="PM2.5") {
+                return;
+              }
+              let cleanLabel = label.replace(".", "");
+              let ICAR_Value = getICARValue(cleanLabel);
+              let OMS_Value = getOMSValue(cleanLabel);
+              let AQI_Value = getAQIValue(cleanLabel);
+              return (<Row className="flex-nowrap">
+                <Col xs={2}>{label}</Col>
+                <Col xs={3} className={`px-1 m-1 rounded d-flex justify-content-between marker-${status}`}>
+                  <div>{value}</div><div> {units}</div>
+                </Col>
+                <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(ICAR_Value, cleanLabel, "ssa")}`}>{ICAR_Value}</Col>
+                <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(OMS_Value, cleanLabel, "oms")}`}>{OMS_Value}</Col>
+                <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(AQI_Value, cleanLabel, "ssa")}`}>{AQI_Value}</Col>
+              </Row>)
+            }
             )}
-          </Form>
-        </div>
-        <div className="data-label">
+          </Container>
+        <div className="data-label text-center">
           <small className="text-muted">
             *Índice de acuerdo a la{" "}
             <a
               className="text-black"
               href="https://www.dof.gob.mx/nota_detalle.php?codigo=5579387&fecha=20/11/2019#gsc.tab=0"
             >
-              {" "}
-              NOM-172-SEMARNAT-2019{" "}
-            </a>{" "}
+              NOM-172-SEMARNAT-2019
+            </a>
           </small>
         </div>
         <div className="py-2 px-3 border-top text-center">
           <Button size="sm">
-            <a style={{ color: "white" }} target="blank" href={urlMI}>
+            <a style={{color: "white"}} target="blank" href={urlMI}>
               Más información
             </a>
           </Button>
@@ -298,6 +272,7 @@ function Marcador({
               {provider.name}
             </a>
           </p>
+        </div>
         </div>
       </Popup>
     </Marker>
@@ -317,7 +292,7 @@ Marcador.propTypes = {
    */
   current: PropTypes.shape({
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    status: PropTypes.number,
+    status: PropTypes.string,
     units: PropTypes.string,
   }),
 
