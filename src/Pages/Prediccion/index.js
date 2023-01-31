@@ -28,6 +28,7 @@ function Prediccion() {
     <div className="container mt-5">
       <div className="ta-center mb-5">
         <h2>Predicción</h2>
+        <p><b>***FUNCIONALIDAD EN CONSTRUCCIÓN***</b></p>
         <p>Consulta la predicción de la calidad del aire</p>
       </div>
       <hr className="mb-4" />
