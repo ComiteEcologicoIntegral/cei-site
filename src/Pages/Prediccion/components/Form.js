@@ -28,6 +28,11 @@ function FormPred({
     // TODO: change this to not make a fetch every time system changes
     if (!system) return;
     getSensorLocationsBySystem(system.value).then((locations) => {
+      var locGen  = {
+        "value" : "ANLG",
+        "label" : "GLOBAL"
+        };
+      locations.unshift(locGen);
       setLocations(locations);
     }
     );
@@ -46,9 +51,10 @@ function FormPred({
               placeholder={"Sistema"}
               onChange={setSystemValue}
             />
+            {/*
             <p style={{ fontSize: "0.8rem" }} className="mb-1">
               *Recuerda que el sistema PurpleAir solo tiene disponible el contaminante PM2.5
-            </p>
+            </p>*/}
           </Col>
           <Col xs={6}>
             <p className="font-weight-bold">Ubicación</p>
