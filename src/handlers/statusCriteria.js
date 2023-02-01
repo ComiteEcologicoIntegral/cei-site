@@ -23,6 +23,14 @@ export const criteria = {
     SO2: [0.015, 0.015, 0.015, 0.015],
     NO2: [0.013, 0.013, 0.013, 0.013],
   },
+  epaaqi: {
+    PM10: [50, 100, 150, 250],
+    PM25: [50, 100, 150, 250],
+    O3: [50, 100, 150, 250],
+    CO: [50, 100, 150, 250],
+    SO2: [50, 100, 150, 250],
+    NO2: [50, 100, 150, 250],
+  }
 };
 
 
@@ -51,7 +59,7 @@ export const getStatus = (gas, value, norm = "ssa") => {
 };
 
 export function getStatusClassName(avg, gas, norm) {
-    if (avg < 0 || !avg || avg === "") {
+    if (avg < 0 || !avg || avg === "" || avg === "ND") {
       return statusClassName.NoData;
     }
     else if (avg < criteria[norm][gas][0]) {

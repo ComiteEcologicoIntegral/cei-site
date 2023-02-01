@@ -239,11 +239,11 @@ function Marcador({
               return (<Row className="flex-nowrap">
                 <Col xs={2}>{label}</Col>
                 <Col xs={3} className={`px-1 m-1 rounded d-flex justify-content-between marker-${status}`}>
-                  <div>{value}</div><div> {units}</div>
+                  {value !== "ND" ? <><div>{value}</div><div> {units}</div></> : value}
                 </Col>
                 <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(ICAR_Value, cleanLabel, "ssa")}`}>{ICAR_Value}</Col>
                 <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(OMS_Value, cleanLabel, "oms")}`}>{OMS_Value}</Col>
-                <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(AQI_Value, cleanLabel, "ssa")}`}>{AQI_Value}</Col>
+                <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(AQI_Value, cleanLabel, "epaaqi")}`}>{AQI_Value}</Col>
               </Row>)
             }
             )}

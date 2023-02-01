@@ -75,8 +75,8 @@ function Mapa() {
   }
 
   const filterND = (data) => {
-    return typeof data === "undefined" || data === null
-            ? "N/D"
+    return typeof data === "undefined" || data === null || data === ""
+            ? "ND"
             : data.toString()
   }
 
