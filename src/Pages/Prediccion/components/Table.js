@@ -1,12 +1,21 @@
 import React from "react"
 function TablePred({
-    title
+    title,
+    texts,
+    colors,
+    dateHour
 }){
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const dayAfterTomorrow = new Date(today);
-    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+    var bgColors = {
+      "color1": colors[0],
+      "color2": colors[1],
+      "color3": colors[2],
+      "color4": colors[3],
+      "color5": colors[4],
+      "color6": colors[5],
+      "color7": colors[6],
+      "color8": colors[7]
+    }
+    
     return (
         <div>
            <div className="tableDiv">
@@ -17,30 +26,36 @@ function TablePred({
           <thead>
             <tr>
               <th className="superTableSpace">HORARIO</th>
-              <th>{tomorrow.toDateString()}</th>
-              <th>{dayAfterTomorrow.toDateString()}</th>
+              <th className="colorSpaces"></th>
+              <th className="superTableSpace">HORARIO</th>
+              <th className="colorSpaces"></th>
+              
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th className="titleH">Madrugada 12:00 am - 6:00 am</th>
-              <th style={{ backgroundColor: "#95BF39" }}></th>
-              <th style={{ backgroundColor: "#95BF39" }}></th>
+              <th className="titleH">{dateHour[0]}</th>
+              <th className="colorSpaces" style={{backgroundColor: bgColors.color1}}>{texts[0].toFixed(2)}</th>
+              <th className="titleH">{dateHour[4]}</th>
+              <th className="colorSpaces" style={{backgroundColor: bgColors.color5}}>{texts[4].toFixed(2)}</th>
             </tr>
             <tr>
-              <th className="titleH">Mañana 6:00 am - 12:00 pm</th>
-              <th style={{ backgroundColor: "#F2E313" }}></th>
-              <th style={{ backgroundColor: "#F2E313" }}></th>
+              <th className="titleH">{dateHour[1]}</th>
+              <th className="colorSpaces" style={{backgroundColor: bgColors.color2}}>{texts[1].toFixed(2)}</th>
+              <th className="titleH">{dateHour[5]}</th>
+              <th className="colorSpaces" style={{backgroundColor: bgColors.color6}}>{texts[5].toFixed(2)}</th>
             </tr>
             <tr>
-              <th className="titleH">Tarde 12:00 pm - 6:00 pm</th>
-              <th style={{ backgroundColor: "#F2811D" }}></th>
-              <th style={{ backgroundColor: "#F2811D" }}></th>
+              <th className="titleH">{dateHour[2]}</th>
+              <th className="colorSpaces" style={{backgroundColor: bgColors.color3}}>{texts[2].toFixed(2)}</th>
+              <th className="titleH">{dateHour[6]}</th>
+              <th className="colorSpaces" style={{backgroundColor: bgColors.color7}}>{texts[6].toFixed(2)}</th>
             </tr>
             <tr>
-              <th className="titleH" align="center">Noche 6:00 pm - 12:00 am</th>
-              <th style={{ backgroundColor: "#F22233" }}></th>
-              <th style={{ backgroundColor: "#F22233" }}></th>
+              <th className="titleH" align="center">{dateHour[3]}</th>
+              <th className="colorSpaces" style={{backgroundColor: bgColors.color4}}>{texts[3].toFixed(2)}</th>
+              <th className="titleH">{dateHour[7]}</th>
+              <th className="colorSpaces" style={{backgroundColor: bgColors.color8}}>{texts[7].toFixed(2)}</th>
             </tr>
           </tbody>
         </table>

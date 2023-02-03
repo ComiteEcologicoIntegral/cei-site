@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import Select from "react-select";
 import { getSensorLocationsBySystem } from "../../../handlers/data";
-
+import { gasesOptions } from "../../../constants";
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
   //{ value: "PurpleAir", label: "PurpleAir", opt: "P" },
@@ -12,18 +12,26 @@ const systemOptions = [
 // Componente para la página de Registro Histórico
 function FormPred({
   system,
+  contaminant,
   location,
   setLocation,
   setSystem,
   search,
+  setGas,
 }) {
   const [locations, setLocations] = useState([]);
-
+  const [indOptions, setIndOptions] = useState(null);
+  
+  const enforceValidGas = () => {
+    setGas(gasesOptions[0]);
+  };
   const setSystemValue = (system) => {
+    enforceValidGas();
     setLocation(null);
     setSystem(system);
   };
-
+  
+  
   useEffect(() => {
     // TODO: change this to not make a fetch every time system changes
     if (!system) return;
@@ -36,8 +44,14 @@ function FormPred({
       setLocations(locations);
     }
     );
-    
+    system.value === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions);
   }, [system]);
+  
+
+  useEffect(() => {
+    if (!contaminant) return;
+    
+  }, [contaminant]);
 
   return (
     <div className="mt-5">
@@ -67,7 +81,17 @@ function FormPred({
             />
           </Col>
         </Form.Row>
-        
+        <Form.Row className="mb-3 d-flex justify-content-evenly">
+          <Col xs={6}>
+            <p className="font-weight-bold mb-2">Contaminante</p>
+            <Select
+              options={indOptions}
+              placeholder={"Indicador"}
+              value={contaminant}
+              onChange={(e) => setGas(e)}
+            />
+          </Col>
+        </Form.Row>
         <Form.Row>
           <Col className="col-boton">
             <Button
