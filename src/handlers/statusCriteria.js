@@ -51,7 +51,7 @@ export const getStatus = (gas, value, norm = "ssa") => {
 };
 
 export function getStatusClassName(avg, gas, norm) {
-    if (avg < 0 || !avg || avg === "") {
+    if (avg < 0 || !avg || avg === "" || avg ==="ND") {
       return statusClassName.NoData;
     }
     else if (avg < criteria[norm][gas][0]) {

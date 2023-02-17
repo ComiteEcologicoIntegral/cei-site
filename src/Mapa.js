@@ -108,11 +108,10 @@ function Mapa() {
       }
       else if (currentInterval === 1) {
         dataKey = gasName;
-        if (gasName === "PM25") {
+        if (gasName === "PM25" && data.Sistema === "PurpleAir") {
           dataKey += "_Promedio";
         }
       }
-      
       const intValue = getValue(data[dataKey], gasName);
       const value = intValue ? intValue : "ND";
 
