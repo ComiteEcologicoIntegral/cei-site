@@ -433,19 +433,22 @@ footer {
 .colorAir{
   background-color: #CAE365;
 }
-.predictionTable th{
-  margin: 12px 12px 12px 12px;
-  padding: 12px 12px 12px 12px;
+th.colorSpaces{
+  margin: 0.5vh 2vw 0.5vh 2vw;
+  padding: 0.5vh 2vw 0.5vh 2vw;
   text-align: center;
 }
+.titleH{
+  background-color: #F4EAE4;
+  margin: 12px 24px 12px 24px;
+  padding: 12px 24px 12px 24px;
+}
 .predictionTable tr{
-  margin: 12px 12px 12px 12px;
-  padding: 12px 12px 12px 12px;
   text-align: center;
 }
 th.superTableSpace{
-  margin: 12px 12px 12px 12px !important; 
-  padding: 12px 120px 12px 120px !important;
+  margin: 6px 12px 6px 12px !important; 
+  padding: 6px 12px 6px 12px !important;
 }
 #table-wrapper {
   position:relative;
@@ -458,9 +461,7 @@ th.superTableSpace{
 #table-wrapper table {
   height:100%;
 }
-.titleH{
-  background-color: #F4EAE4;
-}
+
 .tableDiv{
   margin: auto;
 }
