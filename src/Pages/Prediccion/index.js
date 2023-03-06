@@ -85,86 +85,98 @@ function Prediccion() {
     for (var p = 0;p<8;p++){
       color = "#4d4d4d"
       if (contaminantSTR=="PM25"){
-        if(biggest[p]>=0&&biggest[p]<25){
+        if(biggest[p]>=0&&biggest[p]<=12){
           color = "#95BF39"
-        }else if(biggest[p]>=25&&biggest[p]<41){
+        }else if(biggest[p]>=12.1&&biggest[p]<=35.4){
           color = "#F2E313"
-        }else if(biggest[p]>=41&&biggest[p]<79){
+        }else if(biggest[p]>=35.5&&biggest[p]<=55.4){
           color = "#F2811D"
-        }else if(biggest[p]>=79&&biggest[p]<147){
+        }else if(biggest[p]>=55.5&&biggest[p]<=150.4){
           color = "#F22233"
-        }else if(biggest[p]>=147){
+        }else if(biggest[p]>=150.5&&biggest[p]<=250.4){
           color = "#73022C"
+        }else if(biggest[p]>=250.5&&biggest[p]<=500.4){
+          color = "#45011A"
         }else{
           color = "#4d4d4d"
         }
+
       }else if(contaminantSTR=="PM10"){
-        if(biggest[p]>=0&&biggest[p]<50){
+        if(biggest[p]>=0&&biggest[p]<=54){
           color = "#95BF39"
-        }else if(biggest[p]>=50&&biggest[p]<70){
+        }else if(biggest[p]>=55&&biggest[p]<=154){
           color = "#F2E313"
-        }else if(biggest[p]>=70&&biggest[p]<155){
+        }else if(biggest[p]>=155&&biggest[p]<=254){
           color = "#F2811D"
-        }else if(biggest[p]>=155&&biggest[p]<235){
-          color = "F22233"
-        }else if(biggest[p]>=235){
+        }else if(biggest[p]>=255&&biggest[p]<=354){
+          color = "#F22233"
+        }else if(biggest[p]>=355&&biggest[p]<=424){
           color = "#73022C"
+        }else if(biggest[p]>=425&&biggest[p]<=604){
+          color = "#45011A"
         }else{
           color = "#4d4d4d"
         }
+
       }else if(contaminantSTR=="O3"){
-        if(biggest[p]>=0&&biggest[p]<0.051){
+        if(biggest[p]>=0&&biggest[p]<=0.054){
           color = "#95BF39"
-        }else if(biggest[p]>=0.051&&biggest[p]<0.070){
+        }else if(biggest[p]>=0.055&&biggest[p]<=0.070){
           color = "#F2E313"
-        }else if(biggest[p]>=0.070&&biggest[p]<0.092){
+        }else if(biggest[p]>=0.071&&biggest[p]<=0.085){
           color = "#F2811D"
-        }else if(biggest[p]>=0.092&&biggest[p]<0.114){
+        }else if(biggest[p]>=0.086&&biggest[p]<=0.105){
           color = "#F22233"
-        }else if(biggest[p]>=0.114){
+        }else if(biggest[p]>=0.106&&biggest[p]<=0.200){
           color = "#73022C"
         }else{
           color = "#4d4d4d"
         }
       }else if(contaminantSTR=="CO"){
-        if(biggest[p]>=0&&biggest[p]<8.75){
+        if(biggest[p]>=0&&biggest[p]<=4.4){
           color = "#95BF39"
-        }else if(biggest[p]>=8.75&&biggest[p]<9){
+        }else if(biggest[p]>=4.5&&biggest[p]<=9.4){
           color = "#F2E313"
-        }else if(biggest[p]>=9&&biggest[p]<13.3){
+        }else if(biggest[p]>=9.5&&biggest[p]<=12.4){
           color = "#F2811D"
-        }else if(biggest[p]>=13.3&&biggest[p]<15.5){
+        }else if(biggest[p]>=12.5&&biggest[p]<=15.4){
           color = "F22233"
-        }else if(biggest[p]>=15.5){
+        }else if(biggest[p]>=15.5&&biggest[p]<=30.4){
           color = "#73022C"
-        }else{
+        }else if(biggest[p]>=30.5&&biggest[p]<=50.4){
+          color = "45011A"
+        } else{
           color = "#4d4d4d"
         }
       }else if(contaminantSTR=="NO2"){
-        if(biggest[p]>=0&&biggest[p]<0.103){
+        if(biggest[p]>=0&&biggest[p]<=53){
           color = "#95BF39"
-        }else if(biggest[p]>=0.103&&biggest[p]<0.106){
+        }else if(biggest[p]>=54&&biggest[p]<=100){
           color = "#F2E313"
-        }else if(biggest[p]>=0.106&&biggest[p]<0.23){
+        }else if(biggest[p]>=101&&biggest[p]<=360){
           color = "#F2811D"
-        }else if(biggest[p]>=0.23&&biggest[p]<0.25){
+        }else if(biggest[p]>=361&&biggest[p]<=649){
           color = "#F22233"
-        }else if(biggest[p]>=0.25){
+        }else if(biggest[p]>=650&&biggest[p]<=1249){
           color = "#73022C"
+        }else if(biggest[p]>=1250&&biggest[p]<=2049){
+          color = "45011A"
         }else{
           color = "#4d4d4d"
         }
       }else if(contaminantSTR=="SO2"){
-        if(biggest[p]>=0&&biggest[p]<0.015){
+        if(biggest[p]>=0&&biggest[p]<=35){
           color = "#95BF39"
-        }else if(biggest[p]>=0.015&&biggest[p]<0.04){
+        }else if(biggest[p]>=36&&biggest[p]<=75){
           color = "#F2E313"
-        }else if(biggest[p]>=0.04&&biggest[p]<0.165){
+        }else if(biggest[p]>=76&&biggest[p]<=185){
           color = "#F2811D"
-        }else if(biggest[p]>=0.165&&biggest[p]<0.22){
+        }else if(biggest[p]>=186&&biggest[p]<=304){
           color = "#F22233"
-        }else if(biggest[p]>=0.22){
+        }else if(biggest[p]>=305&&biggest[p]<=604){
           color = "#73022C"
+        }else if(biggest[p]>=605&&biggest[p]<=1004){   
+          color = "45011A"
         }else{
           color = "#4d4d4d"
         }
