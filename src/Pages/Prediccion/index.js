@@ -256,8 +256,7 @@ function Prediccion() {
 			if (dataJSON != null) {
 				try {
 					let biggest = getBigger6hrs(dataJSON);
-					let contaminantSTR = getDropdownValues();
-					getColors(contaminantSTR, biggest);
+					getColors(contaminant.value, biggest);
 					getHoursText();
 					setIsShown(true);
 					setLoading(false);
@@ -274,8 +273,6 @@ function Prediccion() {
 
 	const fetchData = () => {
 		if (system != null && location != null && contaminant != null) {
-			let contaminantSTR = getDropdownValues();
-			console.log(contaminantSTR);
 			GETJASON();
 		} else {
 			console.log("Formulario Incompleto");
