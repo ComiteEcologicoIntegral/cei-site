@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Form from "./components/Form";
 import Table from "./components/Table";
 import { apiUrl } from "../../constants";
+import { Spinner } from "react-bootstrap";
 
 function Prediccion() {
 	const [system, setSystem] = useState(null);
@@ -13,6 +14,7 @@ function Prediccion() {
 	const [dataText, setDataText] = useState(null);
 	const [hourDateText, sethourDateText] = useState(null);
 	const [dataColors, setDataColors] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	function getDropdownValues() {
 		var locationSTR = location.label;
@@ -236,39 +238,45 @@ function Prediccion() {
 		}
 		setDataColors(colors);
 	}
+
 	function GETJASON() {
+		setLoading(true);
+		var dataJSON = null;
 		var xhReq = new XMLHttpRequest();
 		xhReq.open(
 			"GET",
 			`${apiUrl}/get-location-prediction?location=${location.label}&gas=${contaminant.value}`,
-			false
+			true
+			// La llamada al API es asincronica, para que el usuario pueda seguir usando la aplicación mientras se espera a la respuesta
 		);
 		xhReq.send(null);
-		var dataJSON = JSON.parse(xhReq.responseText);
-		return dataJSON;
-	}
-	const fetchData = () => {
-		if (system != null && location != null && contaminant != null) {
-			var dataJSON = null;
-			let contaminantSTR = getDropdownValues();
-			console.log(contaminantSTR);
-			try {
-				dataJSON = GETJASON();
-			} catch (error) {
-				console.error(error);
-			}
+		xhReq.onload = function () {
+			// Cuando la llamada al API ha terminado, se ejecuta
+			dataJSON = JSON.parse(xhReq.responseText);
 			if (dataJSON != null) {
 				try {
 					let biggest = getBigger6hrs(dataJSON);
+					let contaminantSTR = getDropdownValues();
 					getColors(contaminantSTR, biggest);
 					getHoursText();
 					setIsShown(true);
+					setLoading(false);
 				} catch (error) {
 					console.error(error);
 				}
 			} else {
 				console.log("GET JSON ERROR");
+				setLoading(false);
 			}
+		};
+		return dataJSON;
+	}
+
+	const fetchData = () => {
+		if (system != null && location != null && contaminant != null) {
+			let contaminantSTR = getDropdownValues();
+			console.log(contaminantSTR);
+			GETJASON();
 		} else {
 			console.log("Formulario Incompleto");
 		}
@@ -303,13 +311,19 @@ function Prediccion() {
 				setGas={setContaminant}
 			/>
 
-			{isShown && (
-				<Table
-					title={title}
-					texts={dataText}
-					colors={dataColors}
-					dateHour={hourDateText}
-				/>
+			{loading ? (
+				<Spinner animation="border" className="loadingSpinner" />
+			) : (
+				<>
+					{isShown && (
+						<Table
+							title={title}
+							texts={dataText}
+							colors={dataColors}
+							dateHour={hourDateText}
+						/>
+					)}
+				</>
 			)}
 		</div>
 	);
