@@ -40,7 +40,6 @@ function Prediccion() {
 		// 	biggers[o] = Math.max.apply(null, LookBiggers);
 		// 	n = n + 6;
 		// }
-
 		biggers[0] = dataJSON[0];
 		biggers[1] = dataJSON[1];
 		biggers[2] = dataJSON[2];
