@@ -222,8 +222,11 @@ function Marcador({
                 <small className="text-muted m-1">ICAR*</small>
               </Col>
               <Col xs={2} className="px-1 m-1">
-                <small className="text-muted m-1">OMS</small>
+                <small className="text-muted">OMS </small>
+                <br />
+                <p style={{fontSize: "0.387rem"}} className="mb-0">µg/m3 24 horas * ozono 8 horas</p>
               </Col>
+              
               <Col xs={2} className="px-1 m-1">
                 <small className="text-muted m-1">EPA AQI</small>
               </Col>
