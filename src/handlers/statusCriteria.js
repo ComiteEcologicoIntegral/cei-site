@@ -74,6 +74,134 @@ export function getStatusClassName(avg, gas, norm) {
       return statusClassName.ExtremelyBad;
     }
   }
+export function getICAR(avg, gas, norm) {
+    if (avg < 0 || !avg || avg === "" || avg ==="ND") {
+      return statusClassName.NoData;
+    }
+    else if (avg >= 0 && avg <= 25 && gas === "PM25") { 
+      
+      avg = criteria[norm][gas][0]             
+      return statusClassName.Good;
+    }
+    else if (avg > 25 && avg <= 45 && gas === "PM25") { 
+      
+      avg = criteria[norm][gas][1]             
+      return statusClassName.Acceptable;
+    }
+    else if (avg > 45 && avg <= 79 && gas === "PM25") { 
+      
+      avg = criteria[norm][gas][2]             
+      return statusClassName.Bad;
+    }
+    else if (avg > 79 && avg <= 147 && gas === "PM25") { 
+      
+      avg = criteria[norm][gas][3]             
+      return statusClassName.SuperBad;
+    }
+    else if (avg >= 0 && avg <= 50 && gas === "PM10") { 
+      
+      avg = criteria[norm][gas][0]             
+      return statusClassName.Good;
+    }
+    else if (avg > 50 && avg <= 75 && gas === "PM10") { 
+      
+      avg = criteria[norm][gas][1]             
+      return statusClassName.Acceptable;
+    }
+    else if (avg > 75 && avg <= 155 && gas === "PM10") { 
+      
+      avg = criteria[norm][gas][2]             
+      return statusClassName.Bad;
+    }
+    else if (avg > 155 && avg <= 235 && gas === "PM10") { 
+      
+      avg = criteria[norm][gas][3]             
+      return statusClassName.SuperBad;
+    }
+    else if (avg >= 0 && avg <= 0.051 && gas === "O3") { 
+      
+      avg = criteria[norm][gas][0]             
+      return statusClassName.Good;
+    }
+    else if (avg > 0.051 && avg <= 0.070 && gas === "O3") { 
+      
+      avg = criteria[norm][gas][1]             
+      return statusClassName.Acceptable;
+    }
+    else if (avg > 0.070 && avg <= 0.092 && gas === "O3") { 
+      
+      avg = criteria[norm][gas][2]             
+      return statusClassName.Bad;
+    }
+    else if (avg > 0.092 && avg <= 0.114 && gas === "O3") { 
+      
+      avg = criteria[norm][gas][3]             
+      return statusClassName.SuperBad;
+    }
+    else if (avg >= 0 && avg <= 0.107 && gas === "NO2") { 
+      
+      avg = criteria[norm][gas][0]             
+      return statusClassName.Good;
+    }
+    else if (avg > 0.107 && avg <= 0.210 && gas === "NO2") { 
+      
+      avg = criteria[norm][gas][1]             
+      return statusClassName.Acceptable;
+    }
+    else if (avg > 0.210 && avg <= 0.230 && gas === "NO2") { 
+      
+      avg = criteria[norm][gas][2]             
+      return statusClassName.Bad;
+    }
+    else if (avg > 0.230 && avg <= 0.250 && gas === "NO2") { 
+      
+      avg = criteria[norm][gas][3]             
+      return statusClassName.SuperBad;
+    }
+    else if (avg >= 0 && avg <= 0.008 && gas === "SO2") { 
+      
+      avg = criteria[norm][gas][0]             
+      return statusClassName.Good;
+    }
+    else if (avg > 0.008 && avg <= 0.110 && gas === "SO2") { 
+      
+      avg = criteria[norm][gas][1]             
+      return statusClassName.Acceptable;
+    }
+    else if (avg > 0.110 && avg <= 0.165 && gas === "SO2") { 
+      
+      avg = criteria[norm][gas][2]             
+      return statusClassName.Bad;
+    }
+    else if (avg > 0.165 && avg <= 0.220 && gas === "SO2") { 
+      
+      avg = criteria[norm][gas][3]             
+      return statusClassName.SuperBad;
+    }
+    else if (avg >= 0 && avg <= 8.75 && gas === "CO") { 
+      
+      avg = criteria[norm][gas][0]             
+      return statusClassName.Good;
+    }
+    else if (avg > 8.75 && avg <= 11.00 && gas === "CO") { 
+      
+      avg = criteria[norm][gas][1]             
+      return statusClassName.Acceptable;
+    }
+    else if (avg > 11.00 && avg <= 13.30 && gas === "CO") { 
+      
+      avg = criteria[norm][gas][2]             
+      return statusClassName.Bad;
+    }
+    else if (avg > 13.30 && avg <= 15.50 && gas === "CO") { 
+      
+      avg = criteria[norm][gas][3]             
+      return statusClassName.SuperBad;
+    }
+    else{
+      return statusClassName.ExtremelyBad;
+    }
+  }
 
 export function getStatusOMS(avg, gas, norm) {
   if (avg < 0 || !avg || avg === "" || avg ==="ND") {
