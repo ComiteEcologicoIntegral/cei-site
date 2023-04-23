@@ -6,7 +6,7 @@ import Legend from "./components/MapLegend/MapLegend"
 import { TablaCalidad } from "./components/TablaCalidad.js";
 
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
-import { getStatus, getStatusClassName } from "./handlers/statusCriteria.js";
+import { getStatus, getICAR } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 import { Spinner } from "react-bootstrap";
 import moment from "moment";
@@ -144,7 +144,7 @@ function Mapa() {
           indicator: currentGas.label ? currentGas.label : gasName,
           label: value,
           units: gasUnits,
-          status: getStatusClassName(intValue, gasName, "ssa"),
+          status: getICAR(intValue, gasName, "ssa"),
           ref: "#",
         },
         lastUpdate: moment.utc(data.Dia).local(),
@@ -170,7 +170,7 @@ function Mapa() {
             label: label ? label : name,
             units: units,
             value: filterND(data[colName]),
-            status: getStatusClassName(data[colName], name, "ssa"),
+            status: getICAR(data[colName], name, "ssa"),
             ref: "#",
           };
         }),
