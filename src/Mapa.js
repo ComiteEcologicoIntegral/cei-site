@@ -6,7 +6,7 @@ import Legend from "./components/MapLegend/MapLegend"
 import { TablaCalidad } from "./components/TablaCalidad.js";
 
 import { gases, mapBlacklist, idBlacklist } from "./constants.js";
-import { getStatus, getICAR } from "./handlers/statusCriteria.js";
+import { getStatus, getICAR} from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 import { Spinner } from "react-bootstrap";
 import moment from "moment";
