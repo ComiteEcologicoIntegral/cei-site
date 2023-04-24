@@ -5,7 +5,7 @@ import {TailSpin} from 'react-loader-spinner';
 import {getSensorLocationsBySystem} from '../../handlers/data';
 import {populateDateRange, getFirstDayOfMonth, getLastDayOfMonth} from '../../utils/PopulateDateRange';
 import {gasesOptions, apiUrl, normOptions} from "../../constants";
-import {getStatusClassName} from "../../handlers/statusCriteria";
+import {getICAR} from "../../handlers/statusCriteria";
 import "./index.css";
 
 export default function AnnualReport() {
@@ -106,7 +106,7 @@ export default function AnnualReport() {
     if (!monthData[location.label] || !date || date.getDate() > monthData[location.label].length) return;
     const dayAverage = monthData[location.label][date.getDate() - 1].movil;
     if (dayAverage === "") return;
-    let ans = getStatusClassName(dayAverage, contaminantTable.value, avgTypeTable.value);
+    let ans = getICAR(dayAverage, contaminantTable.value, avgTypeTable.value);
     return ans;
   }
 
