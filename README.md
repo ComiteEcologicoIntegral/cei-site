@@ -82,7 +82,7 @@ docker run -d -p 9000:80 --name cei-app haiwave/cei-repo:front
 
 El nombre del contenedor no importa mientras corra en el puerto correcto.
 En caso de que se necesite/quiera cambiar el puerto a donde se hace
-el proxy, es necesario cambiar la configuración del NGINX.
+el proxy, es necesario cambiar la configuración de NGINX.
 
 En el archivo `/etc/nginx/sites-available/default`
 
