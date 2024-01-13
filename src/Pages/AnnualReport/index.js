@@ -1,38 +1,41 @@
-import React, {useState, useEffect} from 'react'
-import {Form, Col, Button} from "react-bootstrap";
+import React, { useState, useEffect } from 'react'
+import { Form, Col, Button } from "react-bootstrap";
 import Select from "react-select";
-import {TailSpin} from 'react-loader-spinner';
-import {getSensorLocationsBySystem} from '../../handlers/data';
-import {populateDateRange, getFirstDayOfMonth, getLastDayOfMonth} from '../../utils/PopulateDateRange';
-import {gasesOptions, apiUrl, normOptions} from "../../constants";
-import {getICAR} from "../../handlers/statusCriteria";
+import { TailSpin } from 'react-loader-spinner';
+import { getSensorLocationsBySystem } from '../../handlers/data';
+import { populateDateRange, getFirstDayOfMonth, getLastDayOfMonth } from '../../utils/PopulateDateRange';
+import { gasesOptions, apiUrl, normOptions } from "../../constants";
+import { getICAR } from "../../handlers/statusCriteria";
 import "./index.css";
+import moment from 'moment';
 
 export default function AnnualReport() {
-  const REPORT_SYSTEM = {value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G"};
+  const REPORT_SYSTEM = { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G" };
 
   const months = [
-    {value: 0, label: "Enero"},
-    {value: 1, label: "Febrero"},
-    {value: 2, label: "Marzo"},
-    {value: 3, label: "Abril"},
-    {value: 4, label: "Mayo"},
-    {value: 5, label: "Junio"},
-    {value: 6, label: "Julio"},
-    {value: 7, label: "Agosto"},
-    {value: 8, label: "Septiembre"},
-    {value: 9, label: "Octubre"},
-    {value: 10, label: "Noviembre"},
-    {value: 11, label: "Diciembre"},
+    { value: 0, label: "Enero" },
+    { value: 1, label: "Febrero" },
+    { value: 2, label: "Marzo" },
+    { value: 3, label: "Abril" },
+    { value: 4, label: "Mayo" },
+    { value: 5, label: "Junio" },
+    { value: 6, label: "Julio" },
+    { value: 7, label: "Agosto" },
+    { value: 8, label: "Septiembre" },
+    { value: 9, label: "Octubre" },
+    { value: 10, label: "Noviembre" },
+    { value: 11, label: "Diciembre" },
   ];
 
-  const years = [
-    {value: 2019, label: 2019},
-    {value: 2020, label: 2020},
-    {value: 2021, label: 2021},
-    {value: 2022, label: 2022},
-    {value: 2023, label: 2023},
-  ];
+  const years = generateYearOptions();
+
+  function generateYearOptions() {
+    const result = [];
+    for (let i = 2019; i <= new moment().year(); i++) {
+      result.push({ value: i, label: i });
+    }
+    return result;
+  }
 
   // dropdowns
   const [locations, setLocations] = useState([]);
