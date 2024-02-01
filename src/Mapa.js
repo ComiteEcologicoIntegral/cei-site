@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
@@ -9,7 +9,10 @@ import { gases, mapBlacklist, idBlacklist } from "./constants.js";
 import { getStatus, getICAR } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 import { Spinner } from "react-bootstrap";
+import dotenv from "dotenv";
 import moment from "moment";
+
+dotenv.config();
 
 const mapDefaultProps = {
   center: [25.67, -100.25],
@@ -22,6 +25,7 @@ function Mapa() {
   const [currentGas, setCurrentGas] = useState(gases[0]);
   const [currentInterval, setCurrentInterval] = useState(0);
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [deprecatedSensors, setDepricatedSensors] = useState([]);
   const {
     data: sensorData,
     loading: loadingSensorData,
@@ -79,6 +83,43 @@ function Mapa() {
             ? "N/D"
             : data.toString()
   }
+
+
+  //this useEffect uses the purpleAir API to directly check the last_seen property of each of the sensors (from a group)
+  //that are known to be ND
+  //this group was created manually with postman and can be edited more info on how to do it here:
+  // https://community.purpleair.com/t/making-api-calls-with-the-purpleair-api/180
+  // https://api.purpleair.com/#api-groups-get-members-data
+  //The point of this is to check if that is still true (still ND), if not they bypass the filter and show up again.
+  //the limit of age is 1 week it can be modified to be earlier but not later because of API restrictions.
+  //we get the data and transform it into something that can be used as the icons are rendered on the map.
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiKey = process.env.REACT_APP_X_API_Key;
+        const groupID = process.env.REACT_APP_Group_ID;
+        const response = await fetch(`https://api.purpleair.com/v1/groups/${groupID}/members?fields=last_seen`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': apiKey,
+          },
+        });
+        const jsonData = await response.json();
+        const sensorList = jsonData.data.map(innerArray => `P${innerArray[0]}`);
+        setDepricatedSensors(sensorList);
+      } catch (error) {
+        console.log('Error al traer los datos: ', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  //this is to see the list of sensors (via ID) that are less then a week old
+  useEffect(() => {
+    console.log(deprecatedSensors);
+  }, [deprecatedSensors]);
 
   const markers = useMemo(() => {
     // TODO: sensors should be filtered by the backend
@@ -177,7 +218,9 @@ function Mapa() {
 
         //url para boton de Mas Informacion
         urlMI: (() => {
-          if (data.Sistema === "PurpleAir")
+          if (data.Sistema === "PurpleAir") {
+            // if (data.Sensor_id === "P45903") console.log(data);
+            // console.log(data.Sensor_id);
             return (
               "https://map.purpleair.com/1/mAQI/a10/p0/cC0?select=" +
               data.Sensor_id.substr(1) +
@@ -186,6 +229,7 @@ function Mapa() {
               "/" +
               data.Longitud
             );
+          }
           if (data.Sistema === "AireNuevoLeon")
             return (
               "http://aire.nl.gob.mx:81/SIMA2017reportes/ReporteDiariosimaIcars.php?estacion1=" +
@@ -269,6 +313,11 @@ function Mapa() {
         <Wrapper whenCreated={setMap} {...mapDefaultProps}>
           {!loadingSensorData &&
             markers.map((markerProps, idx) => {
+              if (markerProps.isPurpleAir && markerProps.ICAR_PM25 === -1 && !deprecatedSensors.includes(markerProps.sensor_id)) {
+                console.log(markerProps.locationStr);
+                console.log(markerProps.sensor_id)
+                return;
+              }
               if (currentGas.name === "PM25" || !markerProps.isPurpleAir) {
                 return (
                   <Marcador
