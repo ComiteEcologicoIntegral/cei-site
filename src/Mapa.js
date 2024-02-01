@@ -117,9 +117,9 @@ function Mapa() {
   }, []);
 
   //this is to see the list of sensors (via ID) that are less then a week old
-  useEffect(() => {
-    console.log(deprecatedSensors);
-  }, [deprecatedSensors]);
+  // useEffect(() => {
+  //   console.log(deprecatedSensors);
+  // }, [deprecatedSensors]);
 
   const markers = useMemo(() => {
     // TODO: sensors should be filtered by the backend
@@ -218,9 +218,7 @@ function Mapa() {
 
         //url para boton de Mas Informacion
         urlMI: (() => {
-          if (data.Sistema === "PurpleAir") {
-            // if (data.Sensor_id === "P45903") console.log(data);
-            // console.log(data.Sensor_id);
+          if (data.Sistema === "PurpleAir")
             return (
               "https://map.purpleair.com/1/mAQI/a10/p0/cC0?select=" +
               data.Sensor_id.substr(1) +
@@ -229,7 +227,6 @@ function Mapa() {
               "/" +
               data.Longitud
             );
-          }
           if (data.Sistema === "AireNuevoLeon")
             return (
               "http://aire.nl.gob.mx:81/SIMA2017reportes/ReporteDiariosimaIcars.php?estacion1=" +
@@ -314,8 +311,6 @@ function Mapa() {
           {!loadingSensorData &&
             markers.map((markerProps, idx) => {
               if (markerProps.isPurpleAir && markerProps.ICAR_PM25 === -1 && !deprecatedSensors.includes(markerProps.sensor_id)) {
-                console.log(markerProps.locationStr);
-                console.log(markerProps.sensor_id)
                 return;
               }
               if (currentGas.name === "PM25" || !markerProps.isPurpleAir) {
