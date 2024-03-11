@@ -54,6 +54,34 @@ export const criteria = {
   },
 };
 
+export const statusClassOrder = [
+  "Good",
+  "Acceptable",
+  "Bad",
+  "SuperBad",
+  "ExtremelyBad",
+  "NoData",
+];
+
+export const statusClassName = {
+  Good: "good",
+  Acceptable: "acceptable",
+  Bad: "bad",
+  SuperBad: "super-bad",
+  ExtremelyBad: "extremely-bad",
+  NoData: "no-data",
+};
+
+// Should be the same as the keys from statusClassName
+export const statusColor = {
+  good: "#95BF39",
+  acceptable: "#F2E313",
+  bad: "#F2811D",
+  "super-bad": "F22233",
+  "extremely-bad": "#73022C",
+  "no-data": "#4d4d4d",
+};
+
 // Opciones del dropdown de sistemas:
 export const systemOptions = [
   { value: "PurpleAir", label: "PurpleAir", opt: "P" },
