@@ -1,22 +1,4 @@
-import { criteria } from "../constants";
-
-const statusClassOrder = [
-  "Good",
-  "Acceptable",
-  "Bad",
-  "SuperBad",
-  "ExtremelyBad",
-  "NoData",
-];
-
-export const statusClassName = {
-  Good: "good",
-  Acceptable: "acceptable",
-  Bad: "bad",
-  SuperBad: "super-bad",
-  ExtremelyBad: "extremely-bad",
-  NoData: "no-data",
-};
+import { criteria, statusClassName, statusClassOrder } from "../constants";
 
 export const airQualityTags = ["buena", "acept", "mala", "muy", "ext"];
 
