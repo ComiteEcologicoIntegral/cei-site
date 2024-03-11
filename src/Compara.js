@@ -6,11 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSensorData } from "./redux/reducers";
 import moment from "moment";
 import "moment/locale/es";
-import { apiUrl } from "./constants";
+import { apiUrl, criteria } from "./constants";
 import Plot from "react-plotly.js";
 
 function Compara() {
-
   const dispatch = useDispatch();
   const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
   const [sensRaw, setSensRaw] = useState(null);
@@ -246,7 +245,7 @@ function Compara() {
           filterData.current[0]["desde"] +
             "/" +
             filterData.current[0]["desdeHora"] +
-            ","
+            ",",
         );
         return;
       } else if (!filterData.current[i]["ubic"]) {
@@ -334,104 +333,16 @@ function Compara() {
   ];
 
   let getShapes = () => {
-    let min1, max1, min2, max2, min3, max3, min4, max4, min5, max5;
-
-    switch (gas) {
-      case "PM2.5":
-        min1 = 0;
-        max1 = 25;
-        min2 = 25;
-        max2 = 45;
-        min3 = 45;
-        max3 = 79;
-        min4 = 79;
-        max4 = 147;
-        min5 = 147;
-        max5 = 172;
-        break;
-      case "PM10":
-        min1 = 0;
-        max1 = 50;
-        min2 = 50;
-        max2 = 75;
-        min3 = 75;
-        max3 = 155;
-        min4 = 155;
-        max4 = 235;
-        min5 = 235;
-        max5 = 255;
-        break;
-      case "O3":
-        min1 = 0;
-        max1 = 0.051;
-        min2 = 0.051;
-        max2 = 0.07;
-        min3 = 0.07;
-        max3 = 0.092;
-        min4 = 0.092;
-        max4 = 0.114;
-        min5 = 0.114;
-        max5 = 0.139;
-        break;
-      case "CO":
-        min1 = 0;
-        max1 = 8.75;
-        min2 = 8.75;
-        max2 = 11;
-        min3 = 11;
-        max3 = 13.3;
-        min4 = 13.3;
-        max4 = 15.5;
-        min5 = 15.5;
-        max5 = 17.5;
-        break;
-      case "NO2":
-        min1 = 0;
-        max1 = 0.107;
-        min2 = 0.107;
-        max2 = 0.21;
-        min3 = 0.21;
-        max3 = 0.23;
-        min4 = 0.23;
-        max4 = 0.25;
-        min5 = 0.25;
-        max5 = 0.275;
-        break;
-      case "SO2":
-        min1 = 0;
-        max1 = 0.008;
-        min2 = 0.008;
-        max2 = 0.11;
-        min3 = 0.11;
-        max3 = 0.165;
-        min4 = 0.165;
-        max4 = 0.22;
-        min5 = 0.22;
-        max5 = 0.255;
-        break;
-      default:
-        min1 = 0;
-        max1 = 25;
-        min2 = 25;
-        max2 = 45;
-        min3 = 45;
-        max3 = 79;
-        min4 = 79;
-        max4 = 147;
-        min5 = 147;
-        max5 = 172;
-        break;
-    }
-
+    const limits = criteria["semarnat"][gas.replace(/[.]/g, "")]; // We remove dots to normalize the gas name
     let shapes = [
       // Nivel 1
       {
         type: "rect",
         xref: "paper",
         x0: 0,
-        y0: min1,
+        y0: 0,
         x1: 1,
-        y1: max1,
+        y1: limits[0],
         fillcolor: "rgb(0, 228, 0)",
         opacity: 0.3,
         line: {
@@ -443,9 +354,9 @@ function Compara() {
         type: "rect",
         xref: "paper",
         x0: 0,
-        y0: min2,
+        y0: limits[0],
         x1: 1,
-        y1: max2,
+        y1: limits[1],
         fillcolor: "rgb(255, 255, 0)",
         opacity: 0.3,
         line: {
@@ -457,9 +368,9 @@ function Compara() {
         type: "rect",
         xref: "paper",
         x0: 0,
-        y0: min3,
+        y0: limits[1],
         x1: 1,
-        y1: max3,
+        y1: limits[2],
         fillcolor: "rgb(255, 126, 0)",
         opacity: 0.3,
         line: {
@@ -471,9 +382,9 @@ function Compara() {
         type: "rect",
         xref: "paper",
         x0: 0,
-        y0: min4,
+        y0: limits[2],
         x1: 1,
-        y1: max4,
+        y1: limits[3],
         fillcolor: "rgb(255, 0, 0)",
         opacity: 0.3,
         line: {
@@ -485,9 +396,9 @@ function Compara() {
         type: "rect",
         xref: "paper",
         x0: 0,
-        y0: min5,
+        y0: limits[3],
         x1: 1,
-        y1: max5,
+        y1: limits[3] * 1.2,
         fillcolor: "rgb(143, 63, 151)",
         opacity: 0.3,
         line: {
@@ -524,7 +435,7 @@ function Compara() {
     if (data) {
       for (let i = 0; i < data.length; i++) {
         let ubicacion = sensores.find(
-          (sensor) => sensor.sensor_id === filterData.current[i]["ubic"].value
+          (sensor) => sensor.sensor_id === filterData.current[i]["ubic"].value,
         ).zona;
         let gas =
           filterData.current[i]["ind"] === "PM25"
@@ -532,26 +443,9 @@ function Compara() {
             : filterData.current[i]["ind"];
         setGas(gas);
 
-        switch (gas) {
-          case "PM2.5":
-            setLimiteOMS(15);
-            break;
-          case "PM10":
-            setLimiteOMS(45);
-            break;
-          case "O3":
-            setLimiteOMS(0.051);
-            break;
-          case "NO2":
-            setLimiteOMS(0.013);
-            break;
-          case "SO2":
-            setLimiteOMS(0.015);
-            break;
-          default:
-            setLimiteOMS(null);
-            break;
-        }
+        const oms_limits = criteria["oms"];
+
+        setLimiteOMS(oms_limits[gas.replace(/[.]/g, "")]);
 
         data[i].name = `${ubicacion} (${gas})`;
         data[i].type = "scatter";
