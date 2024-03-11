@@ -147,28 +147,8 @@ function Prediccion() {
     var colors = [];
     var color = "#4d4d4d";
     for (var p = 0; p < 4; p++) {
-      color = "#4d4d4d";
-      if (contaminantSTR === "PM25") {
-        const statusClass = getICAR(biggest[p], "PM25", "ssa");
-        color = statusColor[statusClass];
-      } else if (contaminantSTR === "PM10") {
-        const statusClass = getICAR(biggest[p], "PM10", "ssa");
-        color = statusColor[statusClass];
-      } else if (contaminantSTR === "O3") {
-        const statusClass = getICAR(biggest[p], "O3", "ssa");
-        color = statusColor[statusClass];
-      } else if (contaminantSTR === "CO") {
-        const statusClass = getICAR(biggest[p], "CO", "ssa");
-        color = statusColor[statusClass];
-      } else if (contaminantSTR === "NO2") {
-        const statusClass = getICAR(biggest[p], "NO2", "ssa");
-        color = statusColor[statusClass];
-      } else if (contaminantSTR === "SO2") {
-        const statusClass = getICAR(biggest[p], "SO2", "ssa");
-        color = statusColor[statusClass];
-      } else {
-        console.log("Contaminante no válido");
-      }
+	  const statusClass = getICAR(biggest[p], contaminantSTR, "ssa");
+	  color = statusColor[statusClass];
       colors[p] = color;
     }
     setDataColors(colors);
