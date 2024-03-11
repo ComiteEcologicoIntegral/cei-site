@@ -53,13 +53,13 @@ function Compara() {
 
   function modifyMinFecha(clear) {
     let tempFecha = moment(
-      filterData.current[0]["desde"] + " " + filterData.current[0]["desdeHora"]
+      filterData.current[0]["desde"] + " " + filterData.current[0]["desdeHora"],
     );
     let tempDay = (3 + tempFecha.isoWeekday()).toString();
     if (tempFecha.isoWeekday() != 7) {
       tempDay = "0" + tempDay;
     }
-    
+
     for (let i = 1; i <= numFiltros.current; i++) {
       let minFecha = "2010-01-04".slice(0, -2) + tempDay;
       var filtro = document.getElementById("filtro-" + i + "desde");
@@ -132,12 +132,12 @@ function Compara() {
       var fecha2 = moment(
         filterData.current[0]["hasta"] +
           " " +
-          filterData.current[0]["hastaHora"]
+          filterData.current[0]["hastaHora"],
       );
       var fecha1 = moment(
         filterData.current[0]["desde"] +
           " " +
-          filterData.current[0]["desdeHora"]
+          filterData.current[0]["desdeHora"],
       );
       var dias = fecha2.diff(fecha1, "days");
       fecha1.add(dias, "days");
@@ -163,7 +163,7 @@ function Compara() {
         let tempFecha = moment(
           filterData.current[i]["desde"] +
             " " +
-            filterData.current[0]["desdeHora"]
+            filterData.current[0]["desdeHora"],
         );
         //alert(tempFecha)
         tempFecha.add(dias, "days");
@@ -181,7 +181,6 @@ function Compara() {
 
   function addFiltro() {
     if (numFiltros.current < 0) {
-
       numFiltros.current = numFiltros.current + 1;
       setFilters([
         ...filters,
@@ -217,7 +216,7 @@ function Compara() {
   function deleteFiltro() {
     if (numFiltros.current !== -1) {
       let filtroDiv = document.getElementById(
-        `filtro-${numFiltros.current}`
+        `filtro-${numFiltros.current}`,
       ).parentNode;
       filtroDiv.parentNode.removeChild(filtroDiv);
       numFiltros.current = numFiltros.current - 1;
