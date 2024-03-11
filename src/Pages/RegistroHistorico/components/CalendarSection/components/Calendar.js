@@ -5,7 +5,8 @@ import {
 } from "../../../../../utils/PopulateDateRange";
 import ReactCalendar from "react-calendar";
 import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
-import { getStatusClassName, statusClassName } from "../../../../../handlers/statusCriteria";
+import { getStatusClassName } from "../../../../../handlers/statusCriteria";
+import { statusClassName } from "../../../../../constants"
 import "./Calendar.css";
 import "./DayBullet.css";
 
