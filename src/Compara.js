@@ -333,7 +333,13 @@ function Compara() {
   ];
 
   let getShapes = () => {
-    const limits = criteria["semarnat"][gas.replace(/[.]/g, "")]; // We remove dots to normalize the gas name
+    let limits;
+    if (gas) {
+      limits = criteria["semarnat"][gas.replace(/[.]/g, "")]; // We remove dots to normalize the gas name
+    } else {
+      limits = criteria["semarnat"]["PM25"];
+    }
+
     let shapes = [
       // Nivel 1
       {
