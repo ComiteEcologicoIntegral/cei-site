@@ -83,16 +83,16 @@ function TablaCalidad({ gas }) {
         <Col>{selectedGas.Title}</Col>
         <Col>{selectedGas.AverageDetails}</Col>
         <Col style={{ backgroundColor: "#00cc03" }}>
-          {`${limits[0]} - ${limits[1]}`}
+          {`${0} - ${limits[0]}`}
         </Col>
         <Col style={{ backgroundColor: "#ffff00" }}>
-          {`${limits[1]} - ${limits[2]}`}
+          {`${limits[0]} - ${limits[1]}`}
         </Col>
         <Col style={{ backgroundColor: "#fe6601" }}>
-          {`${limits[2]} - ${limits[3]}`}
+          {`${limits[1]} - ${limits[2]}`}
         </Col>
         <Col style={{ backgroundColor: "#fc0204" }}>
-          {`${limits[3]} - ${limits[4]}`}
+          {`${limits[2]} - ${limits[3]}`}
         </Col>
         <Col
           className="text-white"
@@ -100,7 +100,7 @@ function TablaCalidad({ gas }) {
             backgroundColor: "#640132",
             borderBottomRightRadius: "12px",
           }}
-        >{`> ${limits[4]}`}</Col>
+        >{`> ${limits[3]}`}</Col>
       </Row>
     </Container>
   );
