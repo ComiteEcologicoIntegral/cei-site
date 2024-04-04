@@ -51,16 +51,48 @@ const Recomendaciones = (props) => {
                         <ul>
                             <li>Realizar actividades al aire libre</li>
                             <li>Ejercitarse al aire libre</li>
+
+                            <li>Personas con enfermedades cardiovasculares / respiratorias o mayores a 60 años:</li>
+                            <li>Es posible realizar actividades físicas en espacios interiores, siempre y cuando se trate de un espacio libre de humo de tabaco. Evita las actividades físicas vigorosas y moderadas, así como el tiempo de estancia al aire libre. </li>
+                            <li>Si presentas algún síntoma o molestia o tienes dudas, busca el consejo de tu médico.</li>
+                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
+
+                            <li>Menores de 12 años y gestantes:</li>
+                            <li>Disfruta las actividades al aire libre.</li>
                             <li>Personas vulnerables limitar actividades físicas</li>
+                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
+                            
+                            <li>Población en general:</li>
+                            <li>Disfruta las actividades al aire libre.</li>
+                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
                         </ul>
                     </Tab.Pane>
                     <Tab.Pane eventKey="mala">
                         <ul>
                             <li>Limitar actividades físicas al aire libre, incrementar frecuencia de descansos, vigilar que estudiantes no presenten síntomas de afecciones respiratorias.</li>
                             <li>Limitar tiempo de exposición</li>
-                            <li>Personas vulnerables permanecer en interiores sin actividad física</li>
                             <li>Considerar suspender entrenamientos y partidos de ligas deportivas y actividades físicas extracurriculares</li>
                             <li>Se recomienda el uso de mascarillas reutilizables N95 con certificación NIOSH*</li>
+
+                            <li>Personas con enfermedades cardiovasculares / respiratorias o mayores a 60 años:</li>
+                            <li>Reduce las actividades físicas vigorosas al aire libre como ejercicios aeróbicos, jugar fútbol, básquetbol, voleibol, atletismo, ciclismo deportivo o correr, trotar suave, caminar a paso rápido o moverse en bicicleta, monopatín, patines y patinetas.</li>
+                            <li>Si presentas algún síntoma o molestia o tienes didas, busca el consejo de tu médico.</li>
+                            <li>Infórmate sobre la evolución de la calidad del aire. </li>
+
+                            <li>Menores de 12 años y personas gestantes:</li>
+                            <li>Es posible realizar actividades físicas al aire libre como trotar suave, caminar a paso rápido o moverse en bicicleta, monopatín, patines y patinetas; aumenta los periodos de descanso.</li>
+                            <li>Reduce las actividades físicas vigorosas al aire libre como ejercicios aeróbicos, jugar fútbol, básquetbol, voleibol, atletismo, ciclismo deportivo, etc.</li>
+                            <li>Si se presentan síntomas respiratorios o cardiacos suspende la actividad y acude a tu médico.</li>
+                            <li>Infórmate sobre la evolución de la calidad de aire.</li>
+                            <li>Es posible realizar actividades al aire libre.</li>
+                            <li>Si presenta síntomas como tos o falta de aire, tomas más descansos y realiza actividades menos vigorosas.</li>
+                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
+
+                            <li>Población en general:</li>
+                            <li>Es posible realizar actividades al aire libre.</li>
+                            <li>Si presenta síntomas como tos o falta de aire, tomas más descansos y realiza actividades menos vigorosas.</li>
+                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
+                           
                         </ul>
                     </Tab.Pane>
                     <Tab.Pane eventKey="muy">
@@ -75,6 +107,23 @@ const Recomendaciones = (props) => {
                             <li>Suspender el uso de cigarros de cualquier tipo</li>
                             <li>Limitar el uso de vehículos que usen combustibles fósiles</li>
                             <li>Se recomienda fuertemente el uso de mascarillas reutilizables N95 con certificación NIOSH*</li>
+
+                            <li>Personas con enfermedades cardiovasculares / respiratorias o mayores a 60 años:</li>
+                            <li>Es posible realizar actividades físicas en espacios interiores, siempre y cuando se trate de un espacio libre de humo de tabaco. </li>
+                            <li>Evita las actividades físicas vigorosas y moderadas, así como el tiempo de estancia al aire libre.</li>
+                            <li>Si presentas algún síntoma o molestia o tienes dudas, busca el consejo de tu médico.</li>
+
+                            <li>Menores de 12 años y personas gestantes:</li>
+                            <li>Reduce las actividades físicas al aire libre y de preferencia realízalas en espacios interiores, siempre y cuando se trate de un espacio libre de humo de tabaco.</li>
+                            <li>Evita la actividad física vigorosa o prolongada al aire libre.</li>
+                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
+
+                            <li>Población en general:</li>
+                            <li>Reduce las actividades físicas al aire libre y de preferencia realízalas en espacios interiores, siempre y cuando se trate de un espacio libre de humo de tabaco.</li>
+                            <li>Evita la actividad física vigorosa o prolongada al aire libre.</li>
+                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
+
+
                         </ul>
                     </Tab.Pane>
                     <Tab.Pane eventKey="ext">
@@ -89,6 +138,10 @@ const Recomendaciones = (props) => {
                             <li>Suspender entrenamientos y partidos de ligas deportivas y actividades físicas extracurriculares</li>
                             <li>Suspender el uso de cigarros de cualquier tipo</li>
                             <li>Limitar el uso de vehículos que usen combustibles fósiles</li>
+
+                            <li>Permanece en espacios interiores en donde puedes realizar actividades físicas.</li>
+                            <li>Reprograma tus actividades al aire libre y si presentas síntomas respiratorios y/o cardiacos acude al médico.</li>
+                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
                         </ul>
                     </Tab.Pane>
                 </Tab.Content>
