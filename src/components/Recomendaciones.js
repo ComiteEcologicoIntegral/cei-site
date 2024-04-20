@@ -42,105 +42,89 @@ const Recomendaciones = (props) => {
                 <Tab.Content>
                     <Tab.Pane eventKey="buena">
                         <ul>
-                            <li>Realizar actividades al aire libre</li>
-                            <li>Ejercitarse al aire libre</li>
-                            <li>Sin riesgo para personas vulnerables</li>
+                            Descripción del riesgo: El riesgo en salud es mínimo o nulo.
+                            <li>Disfrutar realizar actividades al aire libre.</li> 
                         </ul>
                     </Tab.Pane>
                     <Tab.Pane eventKey="acept">
                         <ul>
-                            <li>Realizar actividades al aire libre</li>
-                            <li>Ejercitarse al aire libre</li>
+                            Población en general, menores de 12 años y gestantes:
+                            <li>El riesgo en salud es mínimo.</li>
+                            <li>Disfrutar realizar actividades al aire libre.</li>
                             <br  />
-                            Personas con enfermedades cardiovasculares / respiratorias o mayores a 60 años:
-                            <li>Es posible realizar actividades físicas en espacios interiores, siempre y cuando se trate de un espacio libre de humo de tabaco. Evita las actividades físicas vigorosas y moderadas, así como el tiempo de estancia al aire libre. </li>
-                            <li>Si presentas algún síntoma o molestia o tienes dudas, busca el consejo de tu médico.</li>
-                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
-                            <br  />
-                            Menores de 12 años y gestantes:
-                            <li>Disfruta las actividades al aire libre.</li>
-                            <li>Personas vulnerables limitar actividades físicas</li>
-                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
-                            <br  />
-                            Población en general:
-                            <li>Disfruta las actividades al aire libre.</li>
-                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
+                            Población sensible:
+                            Descripción del riesgo: Personas que son sensibles al ozono (O3) o material particulado (PM10 y PM2.5) pueden experimentar irritación de ojos y síntomas respiratorios como tos, irritación de vías respiratorias, expectoración o flema, dificultad para respirar o sibilancias.
+                            <li>Realizar actividades moderadas al aire libre, reducir actividades físicas vigorosas.</li>
+                            <li>En caso de presentar algún síntoma, molestia o tienes dudas, busca consejo médico.</li>
+                            <li>Mantenerse informado sobre la evolución de la calidad del aire.</li>
+
                         </ul>
                     </Tab.Pane>
                     <Tab.Pane eventKey="mala">
                         <ul>
-                            <li>Limitar actividades físicas al aire libre, incrementar frecuencia de descansos, vigilar que estudiantes no presenten síntomas de afecciones respiratorias.</li>
-                            <li>Limitar tiempo de exposición</li>
-                            <li>Considerar suspender entrenamientos y partidos de ligas deportivas y actividades físicas extracurriculares</li>
-                            <li>Se recomienda el uso de mascarillas reutilizables N95 con certificación NIOSH*</li>
-                            <br  />
-                            Personas con enfermedades cardiovasculares / respiratorias o mayores a 60 años:
-                            <li>Reduce las actividades físicas vigorosas al aire libre como ejercicios aeróbicos, jugar fútbol, básquetbol, voleibol, atletismo, ciclismo deportivo o correr, trotar suave, caminar a paso rápido o moverse en bicicleta, monopatín, patines y patinetas.</li>
-                            <li>Si presentas algún síntoma o molestia o tienes didas, busca el consejo de tu médico.</li>
-                            <li>Infórmate sobre la evolución de la calidad del aire. </li>
-                            <br  />
-                            Menores de 12 años y personas gestantes:
-                            <li>Es posible realizar actividades físicas al aire libre como trotar suave, caminar a paso rápido o moverse en bicicleta, monopatín, patines y patinetas; aumenta los periodos de descanso.</li>
-                            <li>Reduce las actividades físicas vigorosas al aire libre como ejercicios aeróbicos, jugar fútbol, básquetbol, voleibol, atletismo, ciclismo deportivo, etc.</li>
-                            <li>Si se presentan síntomas respiratorios o cardiacos suspende la actividad y acude a tu médico.</li>
-                            <li>Infórmate sobre la evolución de la calidad de aire.</li>
-                            <li>Es posible realizar actividades al aire libre.</li>
-                            <li>Si presenta síntomas como tos o falta de aire, tomas más descansos y realiza actividades menos vigorosas.</li>
-                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
-                            <br  />
                             Población en general:
-                            <li>Es posible realizar actividades al aire libre.</li>
-                            <li>Si presenta síntomas como tos o falta de aire, tomas más descansos y realiza actividades menos vigorosas.</li>
-                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
+                            Descripción del riesgo: Es poco probable que se vea afectada.
+                            <li>Realizar actividades al aire libre de manera limitada, incrementar frecuencia de descansos, vigilar que estudiantes no presenten síntomas de afecciones respiratorias.</li>
+                        	<li>En caso de presentar síntomas como tos o falta de aire, tomar más descansos y realizar actividades menos vigorosas.</li>
+                        	<li>Mantenerse informado sobre la evolución de la calidad del aire.</li>
+                            <br />
+                            Población sensible:
+                            Descripción del riesgo: Incremento en el riesgo de tener síntomas respiratorios y/o disminución en la función pulmonar.
+                        	<li>Reducir las actividades físicas vigorosas al aire libre.</li>
+                        	<li>En caso de presentar algún síntoma, molestia o tener dudas, acudir al médico.</li>
+                        	<li>Mantenerse informado sobre la evolución de la calidad del aire.</li>
+                            <br />
+                            Menores de 12 años y personas gestantes:
+                            Descripción del riesgo: Incremento en el riesgo de tener síntomas respiratorios y/o disminución en la función pulmonar.
+                           	<li>Es posible realizar actividades físicas ligeras al aire libre si se aumentan los periodos de descanso.</li>
+	                        <li>Reducir actividades físicas vigorosas.</li>
+	                        <li>En caso de presentar algún síntoma, molestia o tener dudas, acudir al médico.</li>
+	                        <li>Mantenerse informado sobre la evolución de la calidad del aire.</li>
+
                            
                         </ul>
                     </Tab.Pane>
                     <Tab.Pane eventKey="muy">
                         <ul>
-                            <li>Evitar actividades al aire libre</li>
-                            <li>Evitar ejercitarse al aire libre o en interiores que no cuenten con sistemas de purificación de aire</li>
-                            <li>Cerrar puertas y ventanas</li>
-                            <li>Personas vulnerables permanecer en interiores sin actividad física</li>
-                            <li>Acudir al médico en caso de síntomas de afectaciones a la salud</li>
+                            Población en general menores de 12 años y personas gestantes:
+                            Descripción del riesgo: Se pueden presentar daños a la salud.
+                        	<li>Es posible ejercitarse en interiores siempre y cuando sea un espacio libre de humo de tabaco y con sistema de purificación de aire.</li>
+                        	<li>Reducir la actividad física al aire libre.</li>
+                        	<li>Evitar actividades físicas vigorosas o prolongadas al aire libre.</li>
+                        	<li>Suspender entrenamientos y partidos de ligas deportivas y actividades físicas extracurriculares en exteriores.</li>
+                        	<li>Mantener puertas y ventanas cerradas.</li>
+                        	<li>Evitar fogatas y uso de combustibles sólidos como carbón o leña.</li>
+                        	<li>Suspender el uso de cigarros de cualquier tipo.</li>
+                        	<li>En caso de presentar algún síntoma, molestia o tener dudas, acudir al médico.</li>
+	                        <li>Mantenerse informado sobre la evolución de la calidad del aire.</li> 
+                            <br />
+                            Personas Sensibles
+                            Descripción del riesgo: Pueden experimentar un agravamiento de asma, enfermedad pulmonar obstructiva crónica o evento cardiovascular e incremento en la probabilidad de muerte prematura personas con enfermedad pulmonar obstructiva crónica y cardiaca.
+                            <li>Es posible ejercitarse en interiores siempre y cuando sea un espacio libre de humo de tabaco y con sistema de purificación de aire.</li>
+                            <li>Evitar actividades físicas al aire libre.</li>
+                            <li>Reducir el tiempo de exposición al aire libre.</li>	
+                            <li>Suspender entrenamientos y partidos de ligas deportivas y actividades físicas extracurriculares.</li>
+                            <li>Mantener puertas y ventanas cerradas.</li>
                             <li>Evitar fogatas y uso de combustibles sólidos como carbón o leña</li>
-                            <li>Suspender entrenamientos y partidos de ligas deportivas y actividades físicas extracurriculares</li>
-                            <li>Suspender el uso de cigarros de cualquier tipo</li>
-                            <li>Limitar el uso de vehículos que usen combustibles fósiles</li>
-                            <li>Se recomienda fuertemente el uso de mascarillas reutilizables N95 con certificación NIOSH*</li>
-                            <br  />
-                            Personas con enfermedades cardiovasculares / respiratorias o mayores a 60 años:
-                            <li>Es posible realizar actividades físicas en espacios interiores, siempre y cuando se trate de un espacio libre de humo de tabaco. </li>
-                            <li>Evita las actividades físicas vigorosas y moderadas, así como el tiempo de estancia al aire libre.</li>
-                            <li>Si presentas algún síntoma o molestia o tienes dudas, busca el consejo de tu médico.</li>
-                            <br  />
-                            Menores de 12 años y personas gestantes:
-                            <li>Reduce las actividades físicas al aire libre y de preferencia realízalas en espacios interiores, siempre y cuando se trate de un espacio libre de humo de tabaco.</li>
-                            <li>Evita la actividad física vigorosa o prolongada al aire libre.</li>
-                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
-                            <br  />
-                            Población en general:
-                            <li>Reduce las actividades físicas al aire libre y de preferencia realízalas en espacios interiores, siempre y cuando se trate de un espacio libre de humo de tabaco.</li>
-                            <li>Evita la actividad física vigorosa o prolongada al aire libre.</li>
-                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
-
+                            <li>Suspender el uso de cigarros de cualquier tipo.</li>	
+                            <li>En caso de presentar algún síntoma, molestia o tener dudas, acudir al médico.</li>
+                            <li>Mantenerse informado sobre la evolución de la calidad del aire.</li>	
 
                         </ul>
                     </Tab.Pane>
                     <Tab.Pane eventKey="ext">
                         <ul>
-                            <li>Evitar actividades al aire libre</li>
-                            <li>Evitar ejercitarse al aire libre o en interiores que no cuenten con sistemas de purificación de aire</li>
-                            <li>Cerrar puertas y ventanas</li>
-                            <li>Personas vulnerables permanecer en interiores sin actividad física</li>
-                            <li>Acudir al médico o solicitar servicios de emergencias en caso de síntomas de afectaciones a la salud</li>
-                            <li>Evitar fogatas y uso de combustibles sólidos como carbón o leña</li>
-                            <li>Se recomienda fuertemente el uso de mascarillas reutilizables N95 con certificación NIOSH*</li>
-                            <li>Suspender entrenamientos y partidos de ligas deportivas y actividades físicas extracurriculares</li>
-                            <li>Suspender el uso de cigarros de cualquier tipo</li>
-                            <li>Limitar el uso de vehículos que usen combustibles fósiles</li>
-                            <li>Permanece en espacios interiores en donde puedes realizar actividades físicas.</li>
-                            <li>Reprograma tus actividades al aire libre y si presentas síntomas respiratorios y/o cardiacos acude al médico.</li>
-                            <li>Infórmate sobre la evolución de la calidad del aire.</li>
+                            Descripción del riesgo: Es probable que cualquier persona se vea afectada por efectos graves a la salud.
+                        	<li>Permanecer en espacios interiores libres de humo de tabaco y con sistemas de purificación de aire. </li>
+                        	<li>Evitar actividades físicas al aire libre.</li>
+                        	<li>Suspender entrenamientos y partidos de ligas deportivas y actividades físicas extracurriculares.</li>
+                        	<li>Mantener cerradas puertas y ventanas.</li>
+                        	<li>Acudir al médico o solicitar servicios de emergencias en caso de síntomas de afectaciones a la salud.</li>
+                        	<li>Evitar fogatas y uso de combustibles sólidos como carbón o leña.</li>
+                        	<li>Suspender el uso de cigarros de cualquier tipo.</li>
+                        	<li>Limitar el uso de vehículos que usen combustibles fósiles.</li>
+                        	<li>Mantenerse informado sobre la evolución de la calidad del aire.</li>
+                    
                         </ul>
                     </Tab.Pane>
                 </Tab.Content>
