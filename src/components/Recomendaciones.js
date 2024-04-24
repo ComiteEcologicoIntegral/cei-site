@@ -48,11 +48,11 @@ const Recomendaciones = (props) => {
                     </Tab.Pane>
                     <Tab.Pane eventKey="acept">
                         <ul>
-                            Población en general, menores de 12 años y gestantes:
+                            <b>Población en general, menores de 12 años y gestantes</b> <br/>
                             <li>El riesgo en salud es mínimo.</li>
                             <li>Disfrutar realizar actividades al aire libre.</li>
                             <br  />
-                            Población sensible:
+                            <b>Población sensible</b> <br/>
                             Descripción del riesgo: Personas que son sensibles al ozono (O3) o material particulado (PM10 y PM2.5) pueden experimentar irritación de ojos y síntomas respiratorios como tos, irritación de vías respiratorias, expectoración o flema, dificultad para respirar o sibilancias.
                             <li>Realizar actividades moderadas al aire libre, reducir actividades físicas vigorosas.</li>
                             <li>En caso de presentar algún síntoma, molestia o tienes dudas, busca consejo médico.</li>
@@ -62,19 +62,19 @@ const Recomendaciones = (props) => {
                     </Tab.Pane>
                     <Tab.Pane eventKey="mala">
                         <ul>
-                            Población en general:
+                            <b>Población en general:</b> <br/>
                             Descripción del riesgo: Es poco probable que se vea afectada.
                             <li>Realizar actividades al aire libre de manera limitada, incrementar frecuencia de descansos, vigilar que estudiantes no presenten síntomas de afecciones respiratorias.</li>
                         	<li>En caso de presentar síntomas como tos o falta de aire, tomar más descansos y realizar actividades menos vigorosas.</li>
                         	<li>Mantenerse informado sobre la evolución de la calidad del aire.</li>
                             <br />
-                            Población sensible:
+                            <b>Población sensible</b> <br/>
                             Descripción del riesgo: Incremento en el riesgo de tener síntomas respiratorios y/o disminución en la función pulmonar.
                         	<li>Reducir las actividades físicas vigorosas al aire libre.</li>
                         	<li>En caso de presentar algún síntoma, molestia o tener dudas, acudir al médico.</li>
                         	<li>Mantenerse informado sobre la evolución de la calidad del aire.</li>
                             <br />
-                            Menores de 12 años y personas gestantes:
+                            <b>Menores de 12 años y personas gestantes</b> <br/>
                             Descripción del riesgo: Incremento en el riesgo de tener síntomas respiratorios y/o disminución en la función pulmonar.
                            	<li>Es posible realizar actividades físicas ligeras al aire libre si se aumentan los periodos de descanso.</li>
 	                        <li>Reducir actividades físicas vigorosas.</li>
@@ -86,7 +86,7 @@ const Recomendaciones = (props) => {
                     </Tab.Pane>
                     <Tab.Pane eventKey="muy">
                         <ul>
-                            Población en general menores de 12 años y personas gestantes:
+                            <b>Población en general menores de 12 años y personas gestantes</b> <br/>
                             Descripción del riesgo: Se pueden presentar daños a la salud.
                         	<li>Es posible ejercitarse en interiores siempre y cuando sea un espacio libre de humo de tabaco y con sistema de purificación de aire.</li>
                         	<li>Reducir la actividad física al aire libre.</li>
@@ -98,7 +98,7 @@ const Recomendaciones = (props) => {
                         	<li>En caso de presentar algún síntoma, molestia o tener dudas, acudir al médico.</li>
 	                        <li>Mantenerse informado sobre la evolución de la calidad del aire.</li> 
                             <br />
-                            Personas Sensibles
+                            <b>Población sensible</b> <br/>
                             Descripción del riesgo: Pueden experimentar un agravamiento de asma, enfermedad pulmonar obstructiva crónica o evento cardiovascular e incremento en la probabilidad de muerte prematura personas con enfermedad pulmonar obstructiva crónica y cardiaca.
                             <li>Es posible ejercitarse en interiores siempre y cuando sea un espacio libre de humo de tabaco y con sistema de purificación de aire.</li>
                             <li>Evitar actividades físicas al aire libre.</li>
