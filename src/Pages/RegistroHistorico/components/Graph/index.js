@@ -21,13 +21,22 @@ function Index() {
   const [endTime, setEndTime] = useState(moment().format("HH:mm"));
   const [location, setLocation] = useState(null);
 
-  function createQuery() {
-    let queryStr = `location=${location.label}&gas=${gas.value}&system=${
-      system.opt
-    }&start_date=${moment.utc(startDate).format("MM/DD/YYYY")}/${startTime}:00&end_date=${moment
-      .utc(endDate)
-      .format("MM/DD/YYYY")}/${endTime}:00`;
+  function getMomentFromDateAndTime(date, time) {
+    const dateMoment = moment(date);
+    const timeMoment = moment(time, 'HH:mm:ss');
 
+    return dateMoment
+      .set('hour', timeMoment.get('hour'))
+      .set('minute', timeMoment.get('minute'))
+      .set('second', timeMoment.get('second'))
+      .set('millisecond', timeMoment.get('millisecond'))
+      .toISOString()
+  }
+
+  function createQuery() {
+    let queryStr = `location=${location.value}&gas=${gas.value}&system=${
+      system.opt
+    }&start_date=${getMomentFromDateAndTime(startDate, startTime)}&end_date=${getMomentFromDateAndTime(endDate, endTime)}`;
     return queryStr;
   }
 
