@@ -1,2 +1,4 @@
 build.zip
+node_modules
+build
 .git

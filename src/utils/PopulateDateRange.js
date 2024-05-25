@@ -14,6 +14,13 @@ export function populateDateRange(startDate, stopDate) {
   return dateArray;
 }
 
+export function getFirstAndLastDayOfMonth(year, month) {
+  return {
+    first: getFirstDayOfMonth(year, month),
+    last: getLastDayOfMonth(year, month)
+  }
+}
+
 export function getFirstDayOfMonth(year, month) {
   return new Date(year, month, 1);
 }

@@ -42,14 +42,15 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
       good: 0,
       acceptable: 0,
       bad: 0,
-      "super-bad": 0,
+      "very-bad": 0,
       "extremely-bad": 0,
       "no-data":0
     };
 
     datesOfTheMonth.forEach((date) => {
       if (calendarData[date.getDate() - 1]) {
-        let status = getStatusClassName(calendarData[date.getDate() - 1].movil, gas, avgType.value);      
+        console.log("calendarData[date.getDate() - 1]", calendarData[date.getDate() - 1]);
+        let status = calendarData[date.getDate() - 1].status
         tmpDayCount[status]++;
       }
     });
@@ -92,36 +93,36 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
     setHoursCards(ans);
   }, [dataByHour]);
 
-  const getDateClassName = useCallback(
-    (date) => {
-      if (!calendarData || !calendarData[date.getDate() - 1] || !avgType.value) { 
-        return; 
-      }
-      return getStatusClassName(calendarData[date.getDate() - 1].movil, gas, avgType.value);
-    }, [calendarData]);
+  const getDateStatus = (date) => {
+    if (!calendarData) return;
+    return calendarData[date.getDate() - 1].status;
+  }
 
   const tileClassName = useCallback(
     ({ date, view }) => {
       // Check if a date React-Calendar wants to check is on the list of dates to add class to
       if (datesOfTheMonth.find((dDate) => isSameDay(dDate, date))) {
-        return getDateClassName(date);
+        if (!calendarData || !calendarData[date.getDate() - 1] || !avgType.value) {
+          return;
+        }
+        return getDateStatus(date);
       } else {
         return "out-of-range";
       }
     },
-    [datesOfTheMonth, getDateClassName]
+    [calendarData]
   );
-  
-  const dayData = calendarData ? calendarData[selectedDate.getDate() - 1] : null; 
-  const dayAverageInfo = <span className={getDateClassName(selectedDate)}>{dayData && dayData.movil ? dayData.movil.toPrecision(5) : "ND"}</span>;
+
+  const dayData = calendarData ? calendarData[selectedDate.getDate() - 1] : null;
+  const dayAverageInfo = <span className={getDateStatus(selectedDate)}>{dayData && dayData.movil ? dayData.movil.toPrecision(5) : "ND"}</span>;
   return (
     <div className="container mb-10">
       <div className="mb-3">
         Para visualizar la informacion desglosada por hora da click en el dia
-        que deseas y los datos se verán en la parte izquierda. Para cambiar de 
-        mes puedes usar las flechas de la parte superior o puedes dar click en 
-        el mes actual y cambiar a la vista de mes (se vuelve a la vista por dia 
-        haciendo click en un mes). Al cambiar de mes haz click en un dia de ese 
+        que deseas y los datos se verán en la parte izquierda. Para cambiar de
+        mes puedes usar las flechas de la parte superior o puedes dar click en
+        el mes actual y cambiar a la vista de mes (se vuelve a la vista por dia
+        haciendo click en un mes). Al cambiar de mes haz click en un dia de ese
         mes para que se carguen los datos
       </div>
       <Row className="mb-5">
@@ -167,7 +168,7 @@ function Calendar({ calendarData, dataByHour, gas, selectedDate, setSelectedDate
                 type={statusClassName.Bad}
               />
               <DayBullet
-                count={dayCount["super-bad"]}
+                count={dayCount["very-bad"]}
                 text="Muy mala"
                 type={statusClassName.SuperBad}
               />

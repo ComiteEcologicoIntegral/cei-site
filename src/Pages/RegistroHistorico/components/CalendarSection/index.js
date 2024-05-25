@@ -9,8 +9,9 @@ import {
   populateDateRange,
   getFirstDayOfMonth,
   getLastDayOfMonth,
-  toLocalISOTime
+  getFirstAndLastDayOfMonth
 } from "../../../../utils/PopulateDateRange";
+import { getDayHourlyData, getMonthAverage } from "../../../../services/dayAverageService";
 
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getUTCFullYear();
@@ -19,7 +20,7 @@ let endOfMonth = getLastDayOfMonth(currentYear, currentMonth);
 
 function CalendarSection() {
   const [dataByHour, setDataByHour] = useState(null);
-  const [noData, setNoData] = useState(false); // Desplegar mensaje si no se encontraron datos en la BD
+  const [error, setError] = useState(false);
 
   // Datos de los filtros
   const [system, setSystem] = useState(null);
@@ -63,84 +64,28 @@ function CalendarSection() {
     }
   }, [datesOfTheMonth]);
 
-  useEffect(() => {
-    if (location && contaminant) {
-      fetchDataByHour();
-    }
-  }, [selectedDate]);
-
-  // Crea el string del query para el calendario
-  function getDataByHourQueryString() {
-
-    let currentISOTime = toLocalISOTime(selectedDate).split("T")[0];
-
-    let queryStr = "ubic=" +
-      location.value +
-      "&ind=" +
-      contaminant.value +
-      "&inicio=" +
-      currentISOTime +
-      "&fin=" +
-      currentISOTime;
-
-    return queryStr;
-  }
-
-  function getCalendarQueryString() {
-    currentMonth = selectedDate.getMonth();
-    currentYear = selectedDate.getUTCFullYear();
-    beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
-    endOfMonth = getLastDayOfMonth(currentYear, currentMonth);
-
-    let startDateString = beginOfMonth.toISOString().split("T")[0];
-    let endDateString = endOfMonth.toISOString().split("T")[0];
-
-    let queryStr =
-      "ubic=" +
-      location.value +
-      "&ind=" +
-      contaminant.value +
-      "&inicio=" +
-      startDateString +
-      "&fin=" +
-      endDateString +
-      "&norm=" +
-      avgType.value;
-
-    return queryStr;
-  }
-
   const fetchCalendarData = () => {
-    // Data for calendar
-    let calendarQueryString = getCalendarQueryString();
-    fetch(`${apiUrl}/prom-data-norms?${calendarQueryString}`)
-      .then((response) => response.json())
-      .then((json) => {
-        setCalendarData(json);
-      })
-      .catch((e) => { 
-        console.log(e) 
-        setNoData(true);
+    const { first, last } = getFirstAndLastDayOfMonth(selectedDate.getUTCFullYear(), selectedDate.getMonth());
+    getMonthAverage(location.value, contaminant.value, first.toISOString(), last.toISOString(), avgType.value)
+      .then((data) => {
+        setCalendarData(data);
+      }).catch((e) => {
+        setError(e);
       });
   };
 
-  const fetchDataByHour = () => {
-    // Data by hour
-    let hourQueryString = getDataByHourQueryString();
-    fetch(`${apiUrl}/datos-fecha?${hourQueryString}`)
-      .then((response) => response.json())
-      .then((json) => {
-        setDataByHour(json);
-      })
-      .catch((e) => { 
-        console.log(e) 
-        setNoData(true);
+  const fetchDayHourlyData = () => {
+    getDayHourlyData(location.value, contaminant.value, selectedDate.toISOString(), selectedDate.toISOString())
+      .then((data) => {
+        setDataByHour(data);
+      }).catch((e) => {
+        setError(e);
       });
   };
 
   const fetchData = () => {
     fetchCalendarData();
-    fetchDataByHour();
+    fetchDayHourlyData();
   };
 
   function getQueryStringToDownload() {
@@ -187,16 +132,16 @@ function CalendarSection() {
   return (
     <div className="container mb-10">
       <Modal
-        show={noData}
-        onHide={() => setNoData(false)}
+        show={!!error}
+        onHide={() => setError(false)}
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
         <Modal.Header closeButton>
-          <h5>Datos no encontrados</h5>
+          <h5>API error</h5>
         </Modal.Header>
         <Modal.Body>
-          <p>Revise los parametros e intente de nuevo.</p>
+          <p>{error.message}</p>
         </Modal.Body>
       </Modal>
       <Form
