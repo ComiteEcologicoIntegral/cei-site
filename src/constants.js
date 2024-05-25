@@ -26,6 +26,62 @@ export const gases = [
   },
 ];
 
+// Los valores en estas listas deben estar en orden ascendiente
+export const criteria = {
+  ssa: {
+    PM10: [50, 70, 155, 235],
+    PM25: [25, 41, 79, 147],
+    O3: [0.065, 0.07, 0.092, 0.114],
+    CO: [8.75, 9.0, 13.3, 15.5],
+    SO2: [0.015, 0.04, 0.165, 0.22],
+    NO2: [0.103, 0.106, 0.23, 0.25],
+  },
+  semarnat: {
+    PM10: [50, 75, 155, 235],
+    PM25: [25, 45, 79, 147],
+    O3: [0.051, 0.07, 0.092, 0.114],
+    CO: [8.75, 11.0, 13.3, 15.5],
+    SO2: [0.008, 0.11, 0.165, 0.22],
+    NO2: [0.107, 0.21, 0.23, 0.25],
+  },
+  oms: {
+    PM10: [45, 45, 45, 45],
+    PM25: [15, 15, 15, 15],
+    O3: [0.051, 0.051, 0.051, 0.051],
+    CO: [8, 8, 8, 8],
+    SO2: [0.015, 0.015, 0.015, 0.015],
+    NO2: [0.013, 0.013, 0.013, 0.013],
+  },
+};
+
+export const statusClassOrder = [
+  "Good",
+  "Acceptable",
+  "Bad",
+  "SuperBad",
+  "ExtremelyBad",
+  "NoData",
+];
+
+export const statusClassName = {
+  Good: "good",
+  Acceptable: "acceptable",
+  Bad: "bad",
+  SuperBad: "super-bad",
+  ExtremelyBad: "extremely-bad",
+  NoData: "no-data",
+};
+
+// Should be the same as the keys from statusClassName
+export const statusColor = {
+  good: "#95BF39",
+  acceptable: "#F2E313",
+  bad: "#F2811D",
+  "super-bad": "F22233",
+  "extremely-bad": "#73022C",
+  "no-data": "#4d4d4d",
+};
+
 // Opciones del dropdown de sistemas:
 export const systemOptions = [
   { value: "PurpleAir", label: "PurpleAir", opt: "P" },
@@ -53,36 +109,60 @@ export const unidad = {
 
 export const normOptions = {
   PM25: [
-    {value: "semarnat", label: "NOM-172-SEMARNAT-2019 (Promedio movil 12 horas)"},
-    {value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)"},
-    {value: "oms", label: "OMS (Promedio 24 horas)"}
+    {
+      value: "semarnat",
+      label: "NOM-172-SEMARNAT-2019 (Promedio movil 12 horas)",
+    },
+    { value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)" },
+    { value: "oms", label: "OMS (Promedio 24 horas)" },
   ],
   PM10: [
-    {value: "semarnat", label: "NOM-172-SEMARNAT-2019 (Promedio movil 12 horas)"},
-    {value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)"},
-    {value: "oms", label: "OMS (Promedio 24 horas)"}
+    {
+      value: "semarnat",
+      label: "NOM-172-SEMARNAT-2019 (Promedio movil 12 horas)",
+    },
+    { value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)" },
+    { value: "oms", label: "OMS (Promedio 24 horas)" },
   ],
   CO: [
-    {value: "semarnat", label: "NOM-172-SEMARNAT-2019 (Promedio movil 8 horas)"},
-    {value: "ssa", label: "NOM-021-SSA1-2021 (Promedio movil 8 horas)"},
-    {value: "oms", label: "OMS (Promedio 24 horas)"}
+    {
+      value: "semarnat",
+      label: "NOM-172-SEMARNAT-2019 (Promedio movil 8 horas)",
+    },
+    { value: "ssa", label: "NOM-021-SSA1-2021 (Promedio movil 8 horas)" },
+    { value: "oms", label: "OMS (Promedio 24 horas)" },
   ],
   O3: [
-    {value: "semarnat", label: "NOM-172-SEMARNAT-2019 (Promedio movil 8 horas)"},
-    {value: "ssa", label: "NOM-020-SSA1-2021 (Promedio movil 8 horas)"},
-    {value: "oms", label: "OMS (Promedio 8 horas)"}
+    {
+      value: "semarnat",
+      label: "NOM-172-SEMARNAT-2019 (Promedio movil 8 horas)",
+    },
+    { value: "ssa", label: "NOM-020-SSA1-2021 (Promedio movil 8 horas)" },
+    { value: "oms", label: "OMS (Promedio 8 horas)" },
   ],
   NO2: [
-    {value: "semarnat", label: "NOM-172-SEMARNAT-2019 (Concentracion promedio horaria)"},
-    {value: "ssa", label: "NOM-023-SSA1-2021 (Concentracion promedio horaria)"},
-    {value: "oms", label: "OMS (Promedio 24 horas)"}
+    {
+      value: "semarnat",
+      label: "NOM-172-SEMARNAT-2019 (Concentracion promedio horaria)",
+    },
+    {
+      value: "ssa",
+      label: "NOM-023-SSA1-2021 (Concentracion promedio horaria)",
+    },
+    { value: "oms", label: "OMS (Promedio 24 horas)" },
   ],
   SO2: [
-    {value: "semarnat", label: "NOM-172-SEMARNAT-2019 (Concentracion promedio movil de 24 horas)"},
-    {value: "ssa", label: "NOM-022-SSA1-2021 (Concentracion promedio horaria)"},
-    {value: "oms", label: "OMS (Promedio 24 horas)"}
+    {
+      value: "semarnat",
+      label: "NOM-172-SEMARNAT-2019 (Concentracion promedio movil de 24 horas)",
+    },
+    {
+      value: "ssa",
+      label: "NOM-022-SSA1-2021 (Concentracion promedio horaria)",
+    },
+    { value: "oms", label: "OMS (Promedio 24 horas)" },
   ],
-}
+};
 
 export const idBlacklist = [
   "P36757",
