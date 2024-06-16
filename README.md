@@ -76,7 +76,7 @@ Se detiene y elimina el contenedor viejo y se inicia el nuevo
 ```
 docker stop cei-app
 docker rm cei-app
-docker run -d -p 9000:80 --name cei-app haiwave/cei-repo:front
+docker run -d -p 9000:80 --name cei-app ceiadmin/cei-front:latest
 ```
 
 ### Proxy del VPS
