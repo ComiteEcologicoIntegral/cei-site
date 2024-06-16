@@ -42,8 +42,8 @@ utilizar otro VPS o cuenta de DockerHub.
 En folder root del proyecto
 
 ```
-docker build -t haiwave/cei-repo:front .
-docker push haiwave/cei-repo:front
+docker build -t ceiadmin/cei-front:latest .
+docker push ceiadmin/cei-front:latest
 ```
 
 Si el contenedor se buildea desde una máquina con una arquitectura distinta
@@ -52,7 +52,7 @@ Por ejemplo, si se buildea el contenedor desde una computadora con un chip
 M1 y el VPS utiliza una arquitectura amd64, haríamos lo siguiente:
 
 ```
-docker buildx build --platform linux/amd64 -t haiwave/cei-repo:front .
+docker buildx build --platform linux/amd64 -t ceiadmin/cei-front:latest .
 ```
 
 NOTA: Dependiendo de cual usuario se este utilizando, `haiwave`
@@ -64,7 +64,8 @@ tiene que cambiarse, y es necesario autenticarse con ese usuario con el comando
 SSH al VPS y se hace pull de la imagen
 
 ```
-docker pull haiwave/cei-repo:front
+docker pull ceiadmin/cei-front:latest
+
 ```
 
 Nuevamente, si el repositorio es privado tiene que hacerse `docker login`
