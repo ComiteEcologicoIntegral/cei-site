@@ -33,7 +33,7 @@ const MapaFiltros = ({ onApply }) => {
             .filter(
                 (sensor) =>
                     typeof sensor.Longitud === 'number' &&
-                    typeof sensor.Latitud === 'number' && 
+                    typeof sensor.Latitud === 'number' &&
                     sensor.Sistema === systemChosen.label &&
                     !idBlacklist.includes(sensor.Sensor_id) &&
                     !idBlacklistpriv.includes(sensor.Sensor_id)
@@ -57,7 +57,7 @@ const MapaFiltros = ({ onApply }) => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-   
+
     useEffect(() => {
         onApply({ gas, location, interval });
     }, [gas, location, interval])
@@ -76,7 +76,7 @@ const MapaFiltros = ({ onApply }) => {
     return (
         <div className="container">
             <Form>
-            <Form.Row className="mapa-filtros"> 
+            <Form.Row className="mapa-filtros">
                     <Col className="mb-4 filter-container" xs={12} lg={6}>
                         <div className='filtros'>
                             <div>
@@ -120,13 +120,13 @@ const MapaFiltros = ({ onApply }) => {
                             <div>
                                 <p className='filtro-material font-weight-bold mb-4'>Contaminante</p>
                                 <Button
-                                    className="btn-info"
+                                    className="button-info"
                                     block
                                     onClick={handleShow}
                                 >
                                     ?
                                 </Button>
-                                <Select 
+                                <Select
                                     placeholder="Contaminante"
                                     options={indOptions}
                                     value={gas}
@@ -148,12 +148,12 @@ const MapaFiltros = ({ onApply }) => {
                                 <BsInfoCircle color="MediumVioletRed" />
                             </Button>
                         </OverlayTrigger>
-                            
+
                         </Col> */}
                     </Col>
                 </Form.Row>
             </Form>
-  
+
             <Modal size="lg" show={show} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Indicadores</Modal.Title>
