@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import "moment/locale/es";
+import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
+
 import Form from "./components/Form";
 import { apiUrl } from "../../../../constants";
-import { Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import Calendar from "./components/Calendar";
 import {
   populateDateRange,
@@ -12,11 +14,23 @@ import {
   getFirstAndLastDayOfMonth
 } from "../../../../utils/PopulateDateRange";
 import { getDayHourlyData, getMonthAverage } from "../../../../services/dayAverageService";
+import HourlyData from "./components/HourlyData";
 
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getUTCFullYear();
 let beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
 let endOfMonth = getLastDayOfMonth(currentYear, currentMonth);
+
+const unidad = {
+  PM25: "µg/m3",
+  PM10: "µg/m3",
+  CO: "ppm",
+  O3: "ppm",
+  NO2: "ppm",
+  SO2: "ppm",
+};
+
+const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
 
 function CalendarSection() {
   const [dataByHour, setDataByHour] = useState(null);
@@ -27,6 +41,7 @@ function CalendarSection() {
   const [location, setLocation] = useState(null);
   const [contaminant, setContaminant] = useState(null);
   const [avgType, setAvgType] = useState(null);
+  const [hourCards, setHoursCards] = useState(null);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [datesOfTheMonth, setMonthDates] = useState(populateDateRange(beginOfMonth, endOfMonth));
@@ -75,7 +90,7 @@ function CalendarSection() {
   };
 
   const fetchDayHourlyData = () => {
-    getDayHourlyData(location.value, contaminant.value, selectedDate.toISOString(), selectedDate.toISOString())
+    getDayHourlyData(location.value, contaminant.value, selectedDate.toISOString())
       .then((data) => {
         setDataByHour(data);
       }).catch((e) => {
@@ -129,6 +144,30 @@ function CalendarSection() {
     }
   }
 
+
+  useEffect(() => {
+    if (!dataByHour || dataByHour.length === 0) return;
+
+    let ans = [];
+
+    for (let currHour = 0; currHour < 24 && currHour < dataByHour.length; currHour++) {
+      console.log("dataByHour[currHour]", dataByHour[currHour])
+      ans.push(
+        <div>
+          <AiFillCaretDown color="lightgray" /> {currHour.toString().padStart(2, '0')}:00
+          <p>
+            <AiFillRightSquare style={{ color: "white" }} className={dataByHour[currHour].status} />
+            {dataByHour[currHour].value !== -1
+              ? ` ${dataByHour[currHour].value} ${unidad[contaminant.value]}`
+              : " No hay registro"}
+          </p>
+        </div >
+      );
+    }
+    setHoursCards(ans);
+  }, [dataByHour, contaminant]);
+
+  const dayData = calendarData ? calendarData[selectedDate.getDate() - 1] : null;
   return (
     <div className="container mb-10">
       <Modal
@@ -155,16 +194,35 @@ function CalendarSection() {
         setAvgType={setAvgType}
         search={fetchData}
       />
-      <Calendar
-        calendarData={calendarData}
-        dataByHour={dataByHour}
-        gas={contaminant ? contaminant.value : null}
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
-        datesOfTheMonth={datesOfTheMonth}
-        downloadFile={downloadFile}
-        avgType={avgType}
-      />
+
+      <small className="d-block mb-3 text-muted">
+        Para visualizar la informacion desglosada por hora da click en el dia
+        que deseas y los datos se verán en la parte izquierda. Para cambiar de
+        mes puedes usar las flechas de la parte superior o puedes dar click en
+        el mes actual y cambiar a la vista de mes (se vuelve a la vista por dia
+        haciendo click en un mes). Al cambiar de mes haz click en un dia de ese
+        mes para que se carguen los datos
+      </small>
+      <div className="d-flex justify-content-around">
+        <HourlyData
+          dayData={dayData}
+          dataByHour={dataByHour}
+          unidad={unidad}
+          contaminant={contaminant}
+        />
+        <div>
+          <Calendar
+            calendarData={calendarData}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            datesOfTheMonth={datesOfTheMonth}
+            avgType={avgType}
+          />
+          <Button variant="dark" onClick={downloadFile}>
+            Descargar datos del mes
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

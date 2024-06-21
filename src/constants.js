@@ -77,7 +77,7 @@ export const statusColor = {
   good: "#95BF39",
   acceptable: "#F2E313",
   bad: "#F2811D",
-  "super-bad": "F22233",
+  "super-bad": "#F22233",
   "extremely-bad": "#73022C",
   "no-data": "#4d4d4d",
 };
