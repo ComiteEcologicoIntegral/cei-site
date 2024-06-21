@@ -77,7 +77,7 @@ export const statusColor = {
   good: "#95BF39",
   acceptable: "#F2E313",
   bad: "#F2811D",
-  "super-bad": "F22233",
+  "super-bad": "#F22233",
   "extremely-bad": "#73022C",
   "no-data": "#4d4d4d",
 };
@@ -187,3 +187,6 @@ export const apiUrl =
   process.env.NODE_ENV === "production"
     ? process.env.REACT_APP_API_URL
     : "http://127.0.0.1:8000";
+
+export const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
+
