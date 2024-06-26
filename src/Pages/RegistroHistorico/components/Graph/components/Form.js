@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Col } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import moment from "moment";
-import { fetchSummaryData } from "../../../../../handlers/data";
-import { setSensorData } from "../../../../../redux/reducers";
 import { systemOptions, gasesOptions, idBlacklistpriv } from "../../../../../constants";
+import { getSystemSensors } from "../../../../../services/sensorService";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 // Componente para la página de Registro Histórico
@@ -26,27 +24,6 @@ function GraphForm({
   setGas,
   fetchGraphData,
 }) {
-  const dispatch = useDispatch();
-  const { sensorDataLastUpdate, sensorData } = useSelector((state) => state);
-
-  const [sensRaw, setSensRaw] = useState(null);
-
-  useEffect(() => {
-    // TODO: convertir a hook
-    const diff = sensorDataLastUpdate ? moment().diff(sensorDataLastUpdate, "minutes") : 999;
-
-    if (diff > 60) {
-      fetchSummaryData()
-        .then((data) => {
-          dispatch(setSensorData(data));
-          setSensRaw(data);
-        })
-        .catch((err) => console.error(err));
-    } else {
-      setSensRaw(sensorData);
-    }
-  }, [sensorDataLastUpdate, sensorData]);
-
   const [locations, setLocations] = useState([]);
   const [indOptions, setIndOptions] = useState(null);
 
@@ -68,20 +45,24 @@ function GraphForm({
     return moment().isBefore(selectedTime);
   }
 
-  // Crear valores para el dropdown
   useEffect(() => {
-    if (!sensRaw || !system) return;
+    // TODO: change this to not make a fetch every time system changes
+    if (!system) return;
 
-    let sensors = [];
-    sensRaw.forEach((element) => {
-      if (system.value === element.Sistema && !idBlacklistpriv.includes(element.Sensor_id)) {
-        sensors.push({ value: element.Sensor_id, label: element.Zona });
+    getSystemSensors(system.value).then(
+      (sensors) => {
+        const locations = [];
+        for(const sensor of sensors) {
+          if (!idBlacklistpriv.includes(sensor.id)) {
+            locations.push({ value: sensor.id, label: sensor.address.zone });
+          }
+        }
+        setLocations(locations)
       }
-    });
+    );
 
-    setLocations(sensors);
     system.value === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions);
-  }, [sensRaw, system]);
+  }, [system]);
 
   return (
     <div className="mt-5">

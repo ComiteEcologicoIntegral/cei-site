@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import Select from "react-select";
 import { getSensorLocationsBySystem } from "../../../../../handlers/data";
-import { gasesOptions, normOptions } from "../../../../../constants";
+import { gasesOptions, idBlacklistpriv, normOptions } from "../../../../../constants";
+import { getSystemSensors } from "../../../../../services/sensorService";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
@@ -39,13 +40,22 @@ function CalendarForm({
   useEffect(() => {
     // TODO: change this to not make a fetch every time system changes
     if (!system) return;
-    getSensorLocationsBySystem(system.value).then((locations) => {
-      setLocations(locations);
-    }
+
+    getSystemSensors(system.value).then(
+      (sensors) => {
+        const locations = [];
+        for (const sensor of sensors) {
+          if (!idBlacklistpriv.includes(sensor.id)) {
+            locations.push({ value: sensor.id, label: sensor.address.zone });
+          }
+        }
+        setLocations(locations)
+      }
     );
+
     system.value === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions);
   }, [system]);
-  
+
 
   useEffect(() => {
     if (!contaminant) return;

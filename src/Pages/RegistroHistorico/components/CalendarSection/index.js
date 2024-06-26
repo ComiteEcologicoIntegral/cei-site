@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import "moment/locale/es";
-import { AiFillCaretDown, AiFillRightSquare } from "react-icons/ai";
 
 import Form from "./components/Form";
 import { apiUrl } from "../../../../constants";
@@ -39,7 +38,6 @@ function CalendarSection() {
   const [location, setLocation] = useState(null);
   const [contaminant, setContaminant] = useState(null);
   const [avgType, setAvgType] = useState(null);
-  const [hourCards, setHoursCards] = useState(null);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [datesOfTheMonth, setMonthDates] = useState(populateDateRange(beginOfMonth, endOfMonth));
