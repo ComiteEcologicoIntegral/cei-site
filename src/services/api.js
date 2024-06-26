@@ -3,9 +3,7 @@ export const BASE_URL =
     ? "https://aire.comiteecologicointegral.org/api"
     : "http://127.0.0.1:8000";
 
-export async function fetchBackendAPI(url,  queryParams = {}, options = {}) {
-  console.log("url", url)
-  console.log("queryParams", queryParams)
+export async function fetchBackendAPI(url, queryParams = {}, options = {}) {
   const headers = {
     'Content-Type': 'application/json',
     ...(options.headers || {}),
@@ -24,5 +22,10 @@ export async function fetchBackendAPI(url,  queryParams = {}, options = {}) {
     throw new Error(errorData.message || 'API request failed');
   }
 
-  return response.json();
+  try {
+    return response.json();
+  } catch (error) {
+    console.log('Error:', error);
+    return response.text();
+  }
 }
