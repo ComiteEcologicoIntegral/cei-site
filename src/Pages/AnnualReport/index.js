@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { Form, Col, Button } from "react-bootstrap";
 import Select from "react-select";
 import { TailSpin } from 'react-loader-spinner';
-import { getSensorLocationsBySystem } from '../../handlers/data';
-import { populateDateRange, getFirstDayOfMonth, getLastDayOfMonth } from '../../utils/PopulateDateRange';
-import { gasesOptions, apiUrl, normOptions } from "../../constants";
+import { populateDateRange, getFirstDayOfMonth, getLastDayOfMonth, getFirstAndLastDayOfMonth } from '../../utils/PopulateDateRange';
+import { gasesOptions, apiUrl, normOptions, idBlacklistpriv } from "../../constants";
 import { getICAR } from "../../handlers/statusCriteria";
 import "./index.css";
 import moment from 'moment';
+import useSystemLocations from '../../hooks/useSystemLocations';
+import { getMonthAverage } from '../../services/dayAverageService';
 
 export default function AnnualReport() {
-  const REPORT_SYSTEM = { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G" };
+  const system = { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G" };
 
   const months = [
     { value: 0, label: "Enero" },
@@ -38,7 +39,6 @@ export default function AnnualReport() {
   }
 
   // dropdowns
-  const [locations, setLocations] = useState([]);
   const [avgType, setAvgType] = useState([]);
   const [month, setMonth] = useState(months[0]);
   const [year, setYear] = useState(years[0]);
@@ -46,21 +46,9 @@ export default function AnnualReport() {
   const [contaminant, setContaminant] = useState(gasesOptions[0]);
   const [monthData, setMonthData] = useState(null);
   const [avgOptions, setAvgOptions] = useState(null);
-
-  // table 
-  const [avgTypeTable, setAvgTypeTable] = useState(null);
-  const [contaminantTable, setContaminantTable] = useState(null);
-  const [monthTable, setMonthTable] = useState(null);
-  const [yearTable, setYearTable] = useState(null);
-
-  // helpers
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    getSensorLocationsBySystem(REPORT_SYSTEM.value).then((data) => {
-      setLocations(data);
-    });
-  }, [])
+  const { locations } = useSystemLocations(system.value, idBlacklistpriv);
 
   // Make the avgType contsistent with the current selected contaminant
   useEffect(() => {
@@ -69,55 +57,12 @@ export default function AnnualReport() {
     setAvgOptions(normOptions[contaminant.value]);
   }, [contaminant]);
 
-  function getCalendarQueryString(location) {
-    let start = getFirstDayOfMonth(year.value, month.value);
-    let end = getLastDayOfMonth(year.value, month.value);
-
-    let startDateString = start.toISOString().split("T")[0];
-    let endDateString = end.toISOString().split("T")[0];
-
-    let queryStr =
-      "ubic=" +
-      location.value +
-      "&ind=" +
-      contaminant.value +
-      "&inicio=" +
-      startDateString +
-      "&fin=" +
-      endDateString +
-      "&norm=" +
-      avgType.value;
-
-    return queryStr;
-  }
-
   const fetchCalendarData = (location) => {
-    // Data for calendar
-    let calendarQueryString = getCalendarQueryString(location);
-    return new Promise((resolve, reject) => {
-      fetch(`${apiUrl}/prom-data-norms?${calendarQueryString}`)
-        .then((response) => response.json())
-        .then((json) => {
-          resolve(json);
-        })
-        .catch((e) => reject(e));
-    }
-    );
+    const { first, last } = getFirstAndLastDayOfMonth(year.value, month.value);
+    return getMonthAverage(location.value, contaminant.value, first.toISOString(), last.toISOString(), avgType.value);
   };
 
-  function getDateStatus(date, location) {
-    if (!monthData[location.label] || !date || date.getDate() > monthData[location.label].length) return;
-    const dayAverage = monthData[location.label][date.getDate() - 1].movil;
-    if (dayAverage === "") return;
-    let ans = getICAR(dayAverage, contaminantTable.value, avgTypeTable.value);
-    return ans;
-  }
-
   const handleClick = () => {
-    if (isLoading) {
-      return;
-    }
-
     setIsLoading(true);
 
     setMonthData(null);
@@ -126,11 +71,6 @@ export default function AnnualReport() {
     const lastDayOfTheMonth = getLastDayOfMonth(year.value, month.value);
     const tmpMonthDates = populateDateRange(firstDayOfTheMonth, lastDayOfTheMonth);
     setMonthDates(tmpMonthDates);
-
-    setAvgTypeTable(avgType);
-    setContaminantTable(contaminant);
-    setMonthTable(month);
-    setYearTable(year);
 
     const promises = [];
     locations.forEach((location) => {
@@ -144,7 +84,6 @@ export default function AnnualReport() {
         tmpMonthData[locations[i].label] = results[i];
       }
       setMonthData(tmpMonthData);
-
       setIsLoading(false);
     });
   }
@@ -210,7 +149,7 @@ export default function AnnualReport() {
       }
       {monthData &&
         <div className="annual-report-table">
-          <h4>Tabla para contaminante {contaminantTable.label} con la norma {avgTypeTable.label}. {monthTable.label} {yearTable.label}</h4>
+          <h4>Tabla para contaminante {contaminant.label} con la norma {avgType.label}. {month.label} {year.label}</h4>
           <table>
             <thead>
               <tr>
@@ -222,11 +161,12 @@ export default function AnnualReport() {
             </thead>
             <tbody>
               {locations.map((location) => {
-                if (!monthData) return;
-                const monthDataForLocation = monthData[location.label];
-                if (!monthDataForLocation) return;
-                const dayAvgs = monthDataForLocation.map((data, i) => {
-                  return (<td className={getDateStatus(monthDates[i], location)}>{data.movil ? data.movil.toPrecision(4) : "ND"}</td>);
+                const locMonthlyData = monthData[location.label];
+                const dayAvgs = locMonthlyData.map((data, i) => {
+                  return (
+                    <td className={data.status}>
+                      {data.average ? data.average.toPrecision(4) : "ND"}
+                    </td>);
                 });
                 return (<tr><td>{location.label}</td>{dayAvgs}</tr>);
               }

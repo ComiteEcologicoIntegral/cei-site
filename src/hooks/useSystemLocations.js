@@ -2,16 +2,16 @@ import { useEffect, useState } from 'react';
 import { gasesOptions } from '../constants';
 import { getSystemSensors } from '../services/sensorService';
 
-const useSystemLocations = (system, idBlacklist) => {
+const useSystemLocations = (system_name, idBlacklist) => {
   const [locations, setLocations] = useState([]);
   const [contaminants, setContaminants] = useState([]);
 
   useEffect(() => {
-    if (!system) return;
+    if (!system_name) return;
 
     const fetchSensors = async () => {
       try {
-        const sensors = await getSystemSensors(system.value);
+        const sensors = await getSystemSensors(system_name);
         const newLocations = [];
         for (const sensor of sensors) {
           if (!idBlacklist.includes(sensor.id)) {
@@ -24,12 +24,12 @@ const useSystemLocations = (system, idBlacklist) => {
       }
     };
 
-    system.value === "PurpleAir"
+    system_name === "PurpleAir"
       ? setContaminants([gasesOptions[0]])
       : setContaminants(gasesOptions);
 
     fetchSensors();
-  }, [system, idBlacklist]);
+  }, [system_name, idBlacklist]);
 
   return { locations, contaminants };
 };
