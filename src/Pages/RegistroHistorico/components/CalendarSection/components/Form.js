@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import Select from "react-select";
-import { getSensorLocationsBySystem } from "../../../../../handlers/data";
 import { gasesOptions, idBlacklistpriv, normOptions } from "../../../../../constants";
-import { getSystemSensors } from "../../../../../services/sensorService";
+import useSystemLocations from "../../../../../hooks/useSystemLocations";
 
 // Diferente a la que esta definida en constants porque este debe de decir AireNL/Sinaica junto
 const systemOptions = [
@@ -23,9 +22,8 @@ function CalendarForm({
   setAvgType,
   search,
 }) {
-  const [locations, setLocations] = useState([]);
-  const [indOptions, setIndOptions] = useState(null);
   const [avgOptions, setAvgOptions] = useState(null);
+  const {locations, contaminants} = useSystemLocations(system?.value, idBlacklistpriv);
 
   const enforceValidGas = () => {
     setGas(gasesOptions[0]);
@@ -36,26 +34,6 @@ function CalendarForm({
     setLocation(null);
     setSystem(system);
   };
-
-  useEffect(() => {
-    // TODO: change this to not make a fetch every time system changes
-    if (!system) return;
-
-    getSystemSensors(system.value).then(
-      (sensors) => {
-        const locations = [];
-        for (const sensor of sensors) {
-          if (!idBlacklistpriv.includes(sensor.id)) {
-            locations.push({ value: sensor.id, label: sensor.address.zone });
-          }
-        }
-        setLocations(locations)
-      }
-    );
-
-    system.value === "PurpleAir" ? setIndOptions([gasesOptions[0]]) : setIndOptions(gasesOptions);
-  }, [system]);
-
 
   useEffect(() => {
     if (!contaminant) return;
@@ -103,7 +81,7 @@ function CalendarForm({
           <Col xs={6}>
             <p className="font-weight-bold mb-2">Contaminante</p>
             <Select
-              options={indOptions}
+              options={contaminants}
               placeholder={"Indicador"}
               value={contaminant}
               onChange={(e) => setGas(e)}
