@@ -1,6 +1,6 @@
 export const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_API_URL
+    ? "https://aire.comiteecologicointegral.org/api"
     : "http://127.0.0.1:8000";
 
 export async function fetchBackendAPI(url,  queryParams = {}, options = {}) {

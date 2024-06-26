@@ -185,7 +185,7 @@ export const mapBlacklist = ["Sinaica"];
 
 export const apiUrl =
   process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_API_URL
+    ? "https://aire.comiteecologicointegral.org/api"
     : "http://127.0.0.1:8000";
 
 export const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
