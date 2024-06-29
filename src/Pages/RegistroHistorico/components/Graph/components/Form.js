@@ -25,7 +25,7 @@ function GraphForm({
   fetchGraphData,
 }) {
 
-  const { locations, contaminants } = useSystemLocations(system.value, idBlacklistpriv);
+  const { locations, contaminants } = useSystemLocations(system?.value, idBlacklistpriv);
 
   const enforceValidGas = () => {
     setGas(gasesOptions[0]);
