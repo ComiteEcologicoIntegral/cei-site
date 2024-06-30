@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Col, Row } from "react-bootstrap";
-import {
-  isSameDay,
-} from "../../../../../utils/PopulateDateRange";
 import ReactCalendar from "react-calendar";
-import { statusClassName } from "../../../../../constants"
+import { dateFormat, statusClassName } from "../../../constants"
+import { isSameDay } from "../../../utils/PopulateDateRange";
 import "./Calendar.css";
 import "./DayBullet.css";
+import { capitalizeFirstLetter } from "../../../utils/stringUtils";
 
 
 const DayBullet = (props) => {
@@ -27,16 +25,15 @@ function Calendar({ calendarData, selectedDate, setSelectedDate, datesOfTheMonth
     if (!calendarData) return;
     let tmpDayCount = {
       good: 0,
-      acceptable: 0,
+      "regular": 0,
       bad: 0,
-      "very-bad": 0,
-      "extremely-bad": 0,
+      "very_bad": 0,
+      "extremely_bad": 0,
       "no-data": 0
     };
 
     datesOfTheMonth.forEach((date) => {
       if (calendarData[date.getDate() - 1]) {
-        console.log("calendarData[date.getDate() - 1]", calendarData[date.getDate() - 1]);
         let status = calendarData[date.getDate() - 1].status
         tmpDayCount[status]++;
       }
@@ -76,6 +73,10 @@ function Calendar({ calendarData, selectedDate, setSelectedDate, datesOfTheMonth
         value={selectedDate}
         tileClassName={tileClassName}
       />
+      <p className="mt-3">
+        {capitalizeFirstLetter(selectedDate.toLocaleDateString("es-MX", dateFormat))}
+      </p>
+
       {dayCount && (
         <div className="day-count">
           <h4 className="mt-4">Conteo de días</h4>
@@ -85,9 +86,9 @@ function Calendar({ calendarData, selectedDate, setSelectedDate, datesOfTheMonth
             type={statusClassName.Good}
           />
           <DayBullet
-            count={dayCount.acceptable}
+            count={dayCount.regular}
             text="Aceptable"
-            type={statusClassName.Acceptable}
+            type={statusClassName.Regular}
           />
           <DayBullet
             count={dayCount.bad}
@@ -95,12 +96,12 @@ function Calendar({ calendarData, selectedDate, setSelectedDate, datesOfTheMonth
             type={statusClassName.Bad}
           />
           <DayBullet
-            count={dayCount["very-bad"]}
+            count={dayCount["very_bad"]}
             text="Muy mala"
-            type={statusClassName.SuperBad}
+            type={statusClassName.VeryBad}
           />
           <DayBullet
-            count={dayCount["extremely-bad"]}
+            count={dayCount["extremely_bad"]}
             text="Extremadamente mala"
             type={statusClassName.ExtremelyBad}
           />

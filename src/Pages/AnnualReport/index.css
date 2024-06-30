@@ -1,5 +1,10 @@
 table, th, td {
-  border: 1px solid;
+  border: 1px solid gray;
+}
+
+.annual-report-table {
+  font-size: 0.8rem;
+  overflow-x: scroll;
 }
 
 .no-data {
@@ -11,7 +16,7 @@ table, th, td {
   background-color: rgb(76, 187, 23);
 }
 
-.acceptable {
+.regular {
   background-color: rgb(253, 218, 13);
 }
 
@@ -19,7 +24,7 @@ table, th, td {
   background-color: rgb(254, 0, 0);
 }
 
-.super-bad {
+.very-bad {
   background-color: rgb(166, 0, 0);
 }
 

@@ -1,11 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import moment from "moment";
 
-const initialState = { sensorData: [], sensorDataLastUpdate: null };
-
 const dataSlice = createSlice({
   name: "data",
-  initialState,
+  initialState: { sensorData: [], sensorDataLastUpdate: null },
   reducers: {
     setSensorData(state, action) {
       if (Array.isArray(action.payload)) {

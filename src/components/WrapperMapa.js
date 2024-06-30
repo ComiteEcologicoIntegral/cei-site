@@ -9,15 +9,16 @@ import { MapContainer, TileLayer } from 'react-leaflet';
  * Wrapper
  * @augments {Component<Props, State>}
  */
-function Wrapper({ center, children, ...props }) {
+function Wrapper({ center, setMap, children, ...props }) {
     return (
         <MapContainer
             center={center}
-            scrollWheelZoom={false}
             style={{
                 height: '100%',
                 width: '100%',
             }}
+            ref={setMap}
+            zoomControl={false}
             {...props}
         >
             <TileLayer
@@ -28,8 +29,6 @@ function Wrapper({ center, children, ...props }) {
         </MapContainer>
     );
 }
-
-Wrapper.defaultProps = {};
 
 Wrapper.propTypes = {
     /**

@@ -1,34 +1,50 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import MapaFiltros from "./components/MapaFiltros.js";
 import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
-import Legend from "./components/MapLegend/MapLegend"
-import { TablaCalidad } from "./components/TablaCalidad.js";
 
-import { gases, mapBlacklist, idBlacklist } from "./constants.js";
-import { getStatus, getICAR } from "./handlers/statusCriteria.js";
+import { gases, mapBlacklist, idBlacklist, unidad } from "./constants.js";
+import { getICAR } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
-import { Spinner } from "react-bootstrap";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { Button, Offcanvas } from "react-bootstrap";
+import { BsFillInfoSquareFill } from "react-icons/bs";
+import "./styles/MapLegend.css"
+import { TablaCalidad } from "./components/TablaCalidad.js";
 
 const mapDefaultProps = {
   center: [25.67, -100.25],
-  zoom: 11,
+  zoom: 12,
   minZoom: 10,
 };
 
-function Mapa() {
-  const [showHideState, setshowHideState] = useState(1);
-  const [currentGas, setCurrentGas] = useState(gases[0]);
+const LegendItem = (props) => {
+  const { text, icon } = props;
+
+  return (
+    <div
+      className="legend-item"
+      style={{ border: "1px dashed gray" }}
+    >
+      {icon && (
+        <div className="legend-item-icon">
+          <img src={icon} alt={"Legend Icon"} />
+        </div>
+      )}
+      <div className="legend-item-text">{text}</div>
+    </div>
+  );
+};
+
+function MapPage() {
+  const { location, contaminant } = useSelector((state) => state.form);
+
   const [currentInterval, setCurrentInterval] = useState(0);
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const {
-    data: sensorData,
-    loading: loadingSensorData,
-    error: errorSensorData,
-  } = useSensorData({});
+  const { sensorData } = useSensorData();
 
   const [map, setMap] = useState(null);
+  const [show, setShow] = useState(false);
 
   const setCenter = useCallback(
     (pos) => {
@@ -40,6 +56,13 @@ function Mapa() {
     },
     [map]
   );
+
+  useEffect(() => {
+    if (!location) return;
+    setCenter([location?.value.address.lat, location?.value.address.lon]);
+  }, [location, setCenter]);
+
+
 
   //Diccionario para pasar de Sensor_id a nombre de estacion
   const ANLKeys_dict = {
@@ -75,14 +98,15 @@ function Mapa() {
   }
 
   const filterND = (data) => {
-    return typeof data === "undefined" || data === null
-            ? "N/D"
-            : data.toString()
+    return typeof data === "undefined" || data === null || data === ""
+      ? "ND"
+      : data.toString()
   }
 
   const markers = useMemo(() => {
+    if (!contaminant) return [];
     // TODO: sensors should be filtered by the backend
-    const filteredSensors = sensorData.filter(
+    const filteredSensors = sensorData?.filter(
       (sensor) =>
         typeof sensor.Longitud === "number" &&
         typeof sensor.Latitud === "number" &&
@@ -90,8 +114,11 @@ function Mapa() {
         !idBlacklist.includes(sensor.Sensor_id)
     );
 
-    const resultingData = filteredSensors.map((data) => {
-      const { name: gasName, units: gasUnits } = currentGas;
+
+    const resultingData = filteredSensors?.map((data) => {
+      const { value: gasName } = contaminant;
+      const gasUnits = unidad[gasName];
+
 
       /* Current Interval === 0 -> Presenta el value del indicador de calidad del aire */
       let dataKey;
@@ -113,10 +140,10 @@ function Mapa() {
         }
       }
       const intValue = getValue(data[dataKey], gasName);
-      const value = intValue ? intValue : "ND";
+      const value = toString(intValue) ? intValue : "ND";
 
       return {
-        currentLocation,
+        currentLocation: location,
         ICAR_PM25: +data.ICAR_PM25,
         OMS_PM25: +data.OMS_PM25,
         AQI_PM25: +data.AQI_PM25,
@@ -141,8 +168,8 @@ function Mapa() {
         temperatura: filterND(data.Temperatura_C),
         position: [data.Latitud, data.Longitud],
         current: {
-          indicator: currentGas.label ? currentGas.label : gasName,
-          label: value,
+          indicator: contaminant?.label ? contaminant?.label : gasName,
+          label: filterND(value),
           units: gasUnits,
           status: getICAR(intValue, gasName, "ssa"),
           ref: "#",
@@ -199,77 +226,61 @@ function Mapa() {
     });
 
     return resultingData;
-  }, [sensorData, currentGas, currentInterval, currentLocation]);
+  }, [sensorData, contaminant, currentInterval, location]);
 
   return (
     <div>
-      <div className="MapaIntro ta-center mt-5">
-        <h2>Calidad del aire en tiempo real</h2>
-        <p>
-          Consulta información en tiempo real sobre la calidad del aire en
-          Monterrey
-        </p>
-      </div>
-      <div className="mapa-info mt-5 mb-3">
-        <p>
-          En esta página puedes ver información en tiempo real acerca de la
-          calidad del aire en Monterrey, si deseas obtener información más
-          específica puedes hacer uso de los filtros de abajo.
-        </p>
-      </div>
-      <MapaFiltros
-        onApply={({ gas, location, interval }) => {
-          if (interval) {
-            setCurrentInterval(interval.value);
-          }
+      <Offcanvas show={show} onHide={() => setShow(false)}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Calidad del aire en tiempo real</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <p>
+            Consulta información en tiempo real sobre la calidad del aire en
+            Monterrey
+          </p>
+          <p>
+            En esta página puedes ver información en tiempo real acerca de la
+            calidad del aire en Monterrey, si deseas obtener información más
+            específica puedes hacer uso de los filtros de abajo.
+          </p>
+        </Offcanvas.Body>
+      </Offcanvas>
 
-          if (gas) {
-            const nGas = gases.find((gas_) => gas_.name === gas.value);
-            setCurrentGas(nGas ?? currentGas);
-          }
-
-          if (location) {
-            // Encuentra sensor al que le corresponde la ubicación de los filtros
-            const fSensor = sensorData.find(
-              (record) => record.Sensor_id === location.value
-            );
-
-            if (fSensor) {
-              setCurrentLocation(fSensor.Zona);
-              setCenter([fSensor.Latitud, fSensor.Longitud]);
-            }
-          }
-        }}
-      />
       <div
-        className="my-4 ta-center map-container position-relative"
+        className="z-0"
         style={{
-          zIndex: 0,
           position: "relative",
-          height: "90vh",
+          height: "calc(100vh - 91px)",
           margin: "0 auto",
         }}
       >
-        {loadingSensorData && (
-          <div
-            className="w-100 h-100 d-flex position-absolute"
-            style={{
-              zIndex: 100,
-              backgroundColor: "rgba(0,0,0,0.2)",
-            }}
-          >
-            <div className="position-absolute top-50 start-50 translate-middle">
-              <Spinner animation="border" />
-            </div>
+
+        <Button variant="outline-info" className="position-absolute start-0 top-0 z-1" onClick={() => setShow(true)}>
+          info
+        </Button>
+        <MapaFiltros
+          onApply={({ interval }) => {
+            if (interval) {
+              setCurrentInterval(interval.value);
+            }
+
+          }}
+        />
+        <div className="legend-width p-1 m-2 d-flex position-absolute bottom-0 z-1">
+          <div className="mt-2">
+            <h5>Leyenda</h5>
+            <LegendItem text={"Sensores del Estado"} icon={"images/sensor_estado.png"} />
+            <LegendItem text={"Sensores PurpleAir"} icon={"images/sensor_purple_air.png"} />
+            <LegendItem text={"No hay datos"} icon={"images/no_data.png"} />
           </div>
-        )}
-
-        <Legend showHideState={showHideState} setshowHideState={setshowHideState}/>
-
-        <Wrapper whenCreated={setMap} {...mapDefaultProps}>
-          {!loadingSensorData &&
+          <TablaCalidad gas={contaminant?.value || ""} />
+        </div>
+        <Wrapper setMap={setMap} {...mapDefaultProps}>
+          {
             markers.map((markerProps, idx) => {
-              if (currentGas.name === "PM25" || !markerProps.isPurpleAir) {
+              if (!markerProps) return '';
+              if (contaminant?.value === "PM25" || !markerProps?.isPurpleAir) {
                 return (
                   <Marcador
                     map={map}
@@ -282,13 +293,12 @@ function Mapa() {
                     shape={markerProps.isPurpleAir ? "square" : "round"}
                   />
                 );
-              } 
+              }
             })}
         </Wrapper>
       </div>
-      <TablaCalidad gas={currentGas.name} />
     </div>
   );
 }
 
-export default Mapa;
+export default MapPage;

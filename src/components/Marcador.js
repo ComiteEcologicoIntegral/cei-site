@@ -19,7 +19,9 @@ const fixedValues = {
   SO2: 4,
 };
 
-const isDataValid = (data) => data >= 0;
+const isDataValid = (data) => {
+  return data >= 0;
+}
 
 const showLabel = (label) => {
   if (typeof label != "number") return label;
@@ -119,7 +121,7 @@ function Marcador({
     AQI_SO2,
 };
 
-  
+
   const getICARValue = (label) => {
     const getValue = (label) => {
       if (label === "O3") {
@@ -282,8 +284,6 @@ function Marcador({
   );
 }
 
-Marcador.defaultProps = {};
-
 Marcador.propTypes = {
   /**
    * Etiqueta del indicador que muestra el popup
@@ -302,7 +302,7 @@ Marcador.propTypes = {
   /**
    * Fecha de la ultima actualización del sensor en milisegundos
    */
-  lastUpdate: PropTypes.instanceOf(Date),
+  lastUpdate: PropTypes.instanceOf(moment),
 
   /**
    * Etiqueta de la ubicación del sensor

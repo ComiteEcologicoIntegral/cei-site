@@ -1,35 +1,30 @@
-import { Suspense } from "react";
-import { Route, Switch, BrowserRouter } from "react-router-dom";
-import Header from "./components/Header.js";
-import Footer from "./components/Footer.js";
-import Loading from "./components/Loading.js";
+import { Route, Routes } from "react-router-dom";
 import Acerca from "./Acerca";
 import Prediccion from "./Pages/Prediccion";
-import Mapa from "./Mapa";
-import Registro from "./Pages/RegistroHistorico";
+import MapPage from "./Mapa";
 import ReporteAnual from "./Pages/AnnualReport";
-import Compara from "./Compara";
-import Recomendaciones from "./components/Recomendaciones.js";
 import "./App.css";
+import CalendarSection from "./Pages/CalendarSection/index.js";
+import GraphSection from "./Pages/Plot/index.js";
+import Concepts from "./Pages/Concepts/index.js";
+import Layout from "./components/Layout.js";
+import Recomendaciones from "./components/Recomendaciones";
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Header />
-        <Suspense fallback={<Loading class="loading-default" />}>
-          <Switch>
-            <Route exact path="/" component={Mapa} />
-            <Route exact path="/registro" component={Registro} />
-            <Route exact path="/compara" component={Compara} />
-            <Route exact path="/prediccion" component={Prediccion} />
-            <Route exact path="/acerca" component={Acerca} />
-            <Route exact path="/reporte-anual" component={ReporteAnual} />
-          </Switch>
-        </Suspense>
-      </BrowserRouter>
-      <Recomendaciones selected="buena" isManual={true} />
-      <Footer />
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<MapPage />} />
+          <Route path="/calendario" element={<CalendarSection />} />
+          <Route path="/historico" element={<GraphSection />} />
+          <Route path="/conocenos" element={<Acerca />} />
+          <Route path="/pronostico" element={<Prediccion />} />
+          <Route path="/reporte-anual" element={<ReporteAnual />} />
+          <Route path="/conceptos" element={<Concepts />} />
+          <Route path="/recomendaciones" element={<Recomendaciones selected="buena" isManual={true} />} />
+        </Route>
+      </Routes>
     </div>
   );
 }

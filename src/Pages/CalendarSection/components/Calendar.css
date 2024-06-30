@@ -164,7 +164,7 @@
   background-color: rgb(76, 187, 23);
 }
 
-.acceptable {
+.regular {
   background-color: rgb(253, 218, 13);
 }
 
@@ -172,7 +172,7 @@
   background-color: rgb(254, 0, 0);
 }
 
-.super-bad {
+.very-bad {
   background-color: rgb(166, 0, 0);
 }
 
