@@ -112,7 +112,7 @@ export const normOptions = {
   PM25: [
     {
       value: "semarnat",
-      label: "NOM-172-SEMARNAT-2019 (Promedio movil 12 horas)",
+      label: "NOM-172-SEMARNAT-2023 (Promedio movil 12 horas)",
     },
     { value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)" },
     { value: "oms", label: "OMS (Promedio 24 horas)" },
@@ -120,7 +120,7 @@ export const normOptions = {
   PM10: [
     {
       value: "semarnat",
-      label: "NOM-172-SEMARNAT-2019 (Promedio movil 12 horas)",
+      label: "NOM-172-SEMARNAT-2023 (Promedio movil 12 horas)",
     },
     { value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)" },
     { value: "oms", label: "OMS (Promedio 24 horas)" },
@@ -128,7 +128,7 @@ export const normOptions = {
   CO: [
     {
       value: "semarnat",
-      label: "NOM-172-SEMARNAT-2019 (Promedio movil 8 horas)",
+      label: "NOM-172-SEMARNAT-2023 (Promedio movil 8 horas)",
     },
     { value: "ssa", label: "NOM-021-SSA1-2021 (Promedio movil 8 horas)" },
     { value: "oms", label: "OMS (Promedio 24 horas)" },
@@ -136,7 +136,7 @@ export const normOptions = {
   O3: [
     {
       value: "semarnat",
-      label: "NOM-172-SEMARNAT-2019 (Promedio movil 8 horas)",
+      label: "NOM-172-SEMARNAT-2023 (Promedio movil 8 horas)",
     },
     { value: "ssa", label: "NOM-020-SSA1-2021 (Promedio movil 8 horas)" },
     { value: "oms", label: "OMS (Promedio 8 horas)" },
@@ -144,7 +144,7 @@ export const normOptions = {
   NO2: [
     {
       value: "semarnat",
-      label: "NOM-172-SEMARNAT-2019 (Concentracion promedio horaria)",
+      label: "NOM-172-SEMARNAT-2023 (Concentracion promedio horaria)",
     },
     {
       value: "ssa",
@@ -155,7 +155,7 @@ export const normOptions = {
   SO2: [
     {
       value: "semarnat",
-      label: "NOM-172-SEMARNAT-2019 (Concentracion promedio movil de 24 horas)",
+      label: "NOM-172-SEMARNAT-2023 (Concentracion promedio movil de 24 horas)",
     },
     {
       value: "ssa",
