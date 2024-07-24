@@ -257,9 +257,9 @@ function Marcador({
             *Índice de acuerdo a la{" "}
             <a
               className="text-black"
-              href="https://www.dof.gob.mx/nota_detalle.php?codigo=5579387&fecha=20/11/2019#gsc.tab=0"
+              href="https://www.dof.gob.mx/nota_detalle.php?codigo=5715154&fecha=25/01/2024#gsc.tab=0"
             >
-              NOM-172-SEMARNAT-2019
+              NOM-172-SEMARNAT-2023
             </a>
           </small>
         </div>
