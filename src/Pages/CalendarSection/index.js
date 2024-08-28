@@ -8,7 +8,7 @@ import Calendar from "./components/Calendar";
 import {
   populateDateRange,
   getFirstDayOfMonth,
-  getLastDayOfMonth,
+  getDateLastDayOfMonth,
   getFirstAndLastDayOfMonth
 } from "../../utils/PopulateDateRange";
 import { getDayHourlyData, getMonthAverage } from "../../services/dayAverageService";
@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getUTCFullYear();
 let beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
-let endOfMonth = getLastDayOfMonth(currentYear, currentMonth);
+let endOfMonth = getDateLastDayOfMonth(currentYear, currentMonth);
 
 const unidad = {
   PM25: "µg/m3",
@@ -64,7 +64,7 @@ function CalendarSection() {
     const selectedMonth = selectedDate.getMonth();
     const selectedYear = selectedDate.getUTCFullYear();
     beginOfMonth = getFirstDayOfMonth(selectedYear, selectedMonth);
-    endOfMonth = getLastDayOfMonth(selectedYear, selectedMonth);
+    endOfMonth = getDateLastDayOfMonth(selectedYear, selectedMonth);
 
     // If dates of the month are already populated only repopulate them if selectedMonth or selectedYear have changed
     if (datesOfTheMonth && datesOfTheMonth.length !== 0) {

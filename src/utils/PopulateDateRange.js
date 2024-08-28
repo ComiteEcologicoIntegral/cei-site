@@ -1,3 +1,5 @@
+import moment from "moment";
+
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
@@ -17,7 +19,7 @@ export function populateDateRange(startDate, stopDate) {
 export function getFirstAndLastDayOfMonth(year, month) {
   return {
     first: getFirstDayOfMonth(year, month),
-    last: getLastDayOfMonth(year, month)
+    last: getDateLastDayOfMonth(year, month)
   }
 }
 
@@ -25,8 +27,9 @@ export function getFirstDayOfMonth(year, month) {
   return new Date(year, month, 1);
 }
 
-export function getLastDayOfMonth(year, month) {
-  return new Date(year, month + 1, 0);
+export function getDateLastDayOfMonth(year, month) {
+  const lastDayMoment = moment().year(year).month(month).endOf('month').startOf('day');
+  return lastDayMoment.toDate();
 }
 
 export function isSameDay(d1, d2) {

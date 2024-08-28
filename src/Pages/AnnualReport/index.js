@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Select from "react-select";
 import { TailSpin } from 'react-loader-spinner';
-import { populateDateRange, getFirstDayOfMonth, getLastDayOfMonth, getFirstAndLastDayOfMonth } from '../../utils/PopulateDateRange';
+import { populateDateRange, getFirstDayOfMonth, getDateLastDayOfMonth, getFirstAndLastDayOfMonth } from '../../utils/PopulateDateRange';
 import { gasesOptions, apiUrl, normOptions, idBlacklistpriv } from "../../constants";
 import { getICAR } from "../../handlers/statusCriteria";
 import "./index.css";
@@ -58,7 +58,6 @@ export default function AnnualReport() {
   }, [contaminant]);
 
   const fetchCalendarData = (location) => {
-    console.log('avgType', avgType);
     const { first, last } = getFirstAndLastDayOfMonth(year, month);
     return getMonthAverage(location.value.id, contaminant, first.toISOString(), last.toISOString(), avgType);
   };
@@ -69,7 +68,7 @@ export default function AnnualReport() {
     setMonthData(null);
 
     const firstDayOfTheMonth = getFirstDayOfMonth(year, month);
-    const lastDayOfTheMonth = getLastDayOfMonth(year, month);
+    const lastDayOfTheMonth = getDateLastDayOfMonth(year, month);
     const tmpMonthDates = populateDateRange(firstDayOfTheMonth, lastDayOfTheMonth);
     setMonthDates(tmpMonthDates);
 
