@@ -35,7 +35,7 @@ export const criteria = {
     CO: [5.0, 9.0, 12.0, 16.0],
     SO2: [0.035, 0.075, 0.185, 0.304],
     NO2: [0.053, 0.106, 0.160, 0.213],
-    
+
   },
   semarnat: {
     PM10: [50, 75, 155, 235],
@@ -91,8 +91,8 @@ export const systemOptions = [
 
 // Opciones del dropdown de gases:
 export const gasesOptions = [
-  { value: "PM25", label: "PM2.5" },
   { value: "PM10", label: "PM10" },
+  { value: "PM25", label: "PM2.5" },
   { value: "O3", label: "O3" },
   { value: "CO", label: "CO" },
   { value: "NO2", label: "NO2" },
