@@ -59,14 +59,14 @@ export const statusClassOrder = [
   "Good",
   "Acceptable",
   "Bad",
-  "SuperBad",
+  "VeryBad",
   "ExtremelyBad",
   "NoData",
 ];
 
 export const statusClassName = {
   Good: "good",
-  Regular: "regular",
+  Acceptable: "acceptable",
   Bad: "bad",
   VeryBad: "very-bad",
   ExtremelyBad: "extremely-bad",

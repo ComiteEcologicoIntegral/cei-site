@@ -88,7 +88,7 @@ function Calendar({ calendarData, selectedDate, setSelectedDate, datesOfTheMonth
           <DayBullet
             count={dayCount.regular}
             text="Aceptable"
-            type={statusClassName.Regular}
+            type={statusClassName.Acceptable}
           />
           <DayBullet
             count={dayCount.bad}
