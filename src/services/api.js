@@ -1,7 +1,4 @@
-export const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://aire.comiteecologicointegral.org/api"
-    : "http://127.0.0.1:8000";
+import { apiUrl } from "../constants";
 
 export async function fetchBackendAPI(url, queryParams = {}, options = {}) {
   const headers = {
@@ -10,7 +7,7 @@ export async function fetchBackendAPI(url, queryParams = {}, options = {}) {
   };
 
   const queryString = new URLSearchParams(queryParams).toString();
-  const fullUrl = `${BASE_URL}${url}${queryString ? `?${queryString}` : ''}`;
+  const fullUrl = `${apiUrl}${url}${queryString ? `?${queryString}` : ''}`;
 
   const response = await fetch(fullUrl, {
     ...options,
