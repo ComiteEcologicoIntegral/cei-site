@@ -38,6 +38,14 @@ jobs:
     name: Deploy docker image to server
     runs-on: ubuntu-latest
     steps:
+
+      - name: Debug secrets
+        run: |
+          echo "DOCKER_USERNAME is set: ${{ secrets.DOCKER_USERNAME != '' }}"
+          echo "SERVICE_SSH_KEY is set: ${{ secrets.SERVICE_SSH_KEY != '' }}"
+          echo "SERVER_USERNAME is set: ${{ secrets.SERVER_USERNAME != '' }}"
+          echo "SERVER_HOST is set: ${{ secrets.SERVER_HOST != '' }}"
+
       - name: Pull and start image
         uses: appleboy/ssh-action@master
         env:
