@@ -37,6 +37,7 @@ jobs:
   deploy:
     name: Deploy docker image to server
     runs-on: ubuntu-latest
+    needs: publish-and-deploy
     steps:
 
       - name: Debug secrets
