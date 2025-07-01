@@ -34,6 +34,10 @@ jobs:
           tags: "${{ secrets.DOCKER_USERNAME }}/cei-front:latest"
           labels: ${{ steps.meta.outputs.labels }}
 
+  deploy:
+    name: Deploy docker image to server
+    runs-on: ubuntu-latest
+    steps:
       - name: Pull and start image
         uses: appleboy/ssh-action@master
         env:

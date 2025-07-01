@@ -4,6 +4,7 @@ Web app para monitoreo de calidad del aire.
 https://aire.comiteecologicointegral.org/
 
 ## Dependencias para desarrollo local
+
 [nodejs](https://nodejs.org/es/download)
 
 ## Instalación y Ejecución
@@ -12,6 +13,8 @@ https://aire.comiteecologicointegral.org/
 # Guía rápida
 gh repo clone ComiteEcologicoIntegral/cei-site
 cd cei-site
+# asuming you already have the .env file under ~/Downloads
+mv ~/Downloads/.env .
 npm install
 npm start
 ```
@@ -23,18 +26,25 @@ npm start
 gh repo clone ComiteEcologicoIntegral/cei-site
 ```
 
-2. Cambia al directorio del repositorio e instala las dependencias.
+2. Pide a un miembro del equipo una copia del archivo `.env`, descárgalo y colócalo en el directorio del proyecto.
 
 ```bash
 cd cei-site
+# Sustituye la primera ruta con la ruta del archivo .env que acabas de descargar
+mv ~/Downloads/.env .
+```
+
+3. Instala las dependencias
+
+```bash
 npm install
 ```
 
-3. Ejecuta el proyecto
+4. Ejecuta el proyecto
 
 ```bash
 npm start
 ```
 
-4. Una ventana con la direccion localhost:3000 deberia abrirse en tu navegador.
-   Si no se abre automaticamente, hazlo manualmente.
+Una ventana con la direccion localhost:3000 deberia abrirse en tu navegador.
+Si no se abre automaticamente, hazlo manualmente.
