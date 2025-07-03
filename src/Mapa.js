@@ -1,23 +1,70 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import MapaFiltros from "./components/MapaFiltros.js";
-import Marcador from "./components/Marcador.js";
-import Wrapper from "./components/WrapperMapa.js";
+/**
+ * Mapa.js
+ *
+ * This file defines the MapPage component, which renders an interactive map
+ * displaying real-time air quality sensor data across the main populated areas
+ * of Nuevo León.
+ *
+ * Features:
+ * - Real-time hourly pollutant data visualization
+ * - Interactive filters to select intervals and contaminants
+ * - Dynamic markers with legends and information panels
+ *
+ * Dependencies:
+ * - React (hooks, components)
+ * - Redux (state management)
+ * - Leaflet (map rendering)
+ * - Bootstrap (UI layout and components)
+ *
+ * 
+ * Last updated: [?]
+ */
 
-import { gases, mapBlacklist, idBlacklist, unidad } from "./constants.js";
-import { getICAR } from "./handlers/statusCriteria.js";
-import useSensorData from "./hooks/useSensorData.js";
+
+// React and third party libraries
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { Button, Offcanvas } from "react-bootstrap";
 import { BsFillInfoSquareFill } from "react-icons/bs";
-import "./styles/MapLegend.css"
+
+// Componentes retrieved directly from components
+import MapaFiltros from "./components/MapaFiltros.js";
+import Marcador from "./components/Marcador.js";
+import Wrapper from "./components/WrapperMapa.js";
 import { TablaCalidad } from "./components/TablaCalidad.js";
+
+// Constants and Utilities
+import { gases, mapBlacklist, idBlacklist, unidad } from "./constants.js";
+import { getICAR } from "./handlers/statusCriteria.js";
+import useSensorData from "./hooks/useSensorData.js";
+
+// Styles
+import "./styles/MapLegend.css"
+
+
+/**
+ * Default map properties
+ * Defines initial center coordinates [latitud, longitud] , zoom level, and minus zoom 
+ */
 
 const mapDefaultProps = {
   center: [25.67, -100.25],
   zoom: 12,
   minZoom: 10,
 };
+
+/**
+ * LegendItem component
+ * Render a legend item with an optional icon and text label.
+ * 
+ * 
+ * @param {Object} props - Component props.
+ * @param {string} props.text - The label text to display.
+ * @param {string} [props.icon] - Optional icon image URL.
+ * @returns {JSX.Element} Rendered legend item component.
+ * 
+ */
 
 const LegendItem = (props) => {
   const { text, icon } = props;
@@ -37,15 +84,38 @@ const LegendItem = (props) => {
   );
 };
 
+/**
+ * MapPage Component
+ * Renders the main interactive map displaying real-time air quality data
+ * with filters, markers, and legends for the monitored areas.
+ *
+ * Uses:
+ * - Redux state: location, contaminant
+ * - Hooks: useSensorData, useState, useEffect, useCallback, useMemo
+ * - Child components: Wrapper, Marcador, MapaFiltros, TablaCalidad
+ *
+ * @returns {JSX.Element} The rendered MapPage component.
+ */
+
+
 function MapPage() {
+
+  // Extract location and contaminant data from Redux state
   const { location, contaminant } = useSelector((state) => state.form);
 
+  // Local state for selected interval (e.g. hourly or daily data)
   const [currentInterval, setCurrentInterval] = useState(0);
+
+  // Fetch real-time sensor data using custom hook
   const { sensorData } = useSensorData();
 
+  // Local state to store map instance reference
   const [map, setMap] = useState(null);
+
+  // Local state to control visibility of info off-canvas panel
   const [show, setShow] = useState(false);
 
+  // useCallback to set map center when location changes
   const setCenter = useCallback(
     (pos) => {
       if (map) {
@@ -57,6 +127,9 @@ function MapPage() {
     [map]
   );
 
+  // useEffect hook that sets the map's initial center point
+  // when the location state changes.
+
   useEffect(() => {
     if (!location) return;
     setCenter([location?.value.address.lat, location?.value.address.lon]);
@@ -64,7 +137,8 @@ function MapPage() {
 
 
 
-  //Diccionario para pasar de Sensor_id a nombre de estacion
+  // Dictionary that maps Sensor IDs to their assigned station names.
+
   const ANLKeys_dict = {
     ANL1: "SURESTE",
     ANL2: "NORESTE",
@@ -83,11 +157,24 @@ function MapPage() {
     ANL16: "MITRAS"
   };
 
+  
+  /**
+   * getValue
+   * Formats a pollutant value based on its type while ensuring valid output
+   * 
+   * @param {number} preValue - Raw numeric value from the API.
+   * @param {string} gasName - The gas name used to determine decimal precision.
+   * Returns the formatted value with appropriate decimals, or null if invalid.”
+   * 
+   * Format the pollutant value based on gas type:
+   * Use 4 decimal places for NO2 or SO2, otherwise use 2 decimals.
+   */
+
   const getValue = (preValue, gasName) => {
     if (!preValue || typeof preValue !== "number" || preValue < 0) {
       return null;
     }
-
+    
     let ans;
     if (gasName === "NO2" || gasName === "SO2") {
       ans = +preValue.toFixed(4);
@@ -97,15 +184,40 @@ function MapPage() {
     return ans;
   }
 
+
+  /**
+   * filterND
+   * Converts undefined, null, or empty string values to "ND" (No Data),
+   * otherwise returns the data as a string.  
+   * 
+   * @param {*} data - The data value to check and format.
+   * @returns {string} "ND" if data is undefined, null, or empty; otherwise the data as string.
+   */
+
   const filterND = (data) => {
     return typeof data === "undefined" || data === null || data === ""
       ? "ND"
       : data.toString()
   }
 
+  /**
+  * Memoized calculation of map markers.
+  *
+  * Returns an empty array if no contaminant is selected.
+  *
+  * @returns {Array} Array of marker objects for rendering on the map,
+  * or an empty array if contaminant is not defined.
+  */
   const markers = useMemo(() => {
     if (!contaminant) return [];
-    // TODO: sensors should be filtered by the backend
+
+    /**
+     * - Filters sensorData to include only sensors with:
+     * - Valid numeric longitude and latitude coordinates.
+     * - Systems not included in mapBlacklist.
+     * - Sensor IDs not included in idBlacklist.
+     */
+
     const filteredSensors = sensorData?.filter(
       (sensor) =>
         typeof sensor.Longitud === "number" &&
@@ -114,13 +226,20 @@ function MapPage() {
         !idBlacklist.includes(sensor.Sensor_id)
     );
 
-
+    // Maps each filtered sensor to a marker data object,
+    // extracting the selected gas name and its units for further processing.
     const resultingData = filteredSensors?.map((data) => {
       const { value: gasName } = contaminant;
       const gasUnits = unidad[gasName];
 
-
-      /* Current Interval === 0 -> Presenta el value del indicador de calidad del aire */
+      /**
+       * Determines the appropriate dataKey to extract pollutant values based on currentInterval:
+       * - If currentInterval === 0: uses ICAR indicator for the gas.
+       * For O3 in AireNuevoLeon, selects the greater between 1-hour and 8-hour values.
+       * - If currentInterval === 1: uses raw gas value.
+       * For PM25 in PurpleAir, appends "_Promedio" to access averaged data.
+       */
+      
       let dataKey;
       if (currentInterval === 0) {
         dataKey = `ICAR_${gasName}`;
@@ -139,8 +258,23 @@ function MapPage() {
           dataKey += "_Promedio";
         }
       }
+
+      
+      // Formats the pollutant value retrieved from data[dataKey]
+      // using getValue to apply appropriate decimal precision based on gasName.
       const intValue = getValue(data[dataKey], gasName);
+
+      // Determine final value : If intValue is valid, use it; otherwise set as "ND".
       const value = toString(intValue) ? intValue : "ND";
+
+      /**
+       * Build and return marker data object for current sensor,
+       * including:
+       * - Location and pollutant data
+       * - Calculated air quality indicators (ICAR, OMS, AQI)
+       * - Provider URLs and metadata
+       * - Labels for each gas with formatted values and statuses
+       */
 
       return {
         currentLocation: location,
@@ -193,6 +327,7 @@ function MapPage() {
           let colName = name;
           if (name === "PM25" && data.Sistema === "PurpleAir")
             colName = "PM25_Promedio";
+          // Map each gas to its label, units, formatted value, and status.
           return {
             label: label ? label : name,
             units: units,
@@ -202,7 +337,7 @@ function MapPage() {
           };
         }),
 
-        //url para boton de Mas Informacion
+        // Generate provider-specific URL for "More Information" button.
         urlMI: (() => {
           if (data.Sistema === "PurpleAir")
             return (
@@ -225,8 +360,15 @@ function MapPage() {
       };
     });
 
+    /**
+     * Render map page layout including:
+     * - Offcanvas information panel
+     * - Filter controls and legend
+     * - Map wrapper with markers
+     */
     return resultingData;
   }, [sensorData, contaminant, currentInterval, location]);
+
 
   return (
     <div>

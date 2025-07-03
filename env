@@ -1,0 +1,3 @@
+NODE_ENV="development"
+REACT_APP_API_URL= "https://aire.comiteecologicointegral.org/api"
+
