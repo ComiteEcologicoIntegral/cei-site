@@ -106,7 +106,14 @@ function MapPage() {
   // Local state for selected interval (e.g. hourly or daily data)
   const [currentInterval, setCurrentInterval] = useState(0);
 
-  // Fetch real-time sensor data using custom hook
+  /**
+  * useSensorData
+  *
+  * Custom React hook that retrieves real-time air quality sensor data
+  * from the backend API and returns it in a structured format.
+  *
+  */
+
   const { sensorData } = useSensorData();
 
   // Local state to store map instance reference
