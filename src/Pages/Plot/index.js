@@ -1,3 +1,24 @@
+ /**
+       * GraphSection component
+       * This component is in charge of rendering the filter form, and display the environmental data plot based on user input
+      *this components allows querying data form an API and it downloads it as a CSV.
+      
+      
+      *Features: 
+      * Query parameters selection and validation( date, time, location, contaminant, system)
+      * Summary data and fetching plot from API
+      * Error messages
+      * Data download as CSV
+      
+      
+      
+      
+      *Libraries: 
+      * React, moment, Redux, Bootstrap and Internal components
+      
+      
+       */ 
+       
 import React, { useEffect, useState } from "react";
 import GraphForm from "./components/Form";
 import Plot from "./components/Plot.js";
@@ -7,6 +28,10 @@ import { apiUrl } from "../../constants";
 import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
+
+/**
+ * Principal component tht handles the filter logic, obtaining the data and plot rendering.
+ */
 function GraphSection() {
   // http://localhost:3000/location=Garc%C3%ADa&gas=PM25&system=G&start_date=08/02/2022/00:00:00&end_date=08/29/2022/00:00:00
   const [plotData, setPlotData] = useState(null);
@@ -19,6 +44,15 @@ function GraphSection() {
   const [endDate, setEndDate] = useState(moment());
   const [startTime, setStartTime] = useState(moment('00:00', 'HH:mm').format("HH:mm"));
   const [endTime, setEndTime] = useState(moment().format("HH:mm"));
+  
+  
+  
+/**
+ *Combination of time and date string in ISO string
+ *@param{moment} date- Moment object for date
+ *@param{string} time-Time string (HH:mm:ss)
+ *@return{string} ISO date-time string
+ */
 
   function getMomentFromDateAndTime(date, time) {
     const dateMoment = moment(date);
@@ -33,6 +67,9 @@ function GraphSection() {
   }
 
 
+/**
+ *Download data as CSV file querying the API and trigger a file download in browser
+*/
   function downloadCSV() {
     let queryString = createQuery();
 
@@ -56,13 +93,25 @@ function GraphSection() {
         a.click();
       });
   }
-
+  
+  
+  
+/**
+ *Generates a query string with filter states.
+ *return {string} query string to add to API URL
+ 
+*/
   function createQuery() {
     let queryStr = `location=${location.value.id}&gas=${contaminant.value}&system=${system.opt
       }&start_date=${getMomentFromDateAndTime(startDate, startTime)}&end_date=${getMomentFromDateAndTime(endDate, endTime)}`;
     return queryStr;
   }
-
+  
+  
+ /**
+  * When filter parameters change this effect runs everytime.
+  *Validation of parameters and fetches the summary data and plot from API. 
+ */ 
   useEffect(() => {
     function validateQueryParams() {
       let invalidParams = [];
@@ -102,6 +151,14 @@ function GraphSection() {
     }
 
 
+
+
+
+/**
+ *Fetches plot and summary data from API and uses the generated query string. 
+ * Timestamps are adjusted for timezone offset, states with retrieved data are set. 
+
+*/
     function fetchGraphData() {
       if (!system || !contaminant || !location || !validateQueryParams()) {
         return;
