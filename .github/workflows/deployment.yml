@@ -57,7 +57,8 @@ jobs:
           key: ${{ secrets.SERVICE_SSH_KEY }}
           envs: DCKR_USRNM
           script: |
+            cd
             docker pull "$DCKR_USRNM/cei-front:latest"
             docker stop cei-app
             docker rm cei-app
-            docker run -d -p 9000:80 --name cei-app "$DCKR_USRNM/cei-front:latest"
+            docker run -d -p 9000:80 --env-file /env-files/frontend/.env --name cei-app "$DCKR_USRNM/cei-front:latest"
