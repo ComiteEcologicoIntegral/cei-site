@@ -186,8 +186,7 @@ export const mapBlacklist = ["Sinaica"];
 
 export const apiUrl = "https://aire.comiteecologicointegral.org/api"
 // TODO: Change this to a url instead of an IP
-// export const newAPIURL = "http://82.180.132.126:8080"
-export const newAPIURL = "http://localhost:8080"
+export const newAPIURL = "http://82.180.132.126:8080"
 
 export const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
 
