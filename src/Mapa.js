@@ -43,12 +43,16 @@ import useSensorData from "./hooks/useSensorData.js";
 import "./styles/MapLegend.css"
 import MainForm, { CustomSelect, customStyles } from "./components/MainForm/index.js";
 import Select from "react-select/base";
+import { getSensorLocationsBySystem } from "./handlers/data.js";
+import { getSystemSensorsMetadata } from "./services/sensorService.js";
 
 
 /**
  * Default map properties
  * Defines initial center coordinates [latitud, longitud] , zoom level, and minus zoom
  */
+
+const sensores_new = await getSystemSensorsMetadata("AireNuevoLeon");
 
 const mapDefaultProps = {
   center: [25.67, -100.25],
@@ -442,6 +446,7 @@ function MapPage() {
         </div>
         <Wrapper setMap={setMap} {...mapDefaultProps}>
           {
+            // Old
             markers.map((markerProps, idx) => {
               if (!markerProps) return '';
               if (contaminant?.value === "PM25" || !markerProps?.isPurpleAir) {
@@ -458,7 +463,18 @@ function MapPage() {
                   />
                 );
               }
-            })}
+            })
+            // New
+            // sensores_new.map(
+            //   (sensor, idx) => {
+            //     return (
+            //       <Marcador
+            //         // address = {[data.Address.Latitud, data.Address.Longitud]}
+            //       />
+            //     );
+            //   }
+            // )
+          }
         </Wrapper>
       </div>
     </div>
