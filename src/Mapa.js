@@ -16,7 +16,7 @@
  * - Leaflet (map rendering)
  * - Bootstrap (UI layout and components)
  *
- * 
+ *
  * Last updated: [?]
  */
 
@@ -41,12 +41,16 @@ import useSensorData from "./hooks/useSensorData.js";
 
 // Styles
 import "./styles/MapLegend.css"
+import { getSensorLocationsBySystem } from "./handlers/data.js";
+import { getSystemSensorsMetadata } from "./services/sensorService.js";
 
 
 /**
  * Default map properties
- * Defines initial center coordinates [latitud, longitud] , zoom level, and minus zoom 
+ * Defines initial center coordinates [latitud, longitud] , zoom level, and minus zoom
  */
+
+const sensores_new = await getSystemSensorsMetadata("AireNuevoLeon");
 
 const mapDefaultProps = {
   center: [25.67, -100.25],
@@ -57,13 +61,13 @@ const mapDefaultProps = {
 /**
  * LegendItem component
  * Render a legend item with an optional icon and text label.
- * 
- * 
+ *
+ *
  * @param {Object} props - Component props.
  * @param {string} props.text - The label text to display.
  * @param {string} [props.icon] - Optional icon image URL.
  * @returns {JSX.Element} Rendered legend item component.
- * 
+ *
  */
 
 const LegendItem = (props) => {
@@ -164,15 +168,15 @@ function MapPage() {
     ANL16: "MITRAS"
   };
 
-  
+
   /**
    * getValue
    * Formats a pollutant value based on its type while ensuring valid output
-   * 
+   *
    * @param {number} preValue - Raw numeric value from the API.
    * @param {string} gasName - The gas name used to determine decimal precision.
    * Returns the formatted value with appropriate decimals, or null if invalid.”
-   * 
+   *
    * Format the pollutant value based on gas type:
    * Use 4 decimal places for NO2 or SO2, otherwise use 2 decimals.
    */
@@ -181,7 +185,7 @@ function MapPage() {
     if (!preValue || typeof preValue !== "number" || preValue < 0) {
       return null;
     }
-    
+
     let ans;
     if (gasName === "NO2" || gasName === "SO2") {
       ans = +preValue.toFixed(4);
@@ -195,8 +199,8 @@ function MapPage() {
   /**
    * filterND
    * Converts undefined, null, or empty string values to "ND" (No Data),
-   * otherwise returns the data as a string.  
-   * 
+   * otherwise returns the data as a string.
+   *
    * @param {*} data - The data value to check and format.
    * @returns {string} "ND" if data is undefined, null, or empty; otherwise the data as string.
    */
@@ -246,7 +250,7 @@ function MapPage() {
        * - If currentInterval === 1: uses raw gas value.
        * For PM25 in PurpleAir, appends "_Promedio" to access averaged data.
        */
-      
+
       let dataKey;
       if (currentInterval === 0) {
         dataKey = `ICAR_${gasName}`;
@@ -266,7 +270,7 @@ function MapPage() {
         }
       }
 
-      
+
       // Formats the pollutant value retrieved from data[dataKey]
       // using getValue to apply appropriate decimal precision based on gasName.
       const intValue = getValue(data[dataKey], gasName);
@@ -376,6 +380,8 @@ function MapPage() {
     return resultingData;
   }, [sensorData, contaminant, currentInterval, location]);
 
+  // TODO: remove this console log is only for testing purposes
+  console.log("sensores new api", sensores_new);
 
   return (
     <div>
@@ -427,6 +433,7 @@ function MapPage() {
         </div>
         <Wrapper setMap={setMap} {...mapDefaultProps}>
           {
+            // Old
             markers.map((markerProps, idx) => {
               if (!markerProps) return '';
               if (contaminant?.value === "PM25" || !markerProps?.isPurpleAir) {
@@ -443,7 +450,18 @@ function MapPage() {
                   />
                 );
               }
-            })}
+            })
+            // New
+            // sensores_new.map(
+            //   (sensor, idx) => {
+            //     return (
+            //       <Marcador
+            //         // address = {[data.Address.Latitud, data.Address.Longitud]}
+            //       />
+            //     );
+            //   }
+            // )
+          }
         </Wrapper>
       </div>
     </div>
