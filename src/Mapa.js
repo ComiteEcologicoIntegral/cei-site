@@ -126,6 +126,24 @@ function MapPage() {
   // Local state to control visibility of info off-canvas panel
   const [show, setShow] = useState(false);
 
+  //State to store summary data for fast map redering 
+  const [sensores_new, setsensores_new] = useState([]) 
+  //Fetch sensor summary data on first render
+  useEffect(() => {
+    const fetchSummary = async () => {
+      try {
+        const response = await fetch("https://aire.comiteecologicointegral.org/api/sensor-summary");
+        const data = await response.json();
+        setsensores_new(data);
+        console.log("Resumen cargado:",data);
+      } catch (error) {
+        console.error("Error fetching sensor summary:", error);
+      }
+    };
+    
+    fetchSummary();
+  }, []);  
+
   // useCallback to set map center when location changes
   const setCenter = useCallback(
     (pos) => {
@@ -433,60 +451,43 @@ function MapPage() {
         </div>
         <Wrapper setMap={setMap} {...mapDefaultProps}>
           {
-            // Old
-            /*markers.map((markerProps, idx) => {
-              if (!markerProps) return '';
-              if (contaminant?.value === "PM25" || !markerProps?.isPurpleAir) {
-                return (
-                  <Marcador
-                    map={map}
-                    key={idx}
-                    isPurpleAir={markerProps.isPurpleAir}
-                    {...markerProps}
-                    label={markerProps.current.label}
-                    indicator={markerProps.current.indicator}
-                    status={markerProps.current.status}
-                    shape={markerProps.isPurpleAir ? "square" : "round"}
-                  />
-                );
-              }
-            })*/
             // New
-            sensores_new.map(
-              (sensor) => {
-                return (
+            sensores_new.map((sensor) => {
+              if (!sensor.latitude || !sensor.longitude) return null;
+
+              return (
                   <Marcador
-                    key={sensor.ID}
+                    key={sensor.id}
                     map={map}
-                    position={[sensor.Address.Latitude, sensor.Address.Longitude]}
-                    label={sensor.ID}
+                    position={[sensor.latitude, sensor.longitude]}
                     //placholders, info que necesita el componente marcador
+                    label={sensor.id}
                     current={{
                       label: "ND",
                       status: "ND", 
-                      indicator: sensor.ID,
+                      indicator: sensor.id,
                       units: "",
                       ref: "#"
                     }}
                     labels={[]}
                     provider={{
-                      name: sensor.System, //En el caso de la info nueva, es AireNuevoLeon
+                      name: sensor.system, //En el caso de la info nueva, es AireNuevoLeon
                       ref: "#"
                     }}
                   />
-                )
-              }
-            )
+                );
+              })
+            
             // sensores_new.map(
-            //   (sensor, idx) => {
-            //     return (
+            //   (sensor,idx) => {
+            //     return(
             //       <Marcador
             //         // address = {[data.Address.Latitud, data.Address.Longitud]}
             //       />
             //     );
             //   }
             // )
-          }
+            }
         </Wrapper>
       </div>
     </div>
