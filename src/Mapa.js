@@ -447,7 +447,7 @@ function MapPage() {
         <Wrapper setMap={setMap} {...mapDefaultProps}>
           {
             // Old
-            markers.map((markerProps, idx) => {
+            /*markers.map((markerProps, idx) => {
               if (!markerProps) return '';
               if (contaminant?.value === "PM25" || !markerProps?.isPurpleAir) {
                 return (
@@ -463,8 +463,33 @@ function MapPage() {
                   />
                 );
               }
-            })
+            })*/
             // New
+            sensores_new.map(
+              (sensor) => {
+                return (
+                  <Marcador
+                    key={sensor.ID}
+                    map={map}
+                    position={[sensor.Address.Latitude, sensor.Address.Longitude]}
+                    label={sensor.ID}
+                    //placholders, info que necesita el componente marcador
+                    current={{
+                      label: "ND",
+                      status: "ND", 
+                      indicator: sensor.ID,
+                      units: "",
+                      ref: "#"
+                    }}
+                    labels={[]}
+                    provider={{
+                      name: sensor.System, //En el caso de la info nueva, es AireNuevoLeon
+                      ref: "#"
+                    }}
+                  />
+                )
+              }
+            )
             // sensores_new.map(
             //   (sensor, idx) => {
             //     return (
