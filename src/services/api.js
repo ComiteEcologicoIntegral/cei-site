@@ -1,11 +1,11 @@
-import { apiUrl, newAPIURL } from "../constants";
+import { apiUrl, APIV2URL } from "../constants";
 
 export async function fetchBackendAPI(url, queryParams = {}, options = {}) {
   return fetchAPI(apiUrl, url, queryParams, options)
 }
 
-export async function fetchNewBackendAPI(url, queryParams = {}, options = {}) {
-  return fetchAPI(newAPIURL, url, queryParams, options)
+export async function fetchAPIV2(url, queryParams = {}, options = {}) {
+  return fetchAPI(APIV2URL, url, queryParams, options)
 }
 
 async function fetchAPI(domain, url, queryParams = {}, options = {}) {
