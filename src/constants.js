@@ -184,7 +184,7 @@ export const idBlacklist = [
 export const idBlacklistpriv = ["P39497", "P39285"];
 export const mapBlacklist = ["Sinaica"];
 
-export const apiUrl = "https://aire.comiteecologicointegral.org/api"
+export const apiUrl = process.env.REACT_APP_API_URL;
 
 export const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
 
