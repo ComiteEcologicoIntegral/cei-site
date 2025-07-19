@@ -1,0 +1,43 @@
+{
+  "sensor_id": "ANL10",
+  "timestamp": "2025-03-27T04:00:00",
+  "pm10": {
+    "value": 38,
+    "icar": -1.0,
+    "oms": -1.0,
+    "aqi": -1.0
+  },
+  "pm25": {
+    "value": 10,
+    "icar": -1.0,
+    "oms": -1.0,
+    "aqi": -1.0
+  },
+  "o3": {
+    "value": 0.17,
+    "icar": -1.0,
+    "oms": -1.0,
+    "aqi": -1.0
+  },
+  "co": {
+    "value": 0.17,
+    "icar": -1.0,
+    "oms": -1.0,
+    "aqi": -1.0
+  },
+  "no2": {
+    "value": 0.0182,
+    "icar": -1.0,
+    "oms": -1.0,
+    "aqi": -1.0
+  },
+  "so2": {
+    "value": 0.0049,
+    "icar": -1.0,
+    "oms": -1.0,
+    "aqi": -1.0
+  },
+  "humidity_r": 71.0,
+  "temperature_c": 21.95,
+  "presion_atm": 714.9
+}
