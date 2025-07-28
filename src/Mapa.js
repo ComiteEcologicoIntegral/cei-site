@@ -39,6 +39,9 @@ import { gases, mapBlacklist, idBlacklist, unidad } from "./constants.js";
 import { getICAR } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 
+//JSON con información del sensor
+import sensorInfoJson from "./services/sensor_indexes_response_sample.json"
+
 // Styles
 import "./styles/MapLegend.css"
 import { getSensorLocationsBySystem } from "./handlers/data.js";
@@ -101,6 +104,53 @@ const LegendItem = (props) => {
  * @returns {JSX.Element} The rendered MapPage component.
  */
 
+
+//
+const markerPropsTemplate = {
+  sensor_id: sensorInfoJson.sensor_id,
+  lastUpdate: sensorInfoJson.timestamp,
+  temperatura: sensorInfoJson.temperature_c,
+  humedad: sensorInfoJson.humidity_r,
+  current : {
+    label: sensorInfoJson.pm10.value,
+    status: sensorInfoJson.pm10.icar,
+    indicator: "PM10",
+    units: "µg/m³",
+    ref: "#"
+  },
+  labels: [
+    { label: "PM2.5", status: sensorInfoJson.pm25.icar, value: sensorInfoJson.pm25.value, units: "µg/m³" },
+    { label: "PM10", status: sensorInfoJson.pm10.icar,  value: sensorInfoJson.pm10.value, units: "µg/m³" },
+    { label: "O3", status: sensorInfoJson.o3.icar, value: sensorInfoJson.o3.value, units: "ppm" },
+    { label: "CO", status: sensorInfoJson.co.icar, value: sensorInfoJson.co.value, units: "ppm" },
+    { label: "NO2", status: sensorInfoJson.no2.icar, value: sensorInfoJson.no2.value, units: "ppm" },
+    { label: "SO2", status: sensorInfoJson.so2.icar, value: sensorInfoJson.so2.value, units: "ppm" }
+  ],
+  provider: {
+  name: "AireNuevoLeon",
+  ref: "http://aire.nl.gob.mx/" 
+  },
+  ICAR_PM25: sensorInfoJson.pm25.icar,
+  OMS_PM25: sensorInfoJson.pm25.oms,
+  AQI_PM25: sensorInfoJson.pm25.aqi,
+  ICAR_PM10: sensorInfoJson.pm10.icar,
+  OMS_PM10: sensorInfoJson.pm10.oms,
+  AQI_PM10: sensorInfoJson.pm10.aqi,
+  ICAR_O3_8h: sensorInfoJson.o3.icar,
+  ICAR_O3_1h: sensorInfoJson.o3.icar,
+  OMS_O3: sensorInfoJson.o3.oms,
+  AQI_O3: sensorInfoJson.o3.aqi,
+  ICAR_CO: sensorInfoJson.co.icar,
+  OMS_CO: sensorInfoJson.co.oms,
+  AQI_CO: sensorInfoJson.co.aqi,
+  ICAR_NO2: sensorInfoJson.no2.icar,
+  OMS_NO2: sensorInfoJson.no2.oms,
+  AQI_NO2: sensorInfoJson.no2.aqi,
+  ICAR_SO2: sensorInfoJson.so2.icar,
+  OMS_SO2: sensorInfoJson.so2.oms,
+  AQI_SO2: sensorInfoJson.so2.aqi,
+  isPurpleAir: false
+};
 
 function MapPage() {
 
@@ -452,7 +502,7 @@ function MapPage() {
               }
             })*/
             // New
-            sensores_new.map(
+            /*sensores_new.map(
               (sensor) => {
                 return (
                   <Marcador
@@ -476,16 +526,48 @@ function MapPage() {
                   />
                 )
               }
-            )
-            // sensores_new.map(
-            //   (sensor, idx) => {
-            //     return (
-            //       <Marcador
-            //         // address = {[data.Address.Latitud, data.Address.Longitud]}
-            //       />
-            //     );
-            //   }
-            // )
+            )*/
+           sensores_new.map(
+              (sensor) => {
+                const isSensorInfoJson = sensor.ID === sensorInfoJson.sensor_id;
+                const markerProps = isSensorInfoJson
+                ? {
+                  ...markerPropsTemplate,
+                  position: [sensor.Address.Latitude, sensor.Address.Longitude]
+
+                }
+                : {
+                    map: map,
+                    key: sensor.ID,
+                    position: [sensor.Address.Latitude, sensor.Address.Longitude],
+                    label: sensor.ID,
+                    current: {
+                      label: "ND",
+                      status: "ND",
+                      indicator: sensor.ID,
+                      units: "",
+                      ref: "#"
+                    },
+                    labels: [],
+                    provider: {
+                      name: sensor.System,
+                      ref: "#"
+                    },
+                };
+
+                return (  
+                <Marcador
+                  key={sensor.ID}
+                  {...markerProps}
+                  map={map}
+                  shape={markerProps.shape}
+                  label={markerProps.current?.label}
+                  indicator={markerProps.current?.indicator}
+                  status={markerProps.current?.status}
+                />
+                )
+              }
+           )
           }
         </Wrapper>
       </div>
