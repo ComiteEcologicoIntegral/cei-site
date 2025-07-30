@@ -16,7 +16,7 @@
  * - Leaflet (map rendering)
  * - Bootstrap (UI layout and components)
  *
- * 
+ *
  * Last updated: [?]
  */
 
@@ -41,11 +41,13 @@ import useSensorData from "./hooks/useSensorData.js";
 
 // Styles
 import "./styles/MapLegend.css"
+import MainForm, { CustomSelect, customStyles } from "./components/MainForm/index.js";
+import Select from "react-select/base";
 
 
 /**
  * Default map properties
- * Defines initial center coordinates [latitud, longitud] , zoom level, and minus zoom 
+ * Defines initial center coordinates [latitud, longitud] , zoom level, and minus zoom
  */
 
 const mapDefaultProps = {
@@ -54,16 +56,21 @@ const mapDefaultProps = {
   minZoom: 10,
 };
 
+const intervalos = [
+  { value: 0, label: 'Indice Calidad Aire' },
+  { value: 1, label: 'Concentracion horaria' },
+]
+
 /**
  * LegendItem component
  * Render a legend item with an optional icon and text label.
- * 
- * 
+ *
+ *
  * @param {Object} props - Component props.
  * @param {string} props.text - The label text to display.
  * @param {string} [props.icon] - Optional icon image URL.
  * @returns {JSX.Element} Rendered legend item component.
- * 
+ *
  */
 
 const LegendItem = (props) => {
@@ -104,7 +111,7 @@ function MapPage() {
   const { location, contaminant } = useSelector((state) => state.form);
 
   // Local state for selected interval (e.g. hourly or daily data)
-  const [currentInterval, setCurrentInterval] = useState(0);
+  const [currentInterval, setCurrentInterval] = useState(intervalos[0]);
 
   /**
   * useSensorData
@@ -164,15 +171,15 @@ function MapPage() {
     ANL16: "MITRAS"
   };
 
-  
+
   /**
    * getValue
    * Formats a pollutant value based on its type while ensuring valid output
-   * 
+   *
    * @param {number} preValue - Raw numeric value from the API.
    * @param {string} gasName - The gas name used to determine decimal precision.
    * Returns the formatted value with appropriate decimals, or null if invalid.”
-   * 
+   *
    * Format the pollutant value based on gas type:
    * Use 4 decimal places for NO2 or SO2, otherwise use 2 decimals.
    */
@@ -181,7 +188,7 @@ function MapPage() {
     if (!preValue || typeof preValue !== "number" || preValue < 0) {
       return null;
     }
-    
+
     let ans;
     if (gasName === "NO2" || gasName === "SO2") {
       ans = +preValue.toFixed(4);
@@ -195,8 +202,8 @@ function MapPage() {
   /**
    * filterND
    * Converts undefined, null, or empty string values to "ND" (No Data),
-   * otherwise returns the data as a string.  
-   * 
+   * otherwise returns the data as a string.
+   *
    * @param {*} data - The data value to check and format.
    * @returns {string} "ND" if data is undefined, null, or empty; otherwise the data as string.
    */
@@ -246,9 +253,9 @@ function MapPage() {
        * - If currentInterval === 1: uses raw gas value.
        * For PM25 in PurpleAir, appends "_Promedio" to access averaged data.
        */
-      
+
       let dataKey;
-      if (currentInterval === 0) {
+      if (currentInterval.value === 0) {
         dataKey = `ICAR_${gasName}`;
         if (data.Sistema === "AireNuevoLeon" && gasName === "O3") {
           if (data[`${dataKey}_1h`] >= data[`${dataKey}_8h`]) {
@@ -259,14 +266,14 @@ function MapPage() {
           }
         }
       }
-      else if (currentInterval === 1) {
+      else if (currentInterval.value === 1) {
         dataKey = gasName;
         if (gasName === "PM25" && data.Sistema === "PurpleAir") {
           dataKey += "_Promedio";
         }
       }
 
-      
+
       // Formats the pollutant value retrieved from data[dataKey]
       // using getValue to apply appropriate decimal precision based on gasName.
       const intValue = getValue(data[dataKey], gasName);
@@ -376,53 +383,61 @@ function MapPage() {
     return resultingData;
   }, [sensorData, contaminant, currentInterval, location]);
 
+  const MapInfo = () => <Offcanvas show={show} onHide={() => setShow(false)}>
+    <Offcanvas.Header closeButton>
+      <Offcanvas.Title>Calidad del aire en tiempo real</Offcanvas.Title>
+    </Offcanvas.Header>
+    <Offcanvas.Body>
+      <p>
+        Consulta información en tiempo real sobre la calidad del aire en
+        Monterrey
+      </p>
+      <p>
+        En esta página puedes ver información en tiempo real acerca de la
+        calidad del aire en Monterrey, si deseas obtener información más
+        específica puedes hacer uso de los filtros de abajo.
+      </p>
+    </Offcanvas.Body>
+  </Offcanvas>
+
+  const Leyend = () =>
+    <div className="legend-width p-1 m-2 d-flex position-absolute bottom-0 z-1">
+      <div className="mt-2">
+        <h5>Leyenda</h5>
+        <LegendItem text={"Sensores del Estado"} icon={"images/sensor_estado.png"} />
+        <LegendItem text={"Sensores PurpleAir"} icon={"images/sensor_purple_air.png"} />
+        <LegendItem text={"No hay datos"} icon={"images/no_data.png"} />
+      </div>
+    </div>
 
   return (
     <div>
-      <Offcanvas show={show} onHide={() => setShow(false)}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Calidad del aire en tiempo real</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <p>
-            Consulta información en tiempo real sobre la calidad del aire en
-            Monterrey
-          </p>
-          <p>
-            En esta página puedes ver información en tiempo real acerca de la
-            calidad del aire en Monterrey, si deseas obtener información más
-            específica puedes hacer uso de los filtros de abajo.
-          </p>
-        </Offcanvas.Body>
-      </Offcanvas>
-
+      <MapInfo />
+      <MainForm
+        otherSelects={{
+          title: "Índice",
+          placeholder: "Medida",
+          options: intervalos,
+          onChange: setCurrentInterval,
+          value: currentInterval,
+          styles: customStyles
+        }
+        }
+      />
       <div
         className="z-0"
         style={{
           position: "relative",
-          height: "calc(100vh - 91px)",
-          margin: "0 auto",
+          height: "calc(100vh - 144px)",
         }}
       >
-
-        <Button variant="outline-info" className="position-absolute start-0 top-0 z-1" onClick={() => setShow(true)}>
+        <Button
+          variant="outline-info"
+          className="p-2 m-1 position-absolute start-0 z-1 bg-white bg-opacity-50"
+          onClick={() => setShow(true)}>
           info
         </Button>
-        <MapaFiltros
-          onApply={({ interval }) => {
-            if (interval) {
-              setCurrentInterval(interval.value);
-            }
-
-          }}
-        />
-        <div className="legend-width p-1 m-2 d-flex position-absolute bottom-0 z-1">
-          <div className="mt-2">
-            <h5>Leyenda</h5>
-            <LegendItem text={"Sensores del Estado"} icon={"images/sensor_estado.png"} />
-            <LegendItem text={"Sensores PurpleAir"} icon={"images/sensor_purple_air.png"} />
-            <LegendItem text={"No hay datos"} icon={"images/no_data.png"} />
-          </div>
+        <div className="bg-white bg-opacity-50 position-absolute bottom-0 z-1">
           <TablaCalidad gas={contaminant?.value || ""} />
         </div>
         <Wrapper setMap={setMap} {...mapDefaultProps}>

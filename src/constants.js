@@ -85,8 +85,8 @@ export const statusColor = {
 
 // Opciones del dropdown de sistemas:
 export const systemOptions = [
-  { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G" },
-  { value: "PurpleAir", label: "PurpleAir", opt: "P" },
+  { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G", shortLabel: "Aire NL" },
+  { value: "PurpleAir", label: "PurpleAir", opt: "P", shortLabel: "Purple Air"  },
 ];
 
 // Opciones del dropdown de gases:
@@ -113,6 +113,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Promedio movil 12 horas)",
+      shortLabel: "SEMARNAT"
     },
     { value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)" },
     { value: "oms", label: "OMS (Promedio 24 horas)" },
@@ -121,6 +122,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Promedio movil 12 horas)",
+      shortLabel: "SEMARNAT"
     },
     { value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)" },
     { value: "oms", label: "OMS (Promedio 24 horas)" },
@@ -129,6 +131,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Promedio movil 8 horas)",
+      shortLabel: "SEMARNAT"
     },
     { value: "ssa", label: "NOM-021-SSA1-2021 (Promedio movil 8 horas)" },
     { value: "oms", label: "OMS (Promedio 24 horas)" },
@@ -137,6 +140,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Promedio movil 8 horas)",
+      shortLabel: "SEMARNAT"
     },
     { value: "ssa", label: "NOM-020-SSA1-2021 (Promedio movil 8 horas)" },
     { value: "oms", label: "OMS (Promedio 8 horas)" },
@@ -145,6 +149,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Concentracion promedio horaria)",
+      shortLabel: "SEMARNAT"
     },
     {
       value: "ssa",
@@ -156,6 +161,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Concentracion promedio movil de 24 horas)",
+      shortLabel: "SEMARNAT"
     },
     {
       value: "ssa",

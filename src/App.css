@@ -29,6 +29,8 @@
 
   --marker-size: 36px;
   --marker-size-selected: 47px;
+
+  --bg-asparagus: #63915D;
 }
 
 .no-data {
@@ -74,13 +76,18 @@ nav a img {
   border-radius: 25%;
 }
 
-.menu-link {
-	color: white !important;
-	font-weight: 500;
+.offcanvas-header {
+  background-color: var(--bg-asparagus);
 }
 
-.menu-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.cei-logo {
+  border-radius: 50%;
+}
+
+.custom-nav-link {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
 }
 
 .mb-10 {
@@ -347,6 +354,10 @@ button:focus {
 /****** FOOTER ****/
 footer {
   background-color: var(--color-darkgreen);
+  color: white;
+}
+
+footer h6 {
   color: white;
 }
 

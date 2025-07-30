@@ -1,24 +1,24 @@
- /**
-       * GraphSection component
-       * This component is in charge of rendering the filter form, and display the environmental data plot based on user input
-      *this components allows querying data form an API and it downloads it as a CSV.
-      
-      
-      *Features: 
-      * Query parameters selection and validation( date, time, location, contaminant, system)
-      * Summary data and fetching plot from API
-      * Error messages
-      * Data download as CSV
-      
-      
-      
-      
-      *Libraries: 
-      * React, moment, Redux, Bootstrap and Internal components
-      
-      
-       */ 
-       
+/**
+      * GraphSection component
+      * This component is in charge of rendering the filter form, and display the environmental data plot based on user input
+     *this components allows querying data form an API and it downloads it as a CSV.
+
+
+     *Features:
+     * Query parameters selection and validation( date, time, location, contaminant, system)
+     * Summary data and fetching plot from API
+     * Error messages
+     * Data download as CSV
+
+
+
+
+     *Libraries:
+     * React, moment, Redux, Bootstrap and Internal components
+
+
+      */
+
 import React, { useEffect, useState } from "react";
 import GraphForm from "./components/Form";
 import Plot from "./components/Plot.js";
@@ -27,6 +27,7 @@ import "moment/locale/es";
 import { apiUrl } from "../../constants";
 import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import MainForm from "../../components/MainForm/index.js";
 
 
 /**
@@ -44,15 +45,16 @@ function GraphSection() {
   const [endDate, setEndDate] = useState(moment());
   const [startTime, setStartTime] = useState(moment('00:00', 'HH:mm').format("HH:mm"));
   const [endTime, setEndTime] = useState(moment().format("HH:mm"));
-  
-  
-  
-/**
- *Combination of time and date string in ISO string
- *@param{moment} date- Moment object for date
- *@param{string} time-Time string (HH:mm:ss)
- *@return{string} ISO date-time string
- */
+  const [startDateTime, setStartDateTime] = useState(new Date())
+  const [endDateTime, setEndDateTime] = useState(new Date())
+
+
+  /**
+   *Combination of time and date string in ISO string
+   *@param{moment} date- Moment object for date
+   *@param{string} time-Time string (HH:mm:ss)
+   *@return{string} ISO date-time string
+   */
 
   function getMomentFromDateAndTime(date, time) {
     const dateMoment = moment(date);
@@ -66,10 +68,14 @@ function GraphSection() {
       .toISOString()
   }
 
+  function getISOStrFromDate(date) {
+    return moment(date).toISOString();
+  }
 
-/**
- *Download data as CSV file querying the API and trigger a file download in browser
-*/
+
+  /**
+   *Download data as CSV file querying the API and trigger a file download in browser
+  */
   function downloadCSV() {
     let queryString = createQuery();
 
@@ -93,41 +99,43 @@ function GraphSection() {
         a.click();
       });
   }
-  
-  
-  
-/**
- *Generates a query string with filter states.
- *return {string} query string to add to API URL
- 
-*/
+
+
+
+  /**
+   *Generates a query string with filter states.
+   *return {string} query string to add to API URL
+
+  */
   function createQuery() {
     let queryStr = `location=${location.value.id}&gas=${contaminant.value}&system=${system.opt
-      }&start_date=${getMomentFromDateAndTime(startDate, startTime)}&end_date=${getMomentFromDateAndTime(endDate, endTime)}`;
+      }&start_date=${getISOStrFromDate(startDateTime)}&end_date=${getISOStrFromDate(endDateTime)}`;
     return queryStr;
   }
-  
-  
- /**
-  * When filter parameters change this effect runs everytime.
-  *Validation of parameters and fetches the summary data and plot from API. 
- */ 
+
+
+  /**
+   * When filter parameters change this effect runs everytime.
+   *Validation of parameters and fetches the summary data and plot from API.
+  */
   useEffect(() => {
     function validateQueryParams() {
       let invalidParams = [];
 
-      if (moment().isBefore(endDate)) {
+      if (moment().isBefore(endDateTime)) {
         invalidParams.push({
           parameter: "Hasta",
           reason: `La fecha 'Hasta' no puede ser despues que hoy ${moment().format("DD MMM YYYY")}`
         });
       }
-      if (moment(endDate).isBefore(startDate)) {
+      if (moment(endDateTime).isBefore(startDateTime)) {
         invalidParams.push({
           parameter: "Hasta",
           reason: `La fecha 'Hasta' no puede ser antes que la fecha 'Desde' ${moment(startDate).format("DD MMM YYYY")}`
         });
       }
+
+      console.log(invalidParams)
 
       const areParamsValid = invalidParams.length === 0;
 
@@ -154,12 +162,14 @@ function GraphSection() {
 
 
 
-/**
- *Fetches plot and summary data from API and uses the generated query string. 
- * Timestamps are adjusted for timezone offset, states with retrieved data are set. 
+    /**
+     *Fetches plot and summary data from API and uses the generated query string.
+     * Timestamps are adjusted for timezone offset, states with retrieved data are set.
 
-*/
+    */
     function fetchGraphData() {
+      console.log("fetching data")
+      console.log(system, contaminant, location, validateQueryParams())
       if (!system || !contaminant || !location || !validateQueryParams()) {
         return;
       }
@@ -195,7 +205,8 @@ function GraphSection() {
         });
     }
     fetchGraphData()
-  }, [startDate, startTime, endDate, endTime, contaminant, location, system]);;
+  }, [startDateTime, endDateTime, location, system, contaminant]);
+
 
   return (
     <Container fluid>
@@ -210,17 +221,14 @@ function GraphSection() {
         </Modal.Header>
         <Modal.Body>{error && error.body}</Modal.Body>
       </Modal>
+      <MainForm />
       <Row>
         <Col sm={3}>
           <GraphForm
-            startDate={startDate}
-            setStartDate={setStartDate}
-            startTime={startTime}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            setStartTime={setStartTime}
-            endTime={endTime}
-            setEndTime={setEndTime}
+            startDateTime={startDateTime}
+            setStartDateTime={setStartDateTime}
+            endDateTime={endDateTime}
+            setEndDateTime={setEndDateTime}
           />
         </Col>
         <Col sm={9}>
