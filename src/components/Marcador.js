@@ -152,7 +152,6 @@ function Marcador({
   const updateMarker = useCallback(
     (label_, status_, currentLocation_, locationStr_) => {
       ReactDOM.render(renderMarker(label_, status_, shape, currentLocation_, locationStr_), marker);
-
       setIcon(
         divIcon({
           html: marker,
