@@ -30,7 +30,7 @@ import { BsFillInfoSquareFill } from "react-icons/bs";
 
 // Componentes retrieved directly from components
 import MapaFiltros from "./components/MapaFiltros.js";
-import Marcador from "./components/Marcador.js";
+// import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
 import { TablaCalidad } from "./components/TablaCalidad.js";
 
@@ -48,6 +48,7 @@ import MainForm, { CustomSelect, customStyles } from "./components/MainForm/inde
 import Select from "react-select/base";
 import { getSensorLocationsBySystem } from "./handlers/data.js";
 import { getSystemSensorsMetadata } from "./services/sensorService.js";
+import CustomMarker from "./components/Marker.js";
 
 
 /**
@@ -118,7 +119,7 @@ const markerPropsTemplate = {
   lastUpdate: sensorInfoJson.timestamp,
   temperatura: sensorInfoJson.temperature_c,
   humedad: sensorInfoJson.humidity_r,
-  current : {
+  current: {
     label: sensorInfoJson.pm10.value,
     status: sensorInfoJson.pm10.icar,
     indicator: "PM10",
@@ -127,15 +128,15 @@ const markerPropsTemplate = {
   },
   labels: [
     { label: "PM2.5", status: sensorInfoJson.pm25.icar, value: sensorInfoJson.pm25.value, units: "µg/m³" },
-    { label: "PM10", status: sensorInfoJson.pm10.icar,  value: sensorInfoJson.pm10.value, units: "µg/m³" },
+    { label: "PM10", status: sensorInfoJson.pm10.icar, value: sensorInfoJson.pm10.value, units: "µg/m³" },
     { label: "O3", status: sensorInfoJson.o3.icar, value: sensorInfoJson.o3.value, units: "ppm" },
     { label: "CO", status: sensorInfoJson.co.icar, value: sensorInfoJson.co.value, units: "ppm" },
     { label: "NO2", status: sensorInfoJson.no2.icar, value: sensorInfoJson.no2.value, units: "ppm" },
     { label: "SO2", status: sensorInfoJson.so2.icar, value: sensorInfoJson.so2.value, units: "ppm" }
   ],
   provider: {
-  name: "AireNuevoLeon",
-  ref: "http://aire.nl.gob.mx/" 
+    name: "AireNuevoLeon",
+    ref: "http://aire.nl.gob.mx/"
   },
   ICAR_PM25: sensorInfoJson.pm25.icar,
   OMS_PM25: sensorInfoJson.pm25.oms,
@@ -526,7 +527,7 @@ function MapPage() {
                     //placholders, info que necesita el componente marcador
                     current={{
                       label: "ND",
-                      status: "ND", 
+                      status: "ND",
                       indicator: sensor.ID,
                       units: "",
                       ref: "#"
@@ -540,47 +541,52 @@ function MapPage() {
                 )
               }
             )*/
-           sensores_new.map(
+            sensores_new.map(
               (sensor) => {
-                const isSensorInfoJson = sensor.ID === sensorInfoJson.sensor_id;
-                const markerProps = isSensorInfoJson
-                ? {
-                  ...markerPropsTemplate,
-                  position: [sensor.Address.Latitude, sensor.Address.Longitude]
+                // const isSensorInfoJson = sensor.ID === sensorInfoJson.sensor_id;
+                // const markerProps = isSensorInfoJson
+                // ? {
+                //   ...markerPropsTemplate,
+                //   position: [sensor.Address.Latitude, sensor.Address.Longitude]
+                //
+                // }
+                // : {
+                //     map: map,
+                //     key: sensor.ID,
+                //     position: [sensor.Address.Latitude, sensor.Address.Longitude],
+                //     label: sensor.ID,
+                //     current: {
+                //       label: "ND",
+                //       status: "ND",
+                //       indicator: sensor.ID,
+                //       units: "",
+                //       ref: "#"
+                //     },
+                //     labels: [],
+                //     provider: {
+                //       name: sensor.System,
+                //       ref: "#"
+                //     },
+                // };
 
-                }
-                : {
-                    map: map,
-                    key: sensor.ID,
-                    position: [sensor.Address.Latitude, sensor.Address.Longitude],
-                    label: sensor.ID,
-                    current: {
-                      label: "ND",
-                      status: "ND",
-                      indicator: sensor.ID,
-                      units: "",
-                      ref: "#"
-                    },
-                    labels: [],
-                    provider: {
-                      name: sensor.System,
-                      ref: "#"
-                    },
-                };
-
-                return (  
-                <Marcador
-                  key={sensor.ID}
-                  {...markerProps}
-                  map={map}
-                  shape={markerProps.shape}
-                  label={markerProps.current?.label}
-                  indicator={markerProps.current?.indicator}
-                  status={markerProps.current?.status}
-                />
+                return (
+                  // <Marcador
+                  //   key={sensor.ID}
+                  //   {...markerProps}
+                  //   map={map}
+                  //   shape={markerProps.shape}
+                  //   label={markerProps.current?.label}
+                  //   indicator={markerProps.current?.indicator}
+                  //   status={markerProps.current?.status}
+                  // />
+                  <CustomMarker
+                    address={sensor.Address}
+                    humedad={sensor.humidity_r}
+                    temperatura={sensor.temperature_c}
+                  />
                 )
               }
-           )
+            )
           }
         </Wrapper>
       </div>

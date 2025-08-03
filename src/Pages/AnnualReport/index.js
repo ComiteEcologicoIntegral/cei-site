@@ -9,6 +9,7 @@ import moment from 'moment';
 import useSystemLocations from '../../hooks/useSystemLocations';
 import { getMonthAverage } from '../../services/dayAverageService';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import Spinner from '../../components/Spinner';
 
 export default function AnnualReport() {
   const system = { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G" };
@@ -129,16 +130,7 @@ export default function AnnualReport() {
         <Col xs={10}>
           {
             isLoading &&
-            <TailSpin
-              height="80"
-              width="80"
-              color="#4fa94d"
-              ariaLabel="tail-spin-loading"
-              radius="1"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-            />
+            <Spinner />
           }
           {
             monthData &&

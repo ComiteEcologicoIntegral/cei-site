@@ -1,0 +1,10 @@
+{
+    "hourly": {
+      "value": 10,
+      "unit": "μg/m3"
+    },
+    "icar": -1.0,
+    "oms": -1.0,
+    "aqi": -1.0,
+    "status":  "acceptable"
+}
