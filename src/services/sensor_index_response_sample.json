@@ -1,10 +1,15 @@
 {
     "hourly": {
-      "value": 10,
+      "value": 9,
       "unit": "μg/m3"
     },
-    "icar": -1.0,
+    "icar": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "good",
+      "status_color": "rgb(0, 128, 0)"
+    },
     "oms": -1.0,
     "aqi": -1.0,
-    "status":  "acceptable"
+    "status":  "good"
 }

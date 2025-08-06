@@ -7,10 +7,12 @@ import { getSensorIndex, getSensorIndexes } from "../services/sensorService";
 import { useSelector } from "react-redux";
 import Spinner from "./Spinner";
 import useSystemLocations from "../hooks/useSystemLocations";
+import moment from "moment";
 
 function CustomMarker({
   sensor_id,
   address,
+  currentInterval
 }) {
   const { location: currentLocation, contaminant } = useSelector((state) => state.form);
   const [icon, setIcon] = useState(null);
@@ -21,6 +23,7 @@ function CustomMarker({
   const [current, setCurrent] = useState(null);
 
   useEffect(() => {
+    if (!contaminant) return;
     const fetchCurrent = async () => {
       try {
         setLoading(true);
@@ -42,7 +45,7 @@ function CustomMarker({
   useEffect(() => {
     if (!contaminant || !current || !currentLocation) return;
 
-    const renderMarkerHTML = (label, status, shape = "round", isSelected) => {
+    const renderMarkerHTML = (markerLabel, status, shape = "round", isSelected) => {
       const wrapperClass = isSelected ? "marker-wrapper-selected" : "marker-wrapper";
       const dotClass = `marker-${status} marker-base marker-shape-${shape} ${isSelected ? "marker-border marker-size-" : ""}`;
       const textClass = `marker-${status}`;
@@ -51,7 +54,7 @@ function CustomMarker({
     <div class="${wrapperClass}">
       <div class="${dotClass}"></div>
       <span class="${textClass}" style="background-color: transparent;">
-        ${label}
+        ${markerLabel}
       </span>
     </div>
   `;
@@ -72,8 +75,12 @@ function CustomMarker({
         })
       );
     }
-    updateMarker(contaminant.label, current.status, currentLocation.value, currentLocation.value);
-  }, [contaminant, current, currentLocation]);
+    if (currentInterval.label === 'Concentracion horaria') {
+      updateMarker(current.hourly.value, current.status, currentLocation.value, currentLocation.value);
+    } else {
+      updateMarker(current.icar.value, current.status, currentLocation.value, currentLocation.value);
+    }
+  }, [contaminant, current, currentLocation, currentInterval]);
 
   const handleClick = async (event) => {
     event.target.openPopup()
@@ -122,12 +129,13 @@ function CustomMarker({
               <Col xs={5}>
                 <small className="text-muted">Ubicación</small>
                 <br />
-
-                <data>{address.street}, {address.municipality}</data>
+                <data>{address.Street}, {address.Municipality}</data>
               </Col>
               <Col xs={5}>
                 <small className="text-muted">Concentración horaria</small>
                 <br />
+
+                <data><time>{moment(sensorIndexes.timestamp).format("LL, LT")}</time></data>
               </Col>
             </Row>
 
@@ -166,7 +174,6 @@ const SensorMeasurementTable = ({ sensorIndexes }) => {
       <Col xs={2} className="px-1 m-1">
         <small className="text-muted m-1">OMS</small>
         <br />
-        <p style={{ fontSize: "0.57rem" }} className="mb-0">µg/m3</p>
       </Col>
       <Col xs={2} className="px-1 m-1">
         <small className="text-muted m-1">EPA AQI</small>
