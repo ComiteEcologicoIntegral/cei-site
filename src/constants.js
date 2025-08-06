@@ -195,3 +195,8 @@ export const APIV2URL = "https://aire.comiteecologicointegral.org/api/v2"
 
 export const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
 
+
+export const intervalos = [
+  { value: 0, label: 'Indice Calidad Aire' },
+  { value: 1, label: 'Concentracion horaria' },
+]
