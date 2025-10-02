@@ -3,7 +3,7 @@ name: Deployment
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   build-and-publish:
@@ -23,7 +23,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: "${{ secrets.DOCKER_USERNAME }}/cei-front:prod"
+          images: "${{ secrets.DOCKER_USERNAME }}/cei-front:dev"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -31,10 +31,10 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: "${{ secrets.DOCKER_USERNAME }}/cei-front:prod"
+          tags: "${{ secrets.DOCKER_USERNAME }}/cei-front:dev"
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ENV=prod
+            ENV=dev
 
   deploy:
     name: Deploy docker image to server
@@ -59,7 +59,7 @@ jobs:
           key: ${{ secrets.SERVICE_SSH_KEY }}
           envs: DCKR_USRNM
           script: |
-            docker pull "$DCKR_USRNM/cei-front:prod"
-            docker stop cei-prod-app
-            docker rm cei-prod-app
-            docker run -d -p 9000:80 --name cei-prod-app "$DCKR_USRNM/cei-front:prod"
+            docker pull "$DCKR_USRNM/cei-front:dev"
+            docker stop cei-dev-app
+            docker rm cei-dev-app
+            docker run -d -p 9002:80 --name cei-dev-app "$DCKR_USRNM/cei-front:dev"

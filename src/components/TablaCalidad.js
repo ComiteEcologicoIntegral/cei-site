@@ -34,74 +34,58 @@ function TablaCalidad({ gas }) {
   const limits = criteria["ssa"][gas] || {};
 
   return (
-    <div className="d-flex justify-center align-center">
-      <Container
-        style={{ fontSize: "0.8rem" }}
-      >
-        <h5 className="mt-2">Indice de calidad {gas}</h5>
-        <Row
-          className="ta-center font-weight-bold"
+    <div className="d-flex justify-content-center align-items-center px-0">
+      <Container fluid style={{ fontSize: "0.9rem", maxWidth: "100vw" }}>
+        <h5 className="mt-3 text-center">Índice de calidad</h5>
+        <p className="text-center w-100"> {selectedGas.Title} - {selectedGas.AverageDetails}</p>
+        <div
+          className="table-responsive"
           style={{
-            border: "1px solid white",
-            borderTopRightRadius: "12px",
-            borderTopLeftRadius: "12px",
+            overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
+            borderRadius: "12px",
+            border: "1px solid #dee2e6",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
           }}
         >
-          <Col style={{}}>
-            <p>Contaminante</p>
-          </Col>
-          <Col>
-            <p>Promedio</p>
-          </Col>
-          <Col style={{ backgroundColor: "#00cc03" }}>
-            <p>Buena</p>
-          </Col>
-          <Col style={{ backgroundColor: "#ffff00" }}>
-            <p>Aceptable</p>
-          </Col>
-          <Col style={{ backgroundColor: "#fe6601" }}>
-            <p>Mala</p>
-          </Col>
-          <Col style={{ backgroundColor: "#fc0204" }}>
-            <p>Muy mala</p>
-          </Col>
-          <Col
-            className="text-white"
-            style={{ backgroundColor: "#640132", borderTopRightRadius: "12px" }}
+          <table
+            className="text-center mb-0"
+            style={{ minWidth: "500px", borderCollapse: "separate", borderSpacing: 0 }}
           >
-            <p>Extremadamente mala</p>
-          </Col>
-        </Row>
-        <Row
-          className="ta-center"
-          style={{
-            border: "1px solid white",
-            borderBottomLeftRadius: "12px",
-            borderBottomRightRadius: "12px",
-          }}
-        >
-          <Col>{selectedGas.Title}</Col>
-          <Col>{selectedGas.AverageDetails}</Col>
-          <Col style={{ backgroundColor: "#00cc03" }}>
-            {`${0} - ${limits[0]}`}
-          </Col>
-          <Col style={{ backgroundColor: "#ffff00" }}>
-            {`${limits[0]} - ${limits[1]}`}
-          </Col>
-          <Col style={{ backgroundColor: "#fe6601" }}>
-            {`${limits[1]} - ${limits[2]}`}
-          </Col>
-          <Col style={{ backgroundColor: "#fc0204" }}>
-            {`${limits[2]} - ${limits[3]}`}
-          </Col>
-          <Col
-            className="text-white"
-            style={{
-              backgroundColor: "#640132",
-              borderBottomRightRadius: "12px",
-            }}
-          >{`> ${limits[3]}`}</Col>
-        </Row>
+            <thead>
+              <tr>
+                <th style={{ backgroundColor: "#00cc03", color: "#fff" }}>Buena</th>
+                <th style={{ backgroundColor: "#ffff00", color: "#000" }}>Aceptable</th>
+                <th style={{ backgroundColor: "#fe6601", color: "#fff" }}>Mala</th>
+                <th style={{ backgroundColor: "#fc0204", color: "#fff" }}>Muy mala</th>
+                <th
+                  style={{
+                    backgroundColor: "#640132",
+                    color: "#fff",
+                    borderTopRightRadius: "12px",
+                  }}
+                >
+                  Extremadamente mala
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{ backgroundColor: "#00cc03", color: "#fff" }}>{`0 - ${limits[0]}`}</td>
+                <td style={{ backgroundColor: "#ffff00", color: "#000" }}>{`${limits[0]} - ${limits[1]}`}</td>
+                <td style={{ backgroundColor: "#fe6601", color: "#fff" }}>{`${limits[1]} - ${limits[2]}`}</td>
+                <td style={{ backgroundColor: "#fc0204", color: "#fff" }}>{`${limits[2]} - ${limits[3]}`}</td>
+                <td
+                  style={{
+                    backgroundColor: "#640132",
+                    color: "#fff",
+                    borderBottomRightRadius: "12px",
+                  }}
+                >{`> ${limits[3]}`}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </Container>
     </div>
   );

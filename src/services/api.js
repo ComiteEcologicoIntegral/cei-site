@@ -1,13 +1,21 @@
-import { apiUrl } from "../constants";
+import { apiUrl, APIV2URL } from "../constants";
 
 export async function fetchBackendAPI(url, queryParams = {}, options = {}) {
+  return fetchAPI(apiUrl, url, queryParams, options)
+}
+
+export async function fetchAPIV2(url, queryParams = {}, options = {}) {
+  return fetchAPI(APIV2URL, url, queryParams, options)
+}
+
+async function fetchAPI(domain, url, queryParams = {}, options = {}) {
   const headers = {
     'Content-Type': 'application/json',
     ...(options.headers || {}),
   };
 
   const queryString = new URLSearchParams(queryParams).toString();
-  const fullUrl = `${apiUrl}${url}${queryString ? `?${queryString}` : ''}`;
+  const fullUrl = `${domain}${url}${queryString ? `?${queryString}` : ''}`;
 
   const response = await fetch(fullUrl, {
     ...options,
@@ -26,3 +34,4 @@ export async function fetchBackendAPI(url, queryParams = {}, options = {}) {
     return response.text();
   }
 }
+

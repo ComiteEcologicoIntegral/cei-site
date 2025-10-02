@@ -1,0 +1,157 @@
+{
+  "sensor_id": "ANL10",
+  "timestamp": "2025-03-27T04:00:00",
+  "pm10": {
+    "hourly": {
+      "value": 38,
+      "unit": "μg/m3"
+    },
+    "icar": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "good",
+      "status_color": "rgb(0, 128, 0)"
+    },
+    "oms": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "good",
+      "status_color": "rgb(0, 128, 0)"
+    },
+    "aqi": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "good",
+      "status_color": "rgb(0, 128, 0)"
+    },
+    "status":  "good"
+  },
+  "pm25": {
+    "hourly": {
+      "value": 10,
+      "unit": "μg/m3"
+    },
+    "icar": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "acceptable",
+      "status_color": "rgb(255, 255, 0)"
+    },
+    "oms": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "acceptable",
+      "status_color": "rgb(255, 255, 0)"
+    },
+    "aqi": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "acceptable",
+      "status_color": "rgb(255, 255, 0)"
+    },
+    "status":  "acceptable"
+  },
+  "o3": {
+    "hourly": {
+      "value": 0.17,
+      "unit": "μg/m3"
+    },
+    "icar": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "extremely-bad",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "oms": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "extremely-bad",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "aqi": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "extremely-bad",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "status":  "extremely-bad"
+  },
+  "co": {
+    "hourly": {
+      "value": 0.17,
+      "unit": "μg/m3"
+    },
+    "icar": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "extremely-bad",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "oms": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "extremely-bad",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "aqi": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "extremely-bad",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "status":  "good"
+  },
+  "no2": {
+    "hourly": {
+      "value": 0.0182,
+      "unit": "μg/m3"
+    },
+    "icar": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "extremely-bad",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "oms": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "extremely-bad",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "aqi": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "extremely-bad",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "status":  "no-data"
+  },
+  "so2": {
+    "hourly": {
+      "value": 0.0049,
+      "unit": "μg/m3"
+    },
+    "icar": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "acceptable",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "oms": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "acceptable",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "aqi": {
+      "value": 38,
+      "unit": "μg/m3",
+      "status": "acceptable",
+      "status_color": "rgb(143, 63, 151)"
+    },
+    "status":  "very-bad"
+  },
+  "humidity_r": 71.0,
+  "temperature_c": 21.95,
+  "presion_atm": 714.9
+}
