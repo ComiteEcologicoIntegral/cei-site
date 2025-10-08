@@ -167,6 +167,7 @@ function Prediccion() {
 		xhReq.send(null);
 		xhReq.onload = function () {
 			// Cuando la llamada al API ha terminado, se ejecuta
+			console.log("here in prediccion")
 			dataJSON = JSON.parse(xhReq.responseText);
 			if (dataJSON != null) {
 				try {
