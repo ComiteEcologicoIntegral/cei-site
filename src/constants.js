@@ -190,8 +190,11 @@ export const idBlacklist = [
 export const idBlacklistpriv = ["P39497", "P39285"];
 export const mapBlacklist = ["Sinaica"];
 
-export const apiUrl = "https://aire.comiteecologicointegral.org/api"
-export const APIV2URL = "https://aire.comiteecologicointegral.org/api/v2"
+// export const apiUrl = "https://aire.comiteecologicointegral.org/api"
+// export const APIV2URL = "https://aire.comiteecologicointegral.org/api/v2"
+
+export const apiUrl = "http://82.180.132.126:8001"
+export const APIV2URL = "http://82.180.132.126:8080"
 
 export const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
 
