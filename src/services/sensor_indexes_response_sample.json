@@ -4,7 +4,9 @@
   "pm10": {
     "hourly": {
       "value": 38,
-      "unit": "μg/m3"
+      "unit": "μg/m3",
+      "status": "good",
+      "status_color": "rgb(0, 128, 0)"
     },
     "icar": {
       "value": 38,
