@@ -247,7 +247,7 @@ function Marcador({
                 <Col xs={3} className={`px-1 m-1 rounded d-flex justify-content-between marker-${status}`}>
                   <div>{value}</div><div> {units}</div>
                 </Col>
-                <Col xs={2} className={`px-1 m-1 rounded marker-${getICAR(ICAR_Value, cleanLabel, "ssa")}`}>{ICAR_Value}</Col>
+                <Col xs={2} className={`px-1 m-1 rounded marker-${getICAR(ICAR_Value, cleanLabel, "semarnat")}`}>{ICAR_Value}</Col>
                 <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusOMS(OMS_Value, cleanLabel, "oms")}`}>{OMS_Value}</Col>
                 <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(AQI_Value, cleanLabel, "ssa")}`}>{AQI_Value}</Col>
               </Row>)
