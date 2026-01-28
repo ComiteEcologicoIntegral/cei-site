@@ -32,7 +32,7 @@ const Header = () => {
                         <NavDropdown.Item as={NavLink} to="/conceptos">Contaminantes</NavDropdown.Item>
                         <NavDropdown.Item as={NavLink} to="/recomendaciones">Recomendaciones</NavDropdown.Item>
                     </NavDropdown>
-                    <Nav.Link as={NavLink} to="/conocenos" className="menu-link">Conócenos</Nav.Link>
+                    <Nav.Link as={NavLink} to="https://comiteecologicointegral.org" className="menu-link">Conócenos</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
