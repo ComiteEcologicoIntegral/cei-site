@@ -31,7 +31,7 @@ const qualityGasData = {
 
 function TablaCalidad({ gas }) {
   const selectedGas = qualityGasData[gas] || {};
-  const limits = criteria["ssa"][gas] || {};
+  const limits = criteria["semarnat"][gas] || {};
 
   return (
     <div className="d-flex justify-center align-center">
