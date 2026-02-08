@@ -20,7 +20,6 @@
  * Last updated: [?]
  */
 
-
 // React and third party libraries
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import moment from "moment";
@@ -40,8 +39,7 @@ import { getICAR } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 
 // Styles
-import "./styles/MapLegend.css"
-
+import "./styles/MapLegend.css";
 
 /**
  * Default map properties
@@ -70,10 +68,7 @@ const LegendItem = (props) => {
   const { text, icon } = props;
 
   return (
-    <div
-      className="legend-item"
-      style={{ border: "1px dashed gray" }}
-    >
+    <div className="legend-item" style={{ border: "1px dashed gray" }}>
       {icon && (
         <div className="legend-item-icon">
           <img src={icon} alt={"Legend Icon"} />
@@ -97,22 +92,20 @@ const LegendItem = (props) => {
  * @returns {JSX.Element} The rendered MapPage component.
  */
 
-
 function MapPage() {
-
   // Extract location and contaminant data from Redux state
-  const { location, contaminant } = useSelector((state) => state.form);
+  const { location, contaminant, system } = useSelector((state) => state.form);
 
   // Local state for selected interval (e.g. hourly or daily data)
   const [currentInterval, setCurrentInterval] = useState(0);
 
   /**
-  * useSensorData
-  *
-  * Custom React hook that retrieves real-time air quality sensor data
-  * from the backend API and returns it in a structured format.
-  *
-  */
+   * useSensorData
+   *
+   * Custom React hook that retrieves real-time air quality sensor data
+   * from the backend API and returns it in a structured format.
+   *
+   */
 
   const { sensorData } = useSensorData();
 
@@ -131,7 +124,7 @@ function MapPage() {
         });
       }
     },
-    [map]
+    [map],
   );
 
   // useEffect hook that sets the map's initial center point
@@ -141,8 +134,6 @@ function MapPage() {
     if (!location) return;
     setCenter([location?.value.address.lat, location?.value.address.lon]);
   }, [location, setCenter]);
-
-
 
   // Dictionary that maps Sensor IDs to their assigned station names.
 
@@ -161,9 +152,8 @@ function MapPage() {
     ANL12: "CENTRO",
     ANL13: "SURESTE2",
     ANL15: "PESQUERIA",
-    ANL16: "MITRAS"
+    ANL16: "MITRAS",
   };
-
 
   /**
    * getValue
@@ -189,8 +179,7 @@ function MapPage() {
       ans = +preValue.toFixed(2);
     }
     return ans;
-  }
-
+  };
 
   /**
    * filterND
@@ -204,17 +193,17 @@ function MapPage() {
   const filterND = (data) => {
     return typeof data === "undefined" || data === null || data === ""
       ? "ND"
-      : data.toString()
-  }
+      : data.toString();
+  };
 
   /**
-  * Memoized calculation of map markers.
-  *
-  * Returns an empty array if no contaminant is selected.
-  *
-  * @returns {Array} Array of marker objects for rendering on the map,
-  * or an empty array if contaminant is not defined.
-  */
+   * Memoized calculation of map markers.
+   *
+   * Returns an empty array if no contaminant is selected.
+   *
+   * @returns {Array} Array of marker objects for rendering on the map,
+   * or an empty array if contaminant is not defined.
+   */
   const markers = useMemo(() => {
     if (!contaminant) return [];
 
@@ -230,7 +219,7 @@ function MapPage() {
         typeof sensor.Longitud === "number" &&
         typeof sensor.Latitud === "number" &&
         !mapBlacklist.includes(sensor.Sistema) &&
-        !idBlacklist.includes(sensor.Sensor_id)
+        !idBlacklist.includes(sensor.Sensor_id),
     );
 
     // Maps each filtered sensor to a marker data object,
@@ -254,27 +243,23 @@ function MapPage() {
         if (data.Sistema === "AireNuevoLeon" && gasName === "O3") {
           if (data[`${dataKey}_1h`] >= data[`${dataKey}_8h`]) {
             dataKey += "_1h";
-          }
-          else {
+          } else {
             dataKey += "_8h";
           }
         }
-        val = data[dataKey]
+        val = data[dataKey];
         if (gasName === "PM25") {
-          val *= 0.694
+          val *= 0.694;
+        } else if (gasName === "PM10") {
+          val *= 0.714;
         }
-        else if (gasName ==="PM10") {
-          val *= 0.714
-        }
-      }
-      else if (currentInterval === 1) {
+      } else if (currentInterval === 1) {
         dataKey = gasName;
         if (gasName === "PM25" && data.Sistema === "PurpleAir") {
           dataKey += "_Promedio";
         }
-        val = data[dataKey]
+        val = data[dataKey];
       }
-
 
       // Formats the pollutant value retrieved from data[dataKey]
       // using getValue to apply appropriate decimal precision based on gasName.
@@ -347,7 +332,7 @@ function MapPage() {
           if (name === "PM25" && data.Sistema === "PurpleAir")
             colName = "PM25_Promedio";
           // Map each gas to its label, units, formatted value, and status.
-          let val = data[colName]
+          let val = data[colName];
           return {
             label: label ? label : name,
             units: units,
@@ -389,7 +374,6 @@ function MapPage() {
     return resultingData;
   }, [sensorData, contaminant, currentInterval, location]);
 
-
   return (
     <div>
       <Offcanvas show={show} onHide={() => setShow(false)}>
@@ -417,8 +401,11 @@ function MapPage() {
           margin: "0 auto",
         }}
       >
-
-        <Button variant="outline-info" className="position-absolute start-0 top-0 z-1" onClick={() => setShow(true)}>
+        <Button
+          variant="outline-info"
+          className="position-absolute start-0 top-0 z-1"
+          onClick={() => setShow(true)}
+        >
           info
         </Button>
         <MapaFiltros
@@ -426,37 +413,41 @@ function MapPage() {
             if (interval) {
               setCurrentInterval(interval.value);
             }
-
           }}
         />
         <div className="legend-width p-1 m-2 d-flex position-absolute bottom-0 z-1">
           <div className="mt-2">
             <h5>Leyenda</h5>
-            <LegendItem text={"Sensores del Estado"} icon={"images/sensor_estado.png"} />
-            <LegendItem text={"Sensores PurpleAir"} icon={"images/sensor_purple_air.png"} />
+            <LegendItem
+              text={"Sensores del Estado"}
+              icon={"images/sensor_estado.png"}
+            />
+            <LegendItem
+              text={"Sensores PurpleAir"}
+              icon={"images/sensor_purple_air.png"}
+            />
             <LegendItem text={"No hay datos"} icon={"images/no_data.png"} />
           </div>
           <TablaCalidad gas={contaminant?.value || ""} />
         </div>
         <Wrapper setMap={setMap} {...mapDefaultProps}>
-          {
-            markers.map((markerProps, idx) => {
-              if (!markerProps) return '';
-              if (contaminant?.value === "PM25" || !markerProps?.isPurpleAir) {
-                return (
-                  <Marcador
-                    map={map}
-                    key={idx}
-                    isPurpleAir={markerProps.isPurpleAir}
-                    {...markerProps}
-                    label={markerProps.current.label}
-                    indicator={markerProps.current.indicator}
-                    status={markerProps.current.status}
-                    shape={markerProps.isPurpleAir ? "square" : "round"}
-                  />
-                );
-              }
-            })}
+          {markers.map((markerProps, idx) => {
+            if ( !markerProps || ((system.value === "PurpleAir") !== markerProps.isPurpleAir)) {
+              return "";
+            }
+            return (
+              <Marcador
+                map={map}
+                key={idx}
+                isPurpleAir={markerProps.isPurpleAir}
+                {...markerProps}
+                label={markerProps.current.label}
+                indicator={markerProps.current.indicator}
+                status={markerProps.current.status}
+                shape={markerProps.isPurpleAir ? "square" : "round"}
+              />
+            );
+          })}
         </Wrapper>
       </div>
     </div>
