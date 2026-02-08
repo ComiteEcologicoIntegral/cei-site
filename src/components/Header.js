@@ -27,6 +27,7 @@ const Header = () => {
                     <NavDropdown title="Registro" id="basic-nav-dropdown" className="menu-link">
                         <NavDropdown.Item as={NavLink} to="/historico">Historico</NavDropdown.Item>
                         <NavDropdown.Item as={NavLink} to="/calendario">Calendario</NavDropdown.Item>
+                        <NavDropdown.Item as={NavLink} to="/descargar-datos">Descarga datos</NavDropdown.Item>
                     </NavDropdown>
                     <NavDropdown title="Ayuda" id="basic-nav-dropdown" className="menu-link">
                         <NavDropdown.Item as={NavLink} to="/conceptos">Contaminantes</NavDropdown.Item>
