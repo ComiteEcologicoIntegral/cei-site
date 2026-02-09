@@ -1,17 +1,27 @@
-import React, { useState, useEffect } from 'react'
-import Select from "react-select";
-import { TailSpin } from 'react-loader-spinner';
-import { populateDateRange, getFirstDayOfMonth, getDateLastDayOfMonth, getFirstAndLastDayOfMonth } from '../../utils/PopulateDateRange';
-import { gasesOptions, apiUrl, normOptions, idBlacklistpriv } from "../../constants";
-import { getICAR } from "../../handlers/statusCriteria";
+import { useState, useEffect } from "react";
+import {
+  populateDateRange,
+  getFirstDayOfMonth,
+  getDateLastDayOfMonth,
+  getFirstAndLastDayOfMonth,
+} from "../../utils/PopulateDateRange";
+import {
+  gasesOptions,
+  normOptions,
+} from "../../constants";
 import "./index.css";
-import moment from 'moment';
-import useSystemLocations from '../../hooks/useSystemLocations';
-import { getMonthAverage } from '../../services/dayAverageService';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import moment from "moment";
+import useSystemLocations from "../../hooks/useSystemLocations";
+import { getMonthAverage } from "../../services/dayAverageService";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function AnnualReport() {
-  const system = { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G" };
+  const system = {
+    value: "AireNuevoLeon",
+    label: "AireNuevoLeon/Sinaica",
+    opt: "G",
+  };
 
   const months = [
     { value: 0, label: "Enero" },
@@ -59,7 +69,13 @@ export default function AnnualReport() {
 
   const fetchCalendarData = (location) => {
     const { first, last } = getFirstAndLastDayOfMonth(year, month);
-    return getMonthAverage(location.value.id, contaminant, first.toISOString(), last.toISOString(), avgType);
+    return getMonthAverage(
+      location.value.id,
+      contaminant,
+      first.toISOString(),
+      last.toISOString(),
+      avgType,
+    );
   };
 
   const handleClick = () => {
@@ -69,56 +85,78 @@ export default function AnnualReport() {
 
     const firstDayOfTheMonth = getFirstDayOfMonth(year, month);
     const lastDayOfTheMonth = getDateLastDayOfMonth(year, month);
-    const tmpMonthDates = populateDateRange(firstDayOfTheMonth, lastDayOfTheMonth);
+    const tmpMonthDates = populateDateRange(
+      firstDayOfTheMonth,
+      lastDayOfTheMonth,
+    );
     setMonthDates(tmpMonthDates);
 
     const promises = [];
-    console.log('locations', locations)
+    console.log("locations", locations);
     locations.forEach((location) => {
       promises.push(fetchCalendarData(location));
     });
 
-
     Promise.all(promises).then((results) => {
-      let tmpMonthData = {}
+      let tmpMonthData = {};
       for (let i = 0; i < results.length; ++i) {
         tmpMonthData[locations[i].label] = results[i];
       }
       setMonthData(tmpMonthData);
       setIsLoading(false);
     });
-  }
+  };
 
   return (
     <Container fluid>
       <Row>
         <Col xs={2}>
           <Form>
-            <Form.Group className="mb-3" >
+            <Form.Group className="mb-3">
               <Form.Label>Mes</Form.Label>
-              <Form.Select value={month} onChange={({ target }) => setMonth(target.value)}>
-                {months.map(o => <option value={o.value}>{o.label}</option>)}
+              <Form.Select
+                value={month}
+                onChange={({ target }) => setMonth(target.value)}
+              >
+                {months.map((o) => (
+                  <option value={o.value}>{o.label}</option>
+                ))}
               </Form.Select>
             </Form.Group>
 
-            <Form.Group className="mb-3" >
+            <Form.Group className="mb-3">
               <Form.Label>Año</Form.Label>
-              <Form.Select value={year} onChange={({ target }) => setYear(target.value)}>
-                {years.map(o => <option value={o.value}>{o.label}</option>)}
+              <Form.Select
+                value={year}
+                onChange={({ target }) => setYear(target.value)}
+              >
+                {years.map((o) => (
+                  <option value={o.value}>{o.label}</option>
+                ))}
               </Form.Select>
             </Form.Group>
 
-            <Form.Group className="mb-3" >
+            <Form.Group className="mb-3">
               <Form.Label>Contaminante</Form.Label>
-              <Form.Select value={contaminant} onChange={({ target }) => setContaminant(target.value)}>
-                {gasesOptions.map(o => <option value={o.value}>{o.label}</option>)}
+              <Form.Select
+                value={contaminant}
+                onChange={({ target }) => setContaminant(target.value)}
+              >
+                {gasesOptions.map((o) => (
+                  <option value={o.value}>{o.label}</option>
+                ))}
               </Form.Select>
             </Form.Group>
 
-            <Form.Group className="mb-3" >
+            <Form.Group className="mb-3">
               <Form.Label>Promedio/Índice</Form.Label>
-              <Form.Select value={avgType} onChange={({ target }) => setAvgType(target.value)}>
-                {avgOptions?.map(o => <option value={o.value}>{o.label}</option>)}
+              <Form.Select
+                value={avgType}
+                onChange={({ target }) => setAvgType(target.value)}
+              >
+                {avgOptions?.map((o) => (
+                  <option value={o.value}>{o.label}</option>
+                ))}
               </Form.Select>
             </Form.Group>
             <Button onClick={handleClick} disabled={isLoading}>
@@ -127,30 +165,20 @@ export default function AnnualReport() {
           </Form>
         </Col>
         <Col xs={10}>
-          {
-            isLoading &&
-            <TailSpin
-              height="80"
-              width="80"
-              color="#4fa94d"
-              ariaLabel="tail-spin-loading"
-              radius="1"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-            />
-          }
-          {
-            monthData &&
+          {isLoading && <LoadingSpinner />}
+          {monthData && (
             <div className="mt-3">
-              <h6>Tabla para contaminante {contaminant} con la norma {avgType} {month} {year}</h6>
+              <h6>
+                Tabla para contaminante {contaminant} con la norma {avgType}{" "}
+                {month} {year}
+              </h6>
               <div className="annual-report-table mb-3">
                 <table>
                   <thead>
                     <tr>
                       <th>Zona</th>
                       {monthDates.map((date) => {
-                        return (<th key={date.getDate()}>{date.getDate()}</th>);
+                        return <th key={date.getDate()}>{date.getDate()}</th>;
                       })}
                     </tr>
                   </thead>
@@ -161,18 +189,23 @@ export default function AnnualReport() {
                         return (
                           <td className={data.status}>
                             {data.average ? data.average.toPrecision(4) : "ND"}
-                          </td>);
+                          </td>
+                        );
                       });
-                      return (<tr><td>{location.label}</td>{dayAvgs}</tr>);
-                    }
-                    )}
+                      return (
+                        <tr>
+                          <td>{location.label}</td>
+                          {dayAvgs}
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
-              </div></div>
-          }
+              </div>
+            </div>
+          )}
         </Col>
-
       </Row>
-    </Container >
+    </Container>
   );
 }

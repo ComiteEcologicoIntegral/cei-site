@@ -9,6 +9,7 @@ import GraphSection from "./Pages/Plot/index.js";
 import Concepts from "./Pages/Concepts/index.js";
 import Layout from "./components/Layout.js";
 import Recomendaciones from "./components/Recomendaciones";
+import DownloadData from "./Pages/DownloadData/index.js";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<MapPage />} />
           <Route path="/calendario" element={<CalendarSection />} />
+          <Route path="/descargar-datos" element={<DownloadData />} />
           <Route path="/historico" element={<GraphSection />} />
           <Route path="/conocenos" element={<Acerca />} />
           <Route path="/pronostico" element={<Prediccion />} />

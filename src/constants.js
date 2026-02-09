@@ -188,7 +188,7 @@ export const mapBlacklist = ["Sinaica"];
 // export const APIV2URL = "https://aire.comiteecologicointegral.org/api/v2"
 
 export const apiUrl = "http://82.180.132.126:8001"
-export const APIV2URL = "http://82.180.132.126:8080"
+export const APIV2URL = "https://x6wa3rynzk.us-east-2.awsapprunner.com/"
 
 export const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
 
