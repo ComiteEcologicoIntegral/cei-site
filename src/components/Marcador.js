@@ -6,10 +6,9 @@ import "leaflet/dist/leaflet.css";
 import { Marker, Popup } from "react-leaflet";
 import { Button, Container, Col, Row } from "react-bootstrap";
 import moment from "moment";
-import { getStatusClassName } from "../handlers/statusCriteria";
-import { getStatusOMS } from "../handlers/statusCriteria";
-import { getICAR } from "../handlers/statusCriteria";
-import { getSensorIndexes } from "../services/sensorService";
+import {getStatusClassName} from "../handlers/statusCriteria";
+import {getStatusOMS} from "../handlers/statusCriteria";
+import {getICAR} from "../handlers/statusCriteria";
 
 const fixedValues = {
   PM25: 2,
@@ -39,12 +38,14 @@ const showLabel = (label) => {
 const renderMarker = (label, status, shape = "round", currentLocation, locationStr) => {
   return (
     <div
-      className={`${currentLocation === locationStr ? "marker-wrapper-selected" : "marker-wrapper"
-        }`}
+      className={`${
+        currentLocation === locationStr ? "marker-wrapper-selected" : "marker-wrapper"
+      }`}
     >
       <div
-        className={`marker-${status} marker-base marker-shape-${shape} ${currentLocation === locationStr ? "marker-border marker-size-" : ""
-          }`}
+        className={`marker-${status} marker-base marker-shape-${shape} ${
+          currentLocation === locationStr ? "marker-border marker-size-" : ""
+        }`}
       ></div>
       <span className={`marker-${status}`} style={{ backgroundColor: "transparent" }}>
         {showLabel(label)}
@@ -97,9 +98,6 @@ function Marcador({
 }) {
   const marker = useMemo(() => document.createElement("div"), []);
   const [icon, setIcon] = useState(null);
-  const [sensorIndexes, setSensorIndexes] = useState(null)
-  const [loading, setLoading] = useState(null)
-  const [error, setError] = useState(null)
 
   const values = {
     ICAR_PM25,
@@ -121,7 +119,7 @@ function Marcador({
     ICAR_SO2,
     OMS_SO2,
     AQI_SO2,
-  };
+};
 
 
   const getICARValue = (label) => {
@@ -152,11 +150,13 @@ function Marcador({
   const updateMarker = useCallback(
     (label_, status_, currentLocation_, locationStr_) => {
       ReactDOM.render(renderMarker(label_, status_, shape, currentLocation_, locationStr_), marker);
+
       setIcon(
         divIcon({
           html: marker,
-          className: `sensor-icon ${currentLocation_ === locationStr_ ? "top" : shape === "round" ? "" : "behind"
-            }`,
+          className: `sensor-icon ${
+            currentLocation_ === locationStr_ ? "top" : shape === "round" ? "" : "behind"
+          }`,
           popupAnchor: [7, 0],
         })
       );
@@ -169,32 +169,12 @@ function Marcador({
   }, [label, status, updateMarker, currentLocation, locationStr]);
 
   if (!icon) return null;
-
-  const handleClick = async (event) => {
-    console.log("fetching data")
-    event.target.openPopup()
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await getSensorIndexes('anl1');
-      if (!response.ok) {
-        throw new Error('Netowkr response was not ok')
-      }
-      const result = await response.json()
-      setSensorIndexes(result)
-      console.log('sensor indexes', result)
-    } catch(err) {
-      setError(err.message || 'Something went wrong')
-    } finally {
-      setLoading(false);
-    }
-  }
-
+  console.log("current", current)
 
   return (
     <Marker
       position={position}
-      eventHandlers={{click: handleClick}}
+      onClick={(event) => event.target.openPopup()}
       icon={icon}
       {...props}
     >
@@ -237,7 +217,7 @@ function Marcador({
             </Col>
           </Row>
 
-          <Container style={{ padding: 0, width: "350px" }}>
+          <Container style={{padding: 0, width: "350px"}}>
             <Row className="flex-nowrap">
               <Col xs={2} className="px-1 m-1"></Col>
               <Col xs={3} className="px-1 m-1">
@@ -249,14 +229,14 @@ function Marcador({
               <Col xs={2} className="px-1 m-1">
                 <small className="text-muted m-1">OMS</small>
                 <br />
-                <p style={{ fontSize: "0.57rem" }} className="mb-0">µg/m3</p>
+                <p style={{fontSize: "0.57rem"}} className="mb-0">µg/m3</p>
               </Col>
               <Col xs={2} className="px-1 m-1">
                 <small className="text-muted m-1">EPA AQI</small>
               </Col>
             </Row>
-            {labels.map(({ label, status, value, units }, idx) => {
-              if (isPurpleAir && label != "PM2.5") {
+            {labels.map(({label, status, value, units}, idx) => {
+              if (isPurpleAir && label !="PM2.5") {
                 return;
               }
               let cleanLabel = label.replace(".", "");
@@ -275,30 +255,30 @@ function Marcador({
             }
             )}
           </Container>
-          <div className="data-label text-center">
-            <small className="text-muted">
-              *Índice de acuerdo a la{" "}
-              <a
-                className="text-black"
-                href="https://www.dof.gob.mx/nota_detalle.php?codigo=5715154&fecha=25/01/2024#gsc.tab=0"
-              >
-                NOM-172-SEMARNAT-2023
-              </a>
-            </small>
-          </div>
-          <div className="py-2 px-3 border-top text-center">
-            <Button size="sm">
-              <a style={{ color: "white" }} target="blank" href={urlMI}>
-                Más información
-              </a>
-            </Button>
-            <p className="lh-sm mt-2 mb-0">
-              Fuente(s):{" "}
-              <a target="blank" href={provider.ref}>
-                {provider.name}
-              </a>
-            </p>
-          </div>
+        <div className="data-label text-center">
+          <small className="text-muted">
+            *Índice de acuerdo a la{" "}
+            <a
+              className="text-black"
+              href="https://www.dof.gob.mx/nota_detalle.php?codigo=5715154&fecha=25/01/2024#gsc.tab=0"
+            >
+              NOM-172-SEMARNAT-2023
+            </a>
+          </small>
+        </div>
+        <div className="py-2 px-3 border-top text-center">
+          <Button size="sm">
+            <a style={{color: "white"}} target="blank" href={urlMI}>
+              Más información
+            </a>
+          </Button>
+          <p className="lh-sm mt-2 mb-0">
+            Fuente(s):{" "}
+            <a target="blank" href={provider.ref}>
+              {provider.name}
+            </a>
+          </p>
+        </div>
         </div>
       </Popup>
     </Marker>
