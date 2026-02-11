@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { FaListCheck } from "react-icons/fa6";
 import { TiFeather } from "react-icons/ti";
 import { FaSmog } from "react-icons/fa";
@@ -7,18 +7,19 @@ import { MdHome } from "react-icons/md";
 import { IoIosHelpCircle } from "react-icons/io";
 import { FaCalendar } from "react-icons/fa";
 import { BsFillFileEarmarkSpreadsheetFill } from "react-icons/bs";
+import { FcScatterPlot } from "react-icons/fc";
 import { BiSolidSpreadsheet } from "react-icons/bi";
 import { FaMapMarkedAlt } from "react-icons/fa";
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import "./Header.css";
-import { Col, Container, Offcanvas, Row } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
+import { Col, Container, Offcanvas, Row } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 
 const NavIcon = ({ Icon }) => {
-    return (<Icon className="m-2" />)
-}
+    return <Icon className="m-2" />;
+};
 
 const CEILogo = ({ height }) => {
     return (
@@ -29,30 +30,41 @@ const CEILogo = ({ height }) => {
             className="cei-logo"
         />
     );
-}
-
+};
 
 const Header = () => {
     const [expanded, setExpanded] = useState(false);
-    const closeOffcanvas = () => setExpanded(false)
+    const closeOffcanvas = () => setExpanded(false);
     const CustomNavLink = ({ to, icon, text }) => {
         return (
-            <Nav.Link as={NavLink} to={to} className="custom-nav-link" onClick={closeOffcanvas}>
+            <Nav.Link
+                as={NavLink}
+                to={to}
+                className="custom-nav-link"
+                onClick={closeOffcanvas}
+            >
                 <NavIcon Icon={icon} />
                 {text}
             </Nav.Link>
         );
-    }
-    const CustomNavItem = ({ to, icon, text }) =>
+    };
+    const CustomNavItem = ({ to, icon, text }) => (
         <NavDropdown.Item as={NavLink} to={to} onClick={closeOffcanvas}>
             <NavIcon Icon={icon} />
             {text}
         </NavDropdown.Item>
+    );
 
     return (
-        <Navbar className="my-navbar" data-bs-theme="dark" expand="lg" expanded={expanded} onToggle={setExpanded}>
+        <Navbar
+            className="my-navbar"
+            data-bs-theme="dark"
+            expand="lg"
+            expanded={expanded}
+            onToggle={setExpanded}
+        >
             <Container>
-                <Navbar.Brand >
+                <Navbar.Brand>
                     <TiFeather />
                     CEI
                 </Navbar.Brand>
@@ -69,33 +81,42 @@ const Header = () => {
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <Nav className="me-auto">
-                            <CustomNavLink
-                                to="/"
-                                text="Inicio"
-                                icon={MdHome}
-                            />
-                            <CustomNavLink
-                                to="/mapa"
-                                text="Mapa"
-                                icon={FaMapMarkedAlt}
-                            />
+                            <CustomNavLink to="/" text="Inicio" icon={MdHome} />
+                            <CustomNavLink to="/mapa" text="Mapa" icon={FaMapMarkedAlt} />
                             <div className="d-flex  align-items-center">
-
-                                <NavDropdown title={<div className="d-inline-flex align-items-center"><NavIcon Icon={BiSolidSpreadsheet} /> Registro</div>} id="basic-nav-dropdown">
+                                <NavDropdown
+                                    title={
+                                        <div className="d-inline-flex align-items-center">
+                                            <NavIcon Icon={BiSolidSpreadsheet} /> Registro
+                                        </div>
+                                    }
+                                    id="basic-nav-dropdown"
+                                >
                                     <CustomNavItem
-                                        to="/historico"
-                                        text="Historico"
-                                        icon={BsFillFileEarmarkSpreadsheetFill}
+                                        to="/grafica"
+                                        text="Grafica"
+                                        icon={FcScatterPlot}
                                     />
                                     <CustomNavItem
                                         to="/calendario"
                                         text="Calendario"
                                         icon={FaCalendar}
                                     />
+                                    <CustomNavItem
+                                        to="/historico"
+                                        text="Historico"
+                                        icon={BsFillFileEarmarkSpreadsheetFill}
+                                    />
                                 </NavDropdown>
                             </div>
-                            <NavDropdown title={<div className="d-inline-flex align-items-center"><NavIcon Icon={IoIosHelpCircle} /> Ayuda</div>} id="basic-nav-dropdown">
-
+                            <NavDropdown
+                                title={
+                                    <div className="d-inline-flex align-items-center">
+                                        <NavIcon Icon={IoIosHelpCircle} /> Ayuda
+                                    </div>
+                                }
+                                id="basic-nav-dropdown"
+                            >
                                 <CustomNavItem
                                     to="/conceptos"
                                     text="Contaminantes"
@@ -115,7 +136,7 @@ const Header = () => {
                     </Offcanvas.Body>
                 </Navbar.Offcanvas>
             </Container>
-        </Navbar >
+        </Navbar>
     );
 };
 

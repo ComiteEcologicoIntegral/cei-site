@@ -19,8 +19,8 @@ function App() {
           <Route index element={<Landing />} />
           <Route path="/mapa" element={<MapPage />} />
           <Route path="/calendario" element={<CalendarSection />} />
-          <Route path="/descargar-datos" element={<DownloadData />} />
-          <Route path="/historico" element={<GraphSection />} />
+          <Route path="/historico" element={<DownloadData />} />
+          <Route path="/grafica" element={<GraphSection />} />
           <Route path="/pronostico" element={<Prediccion />} />
           <Route path="/reporte-anual" element={<ReporteAnual />} />
           <Route path="/conceptos" element={<Concepts />} />
