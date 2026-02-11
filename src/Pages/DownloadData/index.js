@@ -5,8 +5,9 @@ import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import { fetchNewBackendApiCsvRes } from "../../services/api";
 import { getISOStrFromDate } from "../../utils/dateUtils";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Offcanvas, Row } from "react-bootstrap";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import Page from "../../components/Page";
 
 function DownloadData() {
   const [loading, setLoading] = useState(false);
@@ -21,26 +22,44 @@ function DownloadData() {
     }).then(() => setLoading(false));
   };
 
+  const [show, setShow] = useState(false);
   return (
-    <Container fluid>
+    <Page
+      pageTitle="Descarga datos históricos"
+      infoTitle="Descarga datos históricos"
+      infoDesc={
+        <>
+          <p>Descarga los datos del sistema Aire Nuevo Leon de nuestra base de datos.</p>
+          <p>Tenemos datos a partir del 2018.</p>
+          <hr/>
+          <p>Para obtener datos sigue estos pasos:</p>
+          <ol>
+            <li>Selecciona la fecha de inicio</li>
+            <li>Selecciona la fecha de fin</li>
+            <li>Da click en descargar</li>
+            <li>Espera unos segundos...Y se descargará un csv con los datos</li>
+          </ol>
+        </>
+      }
+    >
       <Row>
         <Col className="d-flex justify-content-center align-items-center">
           <div>
-            <p>Start</p>
+            <p>Fecha de inicio</p>
             <DateTimePicker onChange={onChangeStart} value={start} />
-            <p>End</p>
+            <p>Fecha de fin</p>
             <DateTimePicker onChange={onChangeEnd} value={end} />
             {loading ? (
               <LoadingSpinner />
             ) : (
               <div>
-                <button onClick={downloadData}>Descargar datos</button>
+                <Button variant="primary m-2" onClick={downloadData}>Descargar datos</Button>
               </div>
             )}
           </div>
         </Col>
       </Row>
-    </Container>
+    </Page>
   );
 }
 
