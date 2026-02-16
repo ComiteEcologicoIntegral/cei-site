@@ -62,6 +62,7 @@ const Header = () => {
             expand="lg"
             expanded={expanded}
             onToggle={setExpanded}
+            styles={{padding: 0}}
         >
             <Container>
                 <Navbar.Brand>
@@ -76,17 +77,16 @@ const Header = () => {
                 >
                     <Offcanvas.Header closeButton className="offcanvas-header">
                         <Offcanvas.Title id="basic-navbar-label-nav">
-                            <CEILogo height="90" />
+                            <CEILogo height="80" />
                         </Offcanvas.Title>
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <Nav className="me-auto">
-                            <CustomNavLink to="/" text="Inicio" icon={MdHome} />
-                            <CustomNavLink to="/mapa" text="Mapa" icon={FaMapMarkedAlt} />
+                            <CustomNavLink to="/" text="Mapa" icon={FaMapMarkedAlt} />
                             <div className="d-flex  align-items-center">
                                 <NavDropdown
                                     title={
-                                        <div className="d-inline-flex align-items-center">
+                                        <div className="d-inline-flex align-items-center custom-nav-link">
                                             <NavIcon Icon={BiSolidSpreadsheet} /> Registro
                                         </div>
                                     }

@@ -16,8 +16,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Landing />} />
-          <Route path="/mapa" element={<MapPage />} />
+          <Route index element={<MapPage />} />
           <Route path="/calendario" element={<CalendarSection />} />
           <Route path="/historico" element={<DownloadData />} />
           <Route path="/grafica" element={<GraphSection />} />

@@ -80,24 +80,6 @@ nav a img {
   background-color: var(--bg-asparagus);
 }
 
-.cei-logo {
-  border-radius: 50%;
-}
-
-.custom-nav-link {
-  display: flex;
-  /* justify-content: center; */
-  align-items: center;
-}
-
-.mb-10 {
-  margin-bottom: 100px;
-}
-
-.mb-75 {
-  margin-bottom: 75px;
-}
-
 /******* RECOMENDACIONES TABS ********/
 
 .tab-content {
@@ -440,4 +422,8 @@ th.superTableSpace {
   position: relative;
   left: 50%;
   top: -12px;
+}
+
+.my-navbar {
+  padding: 0 !important;
 }
