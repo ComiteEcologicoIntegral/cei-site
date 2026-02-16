@@ -82,8 +82,7 @@ const Header = () => {
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <Nav className="me-auto">
-                            <CustomNavLink to="/" text="Inicio" icon={MdHome} />
-                            <CustomNavLink to="/mapa" text="Mapa" icon={FaMapMarkedAlt} />
+                            <CustomNavLink to="/" text="Mapa" icon={FaMapMarkedAlt} />
                             <div className="d-flex  align-items-center">
                                 <NavDropdown
                                     title={
