@@ -277,9 +277,7 @@ function MapPage() {
       //
       //
 
-      console.log("gasName", gasName)
       const intValue = getValue(val, gasName);
-      console.log("intValue", intValue)
 
       // Determine final value : If intValue is valid, use it; otherwise set as "ND".
       const value = toString(intValue) ? intValue : "ND";

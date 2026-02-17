@@ -169,7 +169,6 @@ function Marcador({
   }, [label, status, updateMarker, currentLocation, locationStr]);
 
   if (!icon) return null;
-  console.log("current", current)
 
   return (
     <Marker
