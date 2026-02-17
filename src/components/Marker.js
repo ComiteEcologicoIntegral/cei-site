@@ -103,8 +103,6 @@ function CustomMarker({
   if (!icon) {
     return <div></div>
   }
-  console.log("contaminant", contaminant)
-  console.log("current", current)
 
   return (
     <Marker
