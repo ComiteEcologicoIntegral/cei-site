@@ -24,7 +24,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import { Button, Offcanvas } from "react-bootstrap";
+import { Button, CloseButton, Offcanvas } from "react-bootstrap";
+import Collapse from "react-bootstrap/Collapse";
 import { BsFillInfoSquareFill } from "react-icons/bs";
 
 // Componentes retrieved directly from components
@@ -105,6 +106,7 @@ const LegendItem = (props) => {
 function MapPage() {
   // Extract location and contaminant data from Redux state
   const { location, contaminant, system } = useSelector((state) => state.form);
+  const [open, setOpen] = useState(true);
 
   // Local state for selected interval (e.g. hourly or daily data)
   // const [currentInterval, setCurrentInterval] = useState(0);
@@ -429,20 +431,29 @@ function MapPage() {
             styles: customStyles,
           }}
         />
-        <div className="legend-width p-1 m-2 d-flex position-absolute bottom-0 z-1">
-          <div className="mt-2">
-            <h5>Leyenda</h5>
-            <LegendItem
-              text={"Sensores del Estado"}
-              icon={"images/sensor_estado.png"}
-            />
-            <LegendItem
-              text={"Sensores PurpleAir"}
-              icon={"images/sensor_purple_air.png"}
-            />
-            <LegendItem text={"No hay datos"} icon={"images/no_data.png"} />
-          </div>
-          <TablaCalidad gas={contaminant?.value || ""} />
+        <div className="legend-width p-1 m-2 d-flex position-absolute bottom-0 end-0 z-1">
+          {!open && (
+            <Button
+              variant="primary"
+              onClick={() => setOpen(!open)}
+              aria-expanded={open}
+            >
+              Leyenda
+            </Button>
+          )}
+          <Collapse in={open}>
+            <div>
+              {open && (
+                <div>
+                  <TablaCalidad gas={contaminant?.value || ""} />
+                  <CloseButton
+                    className="p-1 m-1 d-flex position-absolute top-0 end-0 z-1"
+                    onClick={() => setOpen(false)}
+                  />
+                </div>
+              )}
+            </div>
+          </Collapse>
         </div>
         <Wrapper setMap={setMap} {...mapDefaultProps}>
           {markers.map((markerProps, idx) => {
