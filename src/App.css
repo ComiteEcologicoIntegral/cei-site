@@ -427,3 +427,15 @@ th.superTableSpace {
 .my-navbar {
   padding: 0 !important;
 }
+
+button {
+  border-radius: 20% !important;
+}
+
+.btn-info-map {
+  background-color: rgba(255,255,255,0.8);
+}
+
+.btn-like {
+  cursor: pointer;
+}

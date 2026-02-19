@@ -26,7 +26,7 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import { Button, CloseButton, Offcanvas } from "react-bootstrap";
 import Collapse from "react-bootstrap/Collapse";
-import { BsFillInfoSquareFill } from "react-icons/bs";
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
 // Componentes retrieved directly from components
 import MapaFiltros from "./components/MapaFiltros.js";
@@ -414,13 +414,6 @@ function MapPage() {
           margin: "0 auto",
         }}
       >
-        <Button
-          variant="outline-info"
-          className="position-absolute start-0 top-0 z-1"
-          onClick={() => setShow(true)}
-        >
-          info
-        </Button>
         <MainForm
           otherSelects={{
             title: "Índice",
@@ -431,52 +424,71 @@ function MapPage() {
             styles: customStyles,
           }}
         />
+
         <div className="legend-width p-1 m-2 d-flex position-absolute bottom-0 end-0 z-1">
           {!open && (
-            <Button
-              variant="primary"
+            <IoIosArrowUp
+              size={25}
               onClick={() => setOpen(!open)}
-              aria-expanded={open}
-            >
-              Leyenda
-            </Button>
+              className="btn-like"
+            />
           )}
           <Collapse in={open}>
             <div>
               {open && (
                 <div>
                   <TablaCalidad gas={contaminant?.value || ""} />
-                  <CloseButton
-                    className="p-1 m-1 d-flex position-absolute top-0 end-0 z-1"
-                    onClick={() => setOpen(false)}
+                  <IoIosArrowDown
+                    size={25}
+                    onClick={() => setOpen(!open)}
+                    className="btn-like p-1 m-1 d-flex position-absolute top-0 end-0 z-1"
                   />
                 </div>
               )}
             </div>
           </Collapse>
         </div>
-        <Wrapper setMap={setMap} {...mapDefaultProps}>
-          {markers.map((markerProps, idx) => {
-            if (
-              !markerProps ||
-              (system.value === "PurpleAir") !== markerProps.isPurpleAir
-            ) {
-              return "";
-            }
-            return (
-              <Marcador
-                map={map}
-                key={idx}
-                isPurpleAir={markerProps.isPurpleAir}
-                {...markerProps}
-                label={markerProps.current.label}
-                indicator={markerProps.current.indicator}
-                status={markerProps.current.status}
-                shape={markerProps.isPurpleAir ? "square" : "round"}
-              />
-            );
-          })}
-        </Wrapper>
+
+        <div
+          className="z-0"
+          style={{
+            position: "relative",
+            height: "calc(100vh - 91px)",
+            margin: "0 auto",
+          }}
+        >
+          <Button
+            variant="outline-info"
+            size="sm"
+            className="btn-info-map position-absolute start-0 top-0 z-1 m-2"
+            onClick={() => setShow(true)}
+          >
+            info
+          </Button>
+
+          <Wrapper setMap={setMap} {...mapDefaultProps}>
+            {markers.map((markerProps, idx) => {
+              if (
+                !markerProps ||
+                (system.value === "PurpleAir") !== markerProps.isPurpleAir
+              ) {
+                return "";
+              }
+              return (
+                <Marcador
+                  map={map}
+                  key={idx}
+                  isPurpleAir={markerProps.isPurpleAir}
+                  {...markerProps}
+                  label={markerProps.current.label}
+                  indicator={markerProps.current.indicator}
+                  status={markerProps.current.status}
+                  shape={markerProps.isPurpleAir ? "square" : "round"}
+                />
+              );
+            })}
+          </Wrapper>
+        </div>
       </div>
     </div>
   );
