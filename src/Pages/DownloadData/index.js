@@ -29,9 +29,12 @@ function DownloadData() {
       infoTitle="Descarga datos históricos"
       infoDesc={
         <>
-          <p>Descarga los datos del sistema Aire Nuevo Leon de nuestra base de datos.</p>
+          <p>
+            Descarga los datos del sistema Aire Nuevo Leon de nuestra base de
+            datos.
+          </p>
           <p>Tenemos datos a partir del 2018.</p>
-          <hr/>
+          <hr />
           <p>Para obtener datos sigue estos pasos:</p>
           <ol>
             <li>Selecciona la fecha de inicio</li>
@@ -53,7 +56,9 @@ function DownloadData() {
               <LoadingSpinner />
             ) : (
               <div>
-                <Button variant="primary m-2" onClick={downloadData}>Descargar datos</Button>
+                <Button variant="primary m-2" onClick={downloadData}>
+                  Descargar datos
+                </Button>
               </div>
             )}
           </div>

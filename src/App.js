@@ -22,8 +22,8 @@ function App() {
           <Route path="/grafica" element={<GraphSection />} />
           <Route path="/pronostico" element={<Prediccion />} />
           <Route path="/reporte-anual" element={<ReporteAnual />} />
-          <Route path="/conceptos" element={<Concepts />} />
-          <Route path="/recomendaciones" element={<Recomendaciones selected="buena" isManual={true} />} />
+          {/* <Route path="/conceptos" element={<Concepts />} /> */}
+          {/* <Route path="/recomendaciones" element={<Recomendaciones selected="buena" isManual={true} />} /> */}
         </Route>
       </Routes>
     </div>

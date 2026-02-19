@@ -28,6 +28,7 @@ import { apiUrl } from "../../constants";
 import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import MainForm from "../../components/MainForm/index.js";
+import Page from "../../components/Page.js";
 
 
 /**
@@ -209,7 +210,21 @@ function GraphSection() {
 
 
   return (
-    <Container fluid>
+    <Page
+      pageTitle="Gráfica"
+      infoTitle="¿Cómo funciona?"
+      infoDesc={
+        <>
+          <p>
+            Genera gráficas a partir de los registros de la calidad del aire del periodo que desees.
+          </p>
+          <ol>
+            <li>Selecciona los filtros que deseas aplicar.</li>
+            <li>Selecciona la fecha inicial y fecha final de la gráfica.</li>
+          </ol>
+        </>
+      }
+    >
       <Modal
         show={error !== null}
         onHide={() => setError(null)}
@@ -245,7 +260,7 @@ function GraphSection() {
           )}
         </Col>
       </Row>
-    </Container>
+    </Page>
   );
 }
 
