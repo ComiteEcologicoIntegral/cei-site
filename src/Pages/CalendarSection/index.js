@@ -21,7 +21,6 @@
  * Last update:[?]
  */
 
-
 //React and hooks
 import React, { useState, useEffect } from "react";
 
@@ -39,15 +38,21 @@ import {
   populateDateRange,
   getFirstDayOfMonth,
   getDateLastDayOfMonth,
-  getFirstAndLastDayOfMonth
+  getFirstAndLastDayOfMonth,
 } from "../../utils/PopulateDateRange";
-import { getDayHourlyData, getMonthAverage } from "../../services/dayAverageService";
+import {
+  getDayHourlyData,
+  getMonthAverage,
+} from "../../services/dayAverageService";
 import HourlyData from "./components/HourlyData";
 
 //Constants and redux hooks
 import { apiUrl, normOptions } from "../../constants";
 import { useSelector } from "react-redux";
-import MainForm, { CustomSelect, CustomSelectWithOptions, customStyles } from "../../components/MainForm";
+import MainForm, {
+  customStyles,
+} from "../../components/MainForm";
+import Page from "../../components/Page";
 
 //Global current date calculations
 let currentMonth = new Date().getMonth();
@@ -70,15 +75,15 @@ function CalendarSection() {
   const { location, contaminant } = useSelector((state) => state.form);
 
   const [dataByHour, setDataByHour] = useState(null);
-  const [error, setError] = useState(false);
-  const [show, setShow] = useState(false);
   const [avgOptions, setAvgOptions] = useState({});
 
   // Datos de los filtros
   const [avgType, setAvgType] = useState({});
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [datesOfTheMonth, setMonthDates] = useState(populateDateRange(beginOfMonth, endOfMonth));
+  const [datesOfTheMonth, setMonthDates] = useState(
+    populateDateRange(beginOfMonth, endOfMonth),
+  );
 
   const [calendarData, setCalendarData] = useState(null);
 
@@ -125,21 +130,36 @@ function CalendarSection() {
 
   //Fetch calendar daily data
   const fetchCalendarData = () => {
-    const { first, last } = getFirstAndLastDayOfMonth(selectedDate.getUTCFullYear(), selectedDate.getMonth());
-    getMonthAverage(location.value.id, contaminant.value, first.toISOString(), last.toISOString(), avgType.value)
+    const { first, last } = getFirstAndLastDayOfMonth(
+      selectedDate.getUTCFullYear(),
+      selectedDate.getMonth(),
+    );
+    getMonthAverage(
+      location.value.id,
+      contaminant.value,
+      first.toISOString(),
+      last.toISOString(),
+      avgType.value,
+    )
       .then((data) => {
         setCalendarData(data);
-      }).catch((e) => {
-        setError(e);
+      })
+      .catch((e) => {
+        console.error(e)
       });
   };
 
   const fetchDayHourlyData = () => {
-    getDayHourlyData(location.value.id, contaminant.value, selectedDate.toISOString())
+    getDayHourlyData(
+      location.value.id,
+      contaminant.value,
+      selectedDate.toISOString(),
+    )
       .then((data) => {
         setDataByHour(data);
-      }).catch((e) => {
-        setError(e);
+      })
+      .catch((e) => {
+        console.error(e)
       });
   };
 
@@ -196,32 +216,35 @@ function CalendarSection() {
 
   //Component render
   return (
-    <Container fluid>
-      <Offcanvas show={show} onHide={() => setShow(false)}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>¿Cómo funciona?</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <p>Consulta y descarga los registros mensuales de la calidad del aire.</p>
+    <Page
+      pageTitle="Calendario"
+      infoTitle="¿Cómo funciona?"
+      infoDesc={
+        <>
+          <p>
+            Consulta y descarga los registros mensuales de la calidad del aire.
+          </p>
           <ol>
             <li>Selecciona los filtros que deseas aplicar.</li>
             <li>Selecciona el mes que desea conultar.</li>
           </ol>
           <hr />
           <p>
-            Para visualizar la informacion desglosada por hora da click en el dia
-            que deseas y los datos se verán en la parte izquierda.</p>
-          <p>
-            Para cambiar de
-            mes puedes usar las flechas de la parte superior o puedes dar click en
-            el mes actual y cambiar a la vista de mes (se vuelve a la vista por dia
-            haciendo click en un mes).</p>
-          <p>
-            Al cambiar de mes haz click en un dia de ese
-            mes para que se carguen los datos
+            Para visualizar la informacion desglosada por hora da click en el
+            dia que deseas y los datos se verán en la parte izquierda.
           </p>
-        </Offcanvas.Body>
-      </Offcanvas>
+          <p>
+            Para cambiar de mes puedes usar las flechas de la parte superior o
+            puedes dar click en el mes actual y cambiar a la vista de mes (se
+            vuelve a la vista por dia haciendo click en un mes).
+          </p>
+          <p>
+            Al cambiar de mes haz click en un dia de ese mes para que se carguen
+            los datos
+          </p>
+        </>
+      }
+    >
       <Row>
         <Col sm={3}>
           <MainForm
@@ -231,15 +254,9 @@ function CalendarSection() {
               value: avgType,
               onChange: (e) => setAvgType(e),
               styles: customStyles,
-              placeholder: "Promedio de 24 horas"
+              placeholder: "Promedio de 24 horas",
             }}
           />
-          <div className="d-flex mt-3">
-            <h1 style={{ textTransform: "initial" }}>Calendario</h1>
-            <Button variant="outline-info p-0 m-1" onClick={() => setShow(true)}>
-              Info
-            </Button>
-          </div>
           <hr className="mt-2 mb-4" />
           <Calendar
             calendarData={calendarData}
@@ -262,7 +279,7 @@ function CalendarSection() {
           />
         </Col>
       </Row>
-    </Container>
+    </Page>
   );
 }
 

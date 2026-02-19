@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Button, Container, Offcanvas } from "react-bootstrap";
+import Help from "../Pages/Concepts";
+import Recomendaciones from "./Recomendaciones";
 
 function Page({ children, pageTitle, infoTitle, infoDesc }) {
   const [show, setShow] = useState(false);
@@ -11,6 +13,10 @@ function Page({ children, pageTitle, infoTitle, infoDesc }) {
         </Offcanvas.Header>
         <Offcanvas.Body>
           {infoDesc}
+          <br/>
+          <Recomendaciones />
+          <br/>
+          <Help />
         </Offcanvas.Body>
       </Offcanvas>
       <div className="d-flex mt-3">
@@ -19,9 +25,7 @@ function Page({ children, pageTitle, infoTitle, infoDesc }) {
           Info
         </Button>
       </div>
-      <div>
-        {children}
-      </div>
+      <div>{children}</div>
     </Container>
   );
 }
