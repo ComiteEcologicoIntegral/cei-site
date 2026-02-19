@@ -36,14 +36,6 @@
 .no-data {
   color: var(--color-nodata);
 }
-.morado {
-  color: var(--color-darkgreen);
-  text-decoration: underline;
-}
-
-.morado:hover {
-  color: #85bf4b;
-}
 
 .bueno {
   color: var(--color-buena);
@@ -429,7 +421,7 @@ th.superTableSpace {
 }
 
 button {
-  border-radius: 20% !important;
+  border-radius: 10px !important;
 }
 
 .btn-info-map {

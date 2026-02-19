@@ -109,25 +109,25 @@ const Header = () => {
                                     />
                                 </NavDropdown>
                             </div>
-                            <NavDropdown
-                                title={
-                                    <div className="d-inline-flex align-items-center">
-                                        <NavIcon Icon={IoIosHelpCircle} /> Ayuda
-                                    </div>
-                                }
-                                id="basic-nav-dropdown"
-                            >
-                                <CustomNavItem
-                                    to="/conceptos"
-                                    text="Contaminantes"
-                                    icon={FaSmog}
-                                />
-                                <CustomNavItem
-                                    to="/recomendaciones"
-                                    text="Recomendaciones"
-                                    icon={FaListCheck}
-                                />
-                            </NavDropdown>
+                            {/* <NavDropdown */}
+                            {/*     title={ */}
+                            {/*         <div className="d-inline-flex align-items-center"> */}
+                            {/*             <NavIcon Icon={IoIosHelpCircle} /> Ayuda */}
+                            {/*         </div> */}
+                            {/*     } */}
+                            {/*     id="basic-nav-dropdown" */}
+                            {/* > */}
+                            {/*     <CustomNavItem */}
+                            {/*         to="/conceptos" */}
+                            {/*         text="Contaminantes" */}
+                            {/*         icon={FaSmog} */}
+                            {/*     /> */}
+                            {/*     <CustomNavItem */}
+                            {/*         to="/recomendaciones" */}
+                            {/*         text="Recomendaciones" */}
+                            {/*         icon={FaListCheck} */}
+                            {/*     /> */}
+                            {/* </NavDropdown> */}
                             <Nav.Link as={NavLink} to="https://comiteecologicointegral.org/">
                                 <NavIcon Icon={RiTeamFill} />
                                 Conócenos
