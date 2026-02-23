@@ -350,7 +350,7 @@ function MapPage() {
             label: label ? label : name,
             units: units,
             value: filterND(val),
-            status: getICAR(val, name, "ssa"),
+            status: getICAR(val, name, "semarnat"),
             ref: "#",
           };
         }),
