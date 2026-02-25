@@ -51,6 +51,7 @@ import MainForm, { customStyles } from "./components/MainForm/index.js";
 import { getSystemSensorsMetadata } from "./services/sensorService.js";
 import CustomMarker from "./components/Marker.js";
 import "./styles/MapLegend.css";
+import { valueToFixed } from "./utils/gasUtils.js";
 
 /**
  * Default map properties
@@ -186,11 +187,7 @@ function MapPage() {
     }
 
     let ans;
-    if (gasName === "NO2" || gasName === "SO2") {
-      ans = +preValue.toFixed(4);
-    } else {
-      ans = +preValue.toFixed(2);
-    }
+    ans = valueToFixed(preValue, gasName);
     return ans;
   };
 
@@ -208,6 +205,12 @@ function MapPage() {
       ? "ND"
       : data.toString();
   };
+
+  const filterNDNum = (data) => {
+    return typeof data === "undefined" || data === null || data === ""
+      ? "ND"
+      : data;
+  }
 
   /**
    * Memoized calculation of map markers.
@@ -274,15 +277,7 @@ function MapPage() {
         val = data[dataKey];
       }
 
-      // Formats the pollutant value retrieved from data[dataKey]
-      // using getValue to apply appropriate decimal precision based on gasName.
-      //
-      //
-
-      const intValue = getValue(val, gasName);
-
-      // Determine final value : If intValue is valid, use it; otherwise set as "ND".
-      const value = toString(intValue) ? intValue : "ND";
+      let intValue = getValue(val, gasName);
 
       /**
        * Build and return marker data object for current sensor,
@@ -320,7 +315,7 @@ function MapPage() {
         position: [data.Latitud, data.Longitud],
         current: {
           indicator: contaminant?.label ? contaminant?.label : gasName,
-          label: filterND(value),
+          label: filterNDNum(intValue),
           units: gasUnits,
           status: getICAR(intValue, gasName, "semarnat"),
           ref: "#",
@@ -346,6 +341,10 @@ function MapPage() {
             colName = "PM25_Promedio";
           // Map each gas to its label, units, formatted value, and status.
           let val = data[colName];
+          val = filterNDNum(val)
+          if (val != "ND") {
+            val = valueToFixed(val, name)
+          }
           return {
             label: label ? label : name,
             units: units,

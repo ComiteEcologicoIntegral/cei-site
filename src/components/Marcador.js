@@ -9,6 +9,7 @@ import moment from "moment";
 import {getStatusClassName} from "../handlers/statusCriteria";
 import {getStatusOMS} from "../handlers/statusCriteria";
 import {getICAR} from "../handlers/statusCriteria";
+import { valueToFixed } from "../utils/gasUtils";
 
 const fixedValues = {
   PM25: 2,
@@ -134,7 +135,7 @@ function Marcador({
     if (!isDataValid(ans)) {
       return "ND";
     }
-    return ans.toFixed(fixedValues[label]);
+    return valueToFixed(ans, label);
   };
 
   const getOMSValue = (label) => {
