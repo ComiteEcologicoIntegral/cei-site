@@ -39,7 +39,7 @@ jobs:
           tags: "${{ secrets.DOCKER_USERNAME }}/cei-front:dev"
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ENV=dev
+            ENV=development
 
   deploy:
     name: Deploy docker image to server
