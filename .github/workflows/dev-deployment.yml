@@ -1,5 +1,10 @@
 name: Deployment
 
+env:
+  NODE_ENV: development
+  REACT_APP_API_URL: http://82.180.132.126:8003
+  REACT_APP_API_V2_URL: https://x6wa3rynzk.us-east-2.awsapprunner.com/
+
 on:
   push:
     branches:
