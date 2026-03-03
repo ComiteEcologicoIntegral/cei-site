@@ -187,7 +187,7 @@ export default function AnnualReport() {
                       const locMonthlyData = monthData[location.label];
                       const dayAvgs = locMonthlyData.map((data, i) => {
                         return (
-                          <td className={data.status}>
+                          <td  style={{backgroundColor: data.color}}>
                             {data.average ? data.average.toPrecision(4) : "ND"}
                           </td>
                         );
