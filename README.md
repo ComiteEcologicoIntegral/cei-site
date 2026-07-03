@@ -13,8 +13,6 @@ https://aire.comiteecologicointegral.org/
 # Guía rápida
 gh repo clone ComiteEcologicoIntegral/cei-site
 cd cei-site
-# asuming you already have the .env file under ~/Downloads
-mv ~/Downloads/.env .
 npm install
 npm start
 ```
@@ -26,21 +24,13 @@ npm start
 gh repo clone ComiteEcologicoIntegral/cei-site
 ```
 
-2. Pide a un miembro del equipo una copia del archivo `.env`, descárgalo y colócalo en el directorio del proyecto.
-
-```bash
-cd cei-site
-# Sustituye la primera ruta con la ruta del archivo .env que acabas de descargar
-mv ~/Downloads/.env .
-```
-
-3. Instala las dependencias
+2. Instala las dependencias
 
 ```bash
 npm install
 ```
 
-4. Ejecuta el proyecto
+3. Ejecuta el proyecto
 
 ```bash
 npm start
