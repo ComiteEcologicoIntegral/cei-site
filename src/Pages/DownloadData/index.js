@@ -12,10 +12,9 @@ import { downloadSystemOptions } from "../../constants";
 
 function DownloadData() {
   const [loading, setLoading] = useState(false);
-  const [start, onChangeStart] = useState(new Date().setHours(0, 0, 0, 0));
-  const [end, onChangeEnd] = useState(new Date().setMinutes(0, 0, 0));
+  const [start, onChangeStart] = useState(new Date(new Date().setHours(0, 0, 0, 0)));
+  const [end, onChangeEnd] = useState(new Date(new Date().setMinutes(0, 0, 0)));
   const [system, setSystem] = useState(downloadSystemOptions[0].value);
-
   const downloadData = () => {
     if (!start || !end) return;
     setLoading(true);
