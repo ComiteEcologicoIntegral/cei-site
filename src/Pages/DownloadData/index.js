@@ -5,20 +5,25 @@ import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import { fetchNewBackendApiCsvRes } from "../../services/api";
 import { getISOStrFromDate } from "../../utils/dateUtils";
-import { Button, Col, Container, Offcanvas, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Offcanvas, Row } from "react-bootstrap"; // NUEVO: solo se agregó Form
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Page from "../../components/Page";
+import { downloadSystemOptions } from "../../constants"; // NUEVO
 
 function DownloadData() {
   const [loading, setLoading] = useState(false);
   const [start, onChangeStart] = useState(new Date().setHours(0, 0, 0, 0));
   const [end, onChangeEnd] = useState(new Date().setMinutes(0, 0, 0));
+  // NUEVO: estado del sistema, con Aire Nuevo León por defecto (Escenario 3)
+  const [system, setSystem] = useState(downloadSystemOptions[0].value);
+
   const downloadData = () => {
     if (!start || !end) return;
     setLoading(true);
     fetchNewBackendApiCsvRes("/data", {
       start: getISOStrFromDate(start),
       end: getISOStrFromDate(end),
+      system, // NUEVO: se manda el sistema seleccionado (Escenario 7)
     }).then(() => setLoading(false));
   };
 
@@ -30,13 +35,14 @@ function DownloadData() {
       infoDesc={
         <>
           <p>
-            Descarga los datos del sistema Aire Nuevo Leon de nuestra base de
+            Descarga los datos de Aire Nuevo León o Sinaica de nuestra base de
             datos.
           </p>
           <p>Tenemos datos a partir del 2018.</p>
           <hr />
           <p>Para obtener datos sigue estos pasos:</p>
           <ol>
+            <li>Selecciona el sistema</li>
             <li>Selecciona la fecha de inicio</li>
             <li>Selecciona la fecha de fin</li>
             <li>Da click en descargar</li>
@@ -48,6 +54,20 @@ function DownloadData() {
       <Row>
         <Col className="d-flex justify-content-center align-items-center">
           <div>
+            {/* NUEVO: dropdown de Sistema (Escenarios 1, 2 y 3) */}
+            <Form.Group className="mb-3" controlId="system-select">
+              <Form.Label>Sistema</Form.Label>
+              <Form.Select
+                value={system}
+                onChange={(e) => setSystem(e.target.value)}
+              >
+                {downloadSystemOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
             <p>Fecha de inicio</p>
             <DateTimePicker onChange={onChangeStart} value={start} />
             <p>Fecha de fin</p>
