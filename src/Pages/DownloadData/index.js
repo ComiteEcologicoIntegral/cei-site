@@ -5,16 +5,15 @@ import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import { fetchNewBackendApiCsvRes } from "../../services/api";
 import { getISOStrFromDate } from "../../utils/dateUtils";
-import { Button, Col, Container, Form, Offcanvas, Row } from "react-bootstrap"; // NUEVO: solo se agregó Form
+import { Button, Col, Container, Form, Offcanvas, Row } from "react-bootstrap";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Page from "../../components/Page";
-import { downloadSystemOptions } from "../../constants"; // NUEVO
+import { downloadSystemOptions } from "../../constants";
 
 function DownloadData() {
   const [loading, setLoading] = useState(false);
   const [start, onChangeStart] = useState(new Date().setHours(0, 0, 0, 0));
   const [end, onChangeEnd] = useState(new Date().setMinutes(0, 0, 0));
-  // NUEVO: estado del sistema, con Aire Nuevo León por defecto (Escenario 3)
   const [system, setSystem] = useState(downloadSystemOptions[0].value);
 
   const downloadData = () => {
@@ -23,7 +22,7 @@ function DownloadData() {
     fetchNewBackendApiCsvRes("/data", {
       start: getISOStrFromDate(start),
       end: getISOStrFromDate(end),
-      system, // NUEVO: se manda el sistema seleccionado (Escenario 7)
+      system,
     }).then(() => setLoading(false));
   };
 
@@ -54,7 +53,6 @@ function DownloadData() {
       <Row>
         <Col className="d-flex justify-content-center align-items-center">
           <div>
-            {/* NUEVO: dropdown de Sistema (Escenarios 1, 2 y 3) */}
             <Form.Group className="mb-3" controlId="system-select">
               <Form.Label>Sistema</Form.Label>
               <Form.Select
