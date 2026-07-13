@@ -89,6 +89,12 @@ export const systemOptions = [
   { value: "PurpleAir", label: "PurpleAir", opt: "P", shortLabel: "Purple Air"  },
 ];
 
+// Opciones del dropdown de sistema para la descarga de datos históricos (/historico):
+export const downloadSystemOptions = [
+  { value: "AireNuevoLeon", label: "Aire Nuevo León" },
+  { value: "Sinaica", label: "Sinaica" },
+];
+
 // Opciones del dropdown de gases:
 export const gasesOptions = [
   { value: "PM10", label: "PM10" },
