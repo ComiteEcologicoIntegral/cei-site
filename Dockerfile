@@ -1,4 +1,10 @@
+
 FROM node:20.16-alpine as build
+
+# Accept environment name (e.g. production, staging)
+ARG ENV=development
+ENV ENV=$ENV
+RUN echo "Building in $ENV mode"
 
 WORKDIR /app
 
@@ -7,12 +13,8 @@ RUN npm install
 
 COPY . .
 
-# Accept environment name (e.g. production, staging)
-ARG ENV=development
-ENV ENV=$ENV
-
 # Copy correct .env.{ENV} file to .env
-RUN cp .env.$ENV .env
+COPY .env.$ENV .env.production
 
 RUN npm run build
 
