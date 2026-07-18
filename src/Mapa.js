@@ -21,7 +21,7 @@
  */
 
 // React and third party libraries
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { Button, CloseButton, Offcanvas } from "react-bootstrap";
@@ -29,8 +29,6 @@ import Collapse from "react-bootstrap/Collapse";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
 // Componentes retrieved directly from components
-import MapaFiltros from "./components/MapaFiltros.js";
-import Marcador from "./components/Marcador.js";
 import Wrapper from "./components/WrapperMapa.js";
 import { TablaCalidad } from "./components/TablaCalidad.js";
 
@@ -46,15 +44,11 @@ import { getICAR } from "./handlers/statusCriteria.js";
 import useSensorData from "./hooks/useSensorData.js";
 
 // Styles
-import "./styles/MapLegend.css"
-import MainForm, { CustomSelect, customStyles } from "./components/MainForm/index.js";
-import Select from "react-select/base";
-import { getSensorLocationsBySystem } from "./handlers/data.js";
+import "./styles/MapLegend.css";
 import { getSystemSensorsMetadata } from "./services/sensorService.js";
 
 import "./styles/MapLegend.css";
 import MainForm, { customStyles } from "./components/MainForm/index.js";
-import { getSystemSensorsMetadata } from "./services/sensorService.js";
 import CustomMarker from "./components/Marker.js";
 import "./styles/MapLegend.css";
 import { valueToFixed } from "./utils/gasUtils.js";
@@ -218,7 +212,7 @@ function MapPage() {
     return typeof data === "undefined" || data === null || data === ""
       ? "ND"
       : data;
-  }
+  };
 
   /**
    * Memoized calculation of map markers.
@@ -349,9 +343,9 @@ function MapPage() {
             colName = "PM25_Promedio";
           // Map each gas to its label, units, formatted value, and status.
           let val = data[colName];
-          val = filterNDNum(val)
+          val = filterNDNum(val);
           if (val != "ND") {
-            val = valueToFixed(val, name)
+            val = valueToFixed(val, name);
           }
           return {
             label: label ? label : name,
@@ -474,23 +468,47 @@ function MapPage() {
           </Button>
 
           <Wrapper setMap={setMap} {...mapDefaultProps}>
-            {markers.map((markerProps, idx) => {
-              if (
-                !markerProps ||
-                (system.value === "PurpleAir") !== markerProps.isPurpleAir
-              ) {
-                return "";
-              }
+            {sensores_new.map((sensor) => {
+              // const isSensorInfoJson = sensor.ID === sensorInfoJson.sensor_id;
+              // const markerProps = isSensorInfoJson
+              // ? {
+              //   ...markerPropsTemplate,
+              //   position: [sensor.Address.Latitude, sensor.Address.Longitude]
+              //
+              // }
+              // : {
+              //     map: map,
+              //     key: sensor.ID,
+              //     position: [sensor.Address.Latitude, sensor.Address.Longitude],
+              //     label: sensor.ID,
+              //     current: {
+              //       label: "ND",
+              //       status: "ND",
+              //       indicator: sensor.ID,
+              //       units: "",
+              //       ref: "#"
+              //     },
+              //     labels: [],
+              //     provider: {
+              //       name: sensor.System,
+              //       ref: "#"
+              //     },
+              // };
+
               return (
-                <Marcador
-                  map={map}
-                  key={idx}
-                  isPurpleAir={markerProps.isPurpleAir}
-                  {...markerProps}
-                  label={markerProps.current.label}
-                  indicator={markerProps.current.indicator}
-                  status={markerProps.current.status}
-                  shape={markerProps.isPurpleAir ? "square" : "round"}
+                // <Marcador
+                //   key={sensor.ID}
+                //   {...markerProps}
+                //   map={map}
+                //   shape={markerProps.shape}
+                //   label={markerProps.current?.label}
+                //   indicator={markerProps.current?.indicator}
+                //   status={markerProps.current?.status}
+                // />
+                <CustomMarker
+                  address={sensor.Address}
+                  humedad={sensor.humidity_r}
+                  currentInterval={currentInterval}
                 />
               );
             })}
