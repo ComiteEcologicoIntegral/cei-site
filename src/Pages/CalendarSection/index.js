@@ -1,31 +1,30 @@
 /**
  * index.js
- * 
+ *
  * This component is responsible for the air quality calendar section in the application UI.
- * It integrates user filters, fetches and displays monthly and hourly quality data, 
- * and enables users to download records for the selected period. 
- * 
- * Features: 
+ * It integrates user filters, fetches and displays monthly and hourly quality data,
+ * and enables users to download records for the selected period.
+ *
+ * Features:
  * - Select a location and pollutant.
  * - Download monthly data as CSV.
  * - Visualize hourly data for a selected day.
  * - View daily air quality data in a calendar format.
- * - Filter by location and pollutant 
- * 
- * Dependencies: 
+ * - Filter by location and pollutant
+ *
+ * Dependencies:
  * - React (useState , useEffect)
- * - Redux: retrieve selected location 
+ * - Redux: retrieve selected location
  * - moment.js (date formatting and manipulation)
- * - Custom utility functions for date generation 
+ * - Custom utility functions for date generation
  *
  * Last update:[?]
  */
 
-
 //React and hooks
 import React, { useState, useEffect } from "react";
 
-//moment.js for date manipulation and locale configuration 
+//moment.js for date manipulation and locale configuration
 import moment from "moment";
 import "moment/locale/es";
 
@@ -39,14 +38,21 @@ import {
   populateDateRange,
   getFirstDayOfMonth,
   getDateLastDayOfMonth,
-  getFirstAndLastDayOfMonth
+  getFirstAndLastDayOfMonth,
 } from "../../utils/PopulateDateRange";
-import { getDayHourlyData, getMonthAverage } from "../../services/dayAverageService";
+import {
+  getDayHourlyData,
+  getMonthAverage,
+} from "../../services/dayAverageService";
 import HourlyData from "./components/HourlyData";
 
 //Constants and redux hooks
 import { apiUrl, normOptions } from "../../constants";
 import { useSelector } from "react-redux";
+import MainForm, {
+  customStyles,
+} from "../../components/MainForm";
+import Page from "../../components/Page";
 
 //Global current date calculations
 let currentMonth = new Date().getMonth();
@@ -54,7 +60,7 @@ let currentYear = new Date().getUTCFullYear();
 let beginOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
 let endOfMonth = getDateLastDayOfMonth(currentYear, currentMonth);
 
-//Units for each polluant 
+//Units for each polluant
 const unidad = {
   PM25: "µg/m3",
   PM10: "µg/m3",
@@ -65,37 +71,37 @@ const unidad = {
 };
 
 function CalendarSection() {
-//Global state (Redux)
+  //Global state (Redux)
   const { location, contaminant } = useSelector((state) => state.form);
 
   const [dataByHour, setDataByHour] = useState(null);
-  const [error, setError] = useState(false);
-  const [show, setShow] = useState(false);
   const [avgOptions, setAvgOptions] = useState({});
 
   // Datos de los filtros
   const [avgType, setAvgType] = useState({});
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [datesOfTheMonth, setMonthDates] = useState(populateDateRange(beginOfMonth, endOfMonth));
+  const [datesOfTheMonth, setMonthDates] = useState(
+    populateDateRange(beginOfMonth, endOfMonth),
+  );
 
   const [calendarData, setCalendarData] = useState(null);
 
-//Update avarage options when contaminant changes 
+  //Update avarage options when contaminant changes
   useEffect(() => {
     if (!contaminant) return;
     setAvgType(normOptions[contaminant.value][0]);
     setAvgOptions(normOptions[contaminant.value]);
   }, [contaminant]);
 
-  //Fetch data when date is updated 
+  //Fetch data when date is updated
   useEffect(() => {
     if (location && contaminant) {
       fetchData();
     }
   }, [selectedDate]);
 
-  //Update month range when selected date changes 
+  //Update month range when selected date changes
   useEffect(() => {
     const selectedMonth = selectedDate.getMonth();
     const selectedYear = selectedDate.getUTCFullYear();
@@ -115,7 +121,7 @@ function CalendarSection() {
     }
   }, [selectedDate]);
 
-  //Fetch data when month range changes 
+  //Fetch data when month range changes
   useEffect(() => {
     if (location && contaminant) {
       fetchData();
@@ -124,21 +130,36 @@ function CalendarSection() {
 
   //Fetch calendar daily data
   const fetchCalendarData = () => {
-    const { first, last } = getFirstAndLastDayOfMonth(selectedDate.getUTCFullYear(), selectedDate.getMonth());
-    getMonthAverage(location.value.id, contaminant.value, first.toISOString(), last.toISOString(), avgType.value)
+    const { first, last } = getFirstAndLastDayOfMonth(
+      selectedDate.getUTCFullYear(),
+      selectedDate.getMonth(),
+    );
+    getMonthAverage(
+      location.value.id,
+      contaminant.value,
+      first.toISOString(),
+      last.toISOString(),
+      avgType.value,
+    )
       .then((data) => {
         setCalendarData(data);
-      }).catch((e) => {
-        setError(e);
+      })
+      .catch((e) => {
+        console.error(e)
       });
   };
 
   const fetchDayHourlyData = () => {
-    getDayHourlyData(location.value.id, contaminant.value, selectedDate.toISOString())
+    getDayHourlyData(
+      location.value.id,
+      contaminant.value,
+      selectedDate.toISOString(),
+    )
       .then((data) => {
         setDataByHour(data);
-      }).catch((e) => {
-        setError(e);
+      })
+      .catch((e) => {
+        console.error(e)
       });
   };
 
@@ -147,7 +168,7 @@ function CalendarSection() {
     fetchDayHourlyData();
   };
 
-  //Build query string to download  
+  //Build query string to download
   function getQueryStringToDownload() {
     let queryStr = "location=";
 
@@ -163,7 +184,7 @@ function CalendarSection() {
     return queryStr;
   }
 
-  //Trigger file download for selected month 
+  //Trigger file download for selected month
   function downloadFile() {
     let queryStr = getQueryStringToDownload();
 
@@ -190,53 +211,52 @@ function CalendarSection() {
     }
   }
 
-  //Data for selected day 
+  //Data for selected day
   const dayData = calendarData ? calendarData[selectedDate.getDate() - 1] : {};
 
-  //Component render 
+  //Component render
   return (
-    <Container fluid>
-      <Offcanvas show={show} onHide={() => setShow(false)}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>¿Cómo funciona?</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <p>Consulta y descarga los registros mensuales de la calidad del aire.</p>
+    <Page
+      pageTitle="Calendario"
+      infoTitle="¿Cómo funciona?"
+      infoDesc={
+        <>
+          <p>
+            Consulta y descarga los registros mensuales de la calidad del aire.
+          </p>
           <ol>
             <li>Selecciona los filtros que deseas aplicar.</li>
             <li>Selecciona el mes que desea conultar.</li>
           </ol>
           <hr />
           <p>
-            Para visualizar la informacion desglosada por hora da click en el dia
-            que deseas y los datos se verán en la parte izquierda.</p>
-          <p>
-            Para cambiar de
-            mes puedes usar las flechas de la parte superior o puedes dar click en
-            el mes actual y cambiar a la vista de mes (se vuelve a la vista por dia
-            haciendo click en un mes).</p>
-          <p>
-            Al cambiar de mes haz click en un dia de ese
-            mes para que se carguen los datos
+            Para visualizar la informacion desglosada por hora da click en el
+            dia que deseas y los datos se verán en la parte izquierda.
           </p>
-        </Offcanvas.Body>
-      </Offcanvas>
+          <p>
+            Para cambiar de mes puedes usar las flechas de la parte superior o
+            puedes dar click en el mes actual y cambiar a la vista de mes (se
+            vuelve a la vista por dia haciendo click en un mes).
+          </p>
+          <p>
+            Al cambiar de mes haz click en un dia de ese mes para que se carguen
+            los datos
+          </p>
+        </>
+      }
+    >
       <Row>
         <Col sm={3}>
-          <Button variant="outline-info" onClick={() => setShow(true)}>
-            info
-          </Button>
-          <Form>
-            <Form.Group>
-              <p className="font-weight-bold mb-2">Promedio/Índice</p>
-              <Select
-                options={avgOptions}
-                placeholder={"Promedio de 24 horas"}
-                value={avgType}
-                onChange={(e) => setAvgType(e)}
-              />
-            </Form.Group>
-          </Form>
+          <MainForm
+            otherSelects={{
+              title: "Índice",
+              options: avgOptions,
+              value: avgType,
+              onChange: (e) => setAvgType(e),
+              styles: customStyles,
+              placeholder: "Promedio de 24 horas",
+            }}
+          />
           <hr className="mt-2 mb-4" />
           <Calendar
             calendarData={calendarData}
@@ -259,7 +279,7 @@ function CalendarSection() {
           />
         </Col>
       </Row>
-    </Container>
+    </Page>
   );
 }
 

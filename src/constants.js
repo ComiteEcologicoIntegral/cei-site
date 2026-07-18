@@ -28,22 +28,22 @@ export const gases = [
 
 // Los valores en estas listas deben estar en orden ascendiente
 export const criteria = {
+  // Se cumple o no se cumple
   ssa: {
-    PM10: [45, 60, 132, 213],
-    PM25: [15, 33, 79, 130],
-    O3: [0.058, 0.090, 0.135, 0.175],
-    CO: [5.0, 9.0, 12.0, 16.0],
-    SO2: [0.035, 0.075, 0.185, 0.304],
-    NO2: [0.053, 0.106, 0.160, 0.213],
-
+    PM10: [50],
+    PM25: [25],
+    O3: [0.090],
+    CO: [26],
+    SO2: [0.075],
+    NO2: [0.106],
   },
   semarnat: {
-    PM10: [50, 75, 155, 235],
-    PM25: [25, 45, 79, 147],
-    O3: [0.051, 0.07, 0.092, 0.114],
-    CO: [8.75, 11.0, 13.3, 15.5],
-    SO2: [0.008, 0.11, 0.165, 0.22],
-    NO2: [0.107, 0.21, 0.23, 0.25],
+    PM10: [45, 50, 132, 213],
+    PM25: [15, 25, 79, 130],
+    O3: [0.058, 0.09, 0.135, 0.175],
+    CO: [5, 9, 12, 16],
+    SO2: [0.035, 0.075, 0.185, 0.304],
+    NO2: [0.053, 0.106, 0.160, 0.213],
   },
   oms: {
     PM10: [45, 45, 45, 45],
@@ -85,8 +85,14 @@ export const statusColor = {
 
 // Opciones del dropdown de sistemas:
 export const systemOptions = [
-  { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G" },
-  { value: "PurpleAir", label: "PurpleAir", opt: "P" },
+  { value: "AireNuevoLeon", label: "AireNuevoLeon/Sinaica", opt: "G", shortLabel: "Aire NL" },
+  { value: "PurpleAir", label: "PurpleAir", opt: "P", shortLabel: "Purple Air"  },
+];
+
+// Opciones del dropdown de sistema para la descarga de datos históricos (/historico):
+export const downloadSystemOptions = [
+  { value: "AireNuevoLeon", label: "Aire Nuevo León" },
+  { value: "Sinaica", label: "Sinaica" },
 ];
 
 // Opciones del dropdown de gases:
@@ -113,6 +119,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Promedio movil 12 horas)",
+      shortLabel: "SEMARNAT"
     },
     { value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)" },
     { value: "oms", label: "OMS (Promedio 24 horas)" },
@@ -121,6 +128,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Promedio movil 12 horas)",
+      shortLabel: "SEMARNAT"
     },
     { value: "ssa", label: "NOM-025-SSA1-2021 (Promedio movil 24 horas)" },
     { value: "oms", label: "OMS (Promedio 24 horas)" },
@@ -129,6 +137,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Promedio movil 8 horas)",
+      shortLabel: "SEMARNAT"
     },
     { value: "ssa", label: "NOM-021-SSA1-2021 (Promedio movil 8 horas)" },
     { value: "oms", label: "OMS (Promedio 24 horas)" },
@@ -137,6 +146,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Promedio movil 8 horas)",
+      shortLabel: "SEMARNAT"
     },
     { value: "ssa", label: "NOM-020-SSA1-2021 (Promedio movil 8 horas)" },
     { value: "oms", label: "OMS (Promedio 8 horas)" },
@@ -145,6 +155,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Concentracion promedio horaria)",
+      shortLabel: "SEMARNAT"
     },
     {
       value: "ssa",
@@ -156,6 +167,7 @@ export const normOptions = {
     {
       value: "semarnat",
       label: "NOM-172-SEMARNAT-2023 (Concentracion promedio movil de 24 horas)",
+      shortLabel: "SEMARNAT"
     },
     {
       value: "ssa",
@@ -184,10 +196,13 @@ export const idBlacklist = [
 export const idBlacklistpriv = ["P39497", "P39285"];
 export const mapBlacklist = ["Sinaica"];
 
-export const apiUrl = "https://aire.comiteecologicointegral.org/api"
-// TODO: Change this to a url instead of an IP
-// export const newAPIURL = "http://82.180.132.126:8080"
-export const newAPIURL = "http://localhost:8080"
+export const apiUrl = process.env.REACT_APP_API_URL
+export const APIV2URL = process.env.REACT_APP_API_V2_URL
 
 export const dateFormat = { weekday: "long", month: "short", day: "numeric", year: "numeric" };
 
+
+export const intervalos = [
+  { value: 0, label: 'Indice Calidad Aire' },
+  { value: 1, label: 'Concentracion horaria' },
+]

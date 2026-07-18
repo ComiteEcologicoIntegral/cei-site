@@ -5,103 +5,137 @@ import { criteria } from "../constants";
 const qualityGasData = {
   PM25: {
     Title: "PM2.5 μg/m3",
-    AverageDetails: "Promedio ponderado 12 horas",
+    AverageDetails: "Promedio ponderado de 12 horas",
   },
   PM10: {
     Title: "PM10 μg/m3",
-    AverageDetails: "Promedio móvil ponderado 12 horas",
+    AverageDetails: "Promedio móvil ponderado de 12 horas",
   },
   O3: {
     Title: "Ozono ppm",
-    AverageDetails: "Promedio 8 horas",
+    AverageDetails: "Promedio horario",
   },
   CO: {
-    Title: "PM2.5 μg/m3",
-    AverageDetails: "Promedio ponderado 12 horas",
+    Title: "Monóxido de carbono ppm",
+    AverageDetails: "Promedio móvil de 8 horas",
   },
   NO2: {
-    Title: "NO2 ppm",
-    AverageDetails: "Concentración promedio 1 hora",
+    Title: "Dióxido de nitrógeno ppm",
+    AverageDetails: "Promedio horario",
   },
   SO2: {
-    Title: "SO2 ppm",
-    AverageDetails: "Promedio 24 horas",
+    Title: "Dióxido de azufre ppm",
+    AverageDetails: "Promedio horario",
   },
 };
 
+const fmt3digits = {
+  format: (el) => {return el.toFixed(3)}
+}
+
+const fmt2digits =  {
+  format: (el) => {return el.toFixed(2)}
+}
+const fmt0digits = {
+  format: (el) => {return el.toFixed(0)}
+}
+
+const numFormats = {
+  PM10: fmt0digits,
+  PM25: fmt0digits,
+  O3: fmt3digits,
+  NO2: fmt3digits,
+  SO2: fmt3digits,
+  CO: fmt2digits,
+}
+
 function TablaCalidad({ gas }) {
   const selectedGas = qualityGasData[gas] || {};
-  const limits = criteria["ssa"][gas] || {};
+  const numfmt = numFormats[gas]
+
+
+  if (!numfmt) {
+    return;
+  }
+  const limits = criteria["semarnat"][gas].map(el => numfmt.format(el)) || {};
+  // const limits = criteria["semarnat"][gas]|| {};
 
   return (
-    <div className="d-flex justify-center align-center">
-      <Container
-        style={{ fontSize: "0.8rem" }}
-      >
-        <h5 className="mt-2">Indice de calidad {gas}</h5>
-        <Row
-          className="ta-center font-weight-bold"
+    <div className="d-flex justify-content-center align-items-center px-0">
+      <Container fluid style={{ fontSize: "0.9rem", maxWidth: "100vw" }}>
+        <h5 className="mt-3 text-center">Índice de calidad</h5>
+        <p className="text-center w-100">
+          {" "}
+          {selectedGas.Title} - {selectedGas.AverageDetails}
+        </p>
+        <div
+          className="table-responsive"
           style={{
-            border: "1px solid white",
-            borderTopRightRadius: "12px",
-            borderTopLeftRadius: "12px",
+            overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
+            borderRadius: "12px",
+            border: "1px solid #dee2e6",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
           }}
         >
-          <Col style={{}}>
-            <p>Contaminante</p>
-          </Col>
-          <Col>
-            <p>Promedio</p>
-          </Col>
-          <Col style={{ backgroundColor: "#00cc03" }}>
-            <p>Buena</p>
-          </Col>
-          <Col style={{ backgroundColor: "#ffff00" }}>
-            <p>Aceptable</p>
-          </Col>
-          <Col style={{ backgroundColor: "#fe6601" }}>
-            <p>Mala</p>
-          </Col>
-          <Col style={{ backgroundColor: "#fc0204" }}>
-            <p>Muy mala</p>
-          </Col>
-          <Col
-            className="text-white"
-            style={{ backgroundColor: "#640132", borderTopRightRadius: "12px" }}
-          >
-            <p>Extremadamente mala</p>
-          </Col>
-        </Row>
-        <Row
-          className="ta-center"
-          style={{
-            border: "1px solid white",
-            borderBottomLeftRadius: "12px",
-            borderBottomRightRadius: "12px",
-          }}
-        >
-          <Col>{selectedGas.Title}</Col>
-          <Col>{selectedGas.AverageDetails}</Col>
-          <Col style={{ backgroundColor: "#00cc03" }}>
-            {`${0} - ${limits[0]}`}
-          </Col>
-          <Col style={{ backgroundColor: "#ffff00" }}>
-            {`${limits[0]} - ${limits[1]}`}
-          </Col>
-          <Col style={{ backgroundColor: "#fe6601" }}>
-            {`${limits[1]} - ${limits[2]}`}
-          </Col>
-          <Col style={{ backgroundColor: "#fc0204" }}>
-            {`${limits[2]} - ${limits[3]}`}
-          </Col>
-          <Col
-            className="text-white"
+          <table
+            className="text-center mb-0"
             style={{
-              backgroundColor: "#640132",
-              borderBottomRightRadius: "12px",
+              minWidth: "500px",
+              borderCollapse: "separate",
+              borderSpacing: 0,
             }}
-          >{`> ${limits[3]}`}</Col>
-        </Row>
+          >
+            <thead>
+              <tr>
+                <th style={{ backgroundColor: "#00cc03", color: "#fff" }}>
+                  Buena
+                </th>
+                <th style={{ backgroundColor: "#ffff00", color: "#000" }}>
+                  Aceptable
+                </th>
+                <th style={{ backgroundColor: "#fe6601", color: "#fff" }}>
+                  Mala
+                </th>
+                <th style={{ backgroundColor: "#fc0204", color: "#fff" }}>
+                  Muy mala
+                </th>
+                <th
+                  style={{
+                    backgroundColor: "#640132",
+                    color: "#fff",
+                    borderTopRightRadius: "12px",
+                  }}
+                >
+                  Extremadamente mala
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{ backgroundColor: "#00cc03", color: "#fff" }}>
+                  &le;{`${limits[0]}`}
+                </td>
+                <td
+                  style={{ backgroundColor: "#ffff00", color: "#000" }}
+                >{`>${limits[0]} a ${limits[1]}`}</td>
+                <td
+                  style={{ backgroundColor: "#fe6601", color: "#fff" }}
+                >{`>${limits[1]} a ${limits[2]}`}</td>
+                <td
+                  style={{ backgroundColor: "#fc0204", color: "#fff" }}
+                >{`>${limits[2]} a ${limits[3]}`}</td>
+                <td
+                  style={{
+                    backgroundColor: "#640132",
+                    color: "#fff",
+                    borderBottomRightRadius: "12px",
+                  }}
+                >{`> ${limits[3]}`}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </Container>
     </div>
   );

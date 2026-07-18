@@ -9,6 +9,7 @@ import moment from "moment";
 import {getStatusClassName} from "../handlers/statusCriteria";
 import {getStatusOMS} from "../handlers/statusCriteria";
 import {getICAR} from "../handlers/statusCriteria";
+import { valueToFixed } from "../utils/gasUtils";
 
 const fixedValues = {
   PM25: 2,
@@ -134,7 +135,7 @@ function Marcador({
     if (!isDataValid(ans)) {
       return "ND";
     }
-    return ans.toFixed(fixedValues[label]);
+    return valueToFixed(ans, label);
   };
 
   const getOMSValue = (label) => {
@@ -247,7 +248,7 @@ function Marcador({
                 <Col xs={3} className={`px-1 m-1 rounded d-flex justify-content-between marker-${status}`}>
                   <div>{value}</div><div> {units}</div>
                 </Col>
-                <Col xs={2} className={`px-1 m-1 rounded marker-${getICAR(ICAR_Value, cleanLabel, "ssa")}`}>{ICAR_Value}</Col>
+                <Col xs={2} className={`px-1 m-1 rounded marker-${getICAR(ICAR_Value, cleanLabel, "semarnat")}`}>{ICAR_Value}</Col>
                 <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusOMS(OMS_Value, cleanLabel, "oms")}`}>{OMS_Value}</Col>
                 <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(AQI_Value, cleanLabel, "ssa")}`}>{AQI_Value}</Col>
               </Row>)
@@ -266,11 +267,6 @@ function Marcador({
           </small>
         </div>
         <div className="py-2 px-3 border-top text-center">
-          <Button size="sm">
-            <a style={{color: "white"}} target="blank" href={urlMI}>
-              Más información
-            </a>
-          </Button>
           <p className="lh-sm mt-2 mb-0">
             Fuente(s):{" "}
             <a target="blank" href={provider.ref}>

@@ -15,15 +15,13 @@ const MapaFiltros = ({ onApply }) => {
     }, [interval, onApply])
 
     return (
-        <div className="position-absolute end-50 top-0 z-1">
-            <Select
-                className="mb-4"
-                placeholder="Medida"
-                options={intervalos}
-                onChange={setInterval_}
-                value={interval}
-            />
-        </div>
+        <Select
+            className="mb-4"
+            placeholder="Medida"
+            options={intervalos}
+            onChange={setInterval_}
+            value={interval}
+        />
     );
 };
 

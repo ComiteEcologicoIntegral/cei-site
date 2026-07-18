@@ -29,18 +29,12 @@
 
   --marker-size: 36px;
   --marker-size-selected: 47px;
+
+  --bg-asparagus: #63915D;
 }
 
 .no-data {
   color: var(--color-nodata);
-}
-.morado {
-  color: var(--color-darkgreen);
-  text-decoration: underline;
-}
-
-.morado:hover {
-  color: #85bf4b;
 }
 
 .bueno {
@@ -74,21 +68,8 @@ nav a img {
   border-radius: 25%;
 }
 
-.menu-link {
-	color: white !important;
-	font-weight: 500;
-}
-
-.menu-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.mb-10 {
-  margin-bottom: 100px;
-}
-
-.mb-75 {
-  margin-bottom: 75px;
+.offcanvas-header {
+  background-color: var(--bg-asparagus);
 }
 
 /******* RECOMENDACIONES TABS ********/
@@ -350,6 +331,10 @@ footer {
   color: white;
 }
 
+footer h6 {
+  color: white;
+}
+
 .footer-container {
   width: 100%;
 }
@@ -429,4 +414,20 @@ th.superTableSpace {
   position: relative;
   left: 50%;
   top: -12px;
+}
+
+.my-navbar {
+  padding: 0 !important;
+}
+
+button {
+  border-radius: 10px !important;
+}
+
+.btn-info-map {
+  background-color: rgba(255,255,255,0.8);
+}
+
+.btn-like {
+  cursor: pointer;
 }

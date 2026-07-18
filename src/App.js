@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import Acerca from "./Acerca";
 import Prediccion from "./Pages/Prediccion";
 import MapPage from "./Mapa";
 import ReporteAnual from "./Pages/AnnualReport";
@@ -9,6 +8,8 @@ import GraphSection from "./Pages/Plot/index.js";
 import Concepts from "./Pages/Concepts/index.js";
 import Layout from "./components/Layout.js";
 import Recomendaciones from "./components/Recomendaciones";
+import DownloadData from "./Pages/DownloadData/index.js";
+import Landing from "./Pages/Landing/landing.jsx";
 
 function App() {
   return (
@@ -17,12 +18,12 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<MapPage />} />
           <Route path="/calendario" element={<CalendarSection />} />
-          <Route path="/historico" element={<GraphSection />} />
-          <Route path="/conocenos" element={<Acerca />} />
+          <Route path="/historico" element={<DownloadData />} />
+          <Route path="/grafica" element={<GraphSection />} />
           <Route path="/pronostico" element={<Prediccion />} />
           <Route path="/reporte-anual" element={<ReporteAnual />} />
-          <Route path="/conceptos" element={<Concepts />} />
-          <Route path="/recomendaciones" element={<Recomendaciones selected="buena" isManual={true} />} />
+          {/* <Route path="/conceptos" element={<Concepts />} /> */}
+          {/* <Route path="/recomendaciones" element={<Recomendaciones selected="buena" isManual={true} />} /> */}
         </Route>
       </Routes>
     </div>

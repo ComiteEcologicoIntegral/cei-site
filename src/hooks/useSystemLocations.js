@@ -25,7 +25,7 @@ const useSystemLocations = (system_name) => {
     };
 
     system_name === "PurpleAir"
-      ? setContaminants([gasesOptions[0]])
+      ? setContaminants([gasesOptions[1]])
       : setContaminants(gasesOptions);
 
     fetchSensors();

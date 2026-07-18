@@ -1,10 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import Plot from "react-plotly.js";
 
 // TODO: Simplificar, dividir en sub componentes
 function MyPlot({ plotData, summary, downloadCSV }) {
   const { data, layout } = plotData;
+
+  // --- Detecta si la pantalla es chica (< 992px, breakpoint "lg" de Bootstrap)
+  const [isSmall, setIsSmall] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 991.98px)");
+    const handle = (e) => setIsSmall(e.matches);
+    // estado inicial
+    setIsSmall(mq.matches);
+    // escuchar cambios de tamaño
+    if (mq.addEventListener) {
+      mq.addEventListener("change", handle);
+    } else {
+      // Safari viejo
+      mq.addListener(handle);
+    }
+    return () => {
+      if (mq.removeEventListener) {
+        mq.removeEventListener("change", handle);
+      } else {
+        mq.removeListener(handle);
+      }
+    };
+  }, []);
+
+  // estilos que SOLO activan scroll horizontal en pantallas pequeñas
+  const wrapperStyle = {
+    overflowX: isSmall ? "auto" : "visible",
+  };
+
+  // en pantallas pequeñas damos un ancho mínimo mayor para forzar el scroll
+  const innerStyle = {
+    minWidth: isSmall ? 1200 : "auto", // ajusta 1200 a tu preferencia
+  };
 
   return (
     <Row className="mb-5">
@@ -97,13 +132,21 @@ function MyPlot({ plotData, summary, downloadCSV }) {
           Descargar datos en CSV
         </Button>
       </Col>
+
+      {/* Contenedor: sin scroll en desktop, con scroll horizontal en pantallas pequeñas */}
       <Col sm={12} lg={8} xl={10}>
-        <Plot
-          className="plot"
-          data={data}
-          layout={layout}
-          config={{ responsive: true }}
-        />
+        <div style={wrapperStyle}>
+          <div style={innerStyle}>
+            <Plot
+              className="plot"
+              data={data}
+              layout={layout} // se mantiene igual en desktop
+              config={{ responsive: true }}
+              useResizeHandler={true}
+              style={{ width: "100%", height: layout?.height || 500 }}
+            />
+          </div>
+        </div>
       </Col>
     </Row>
   );

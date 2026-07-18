@@ -42,10 +42,10 @@ const HourlyData = ({ dayData, dataByHour, unidad, contaminant }) => {
   // Render: container for the table and daily average badge
   return (
     <Container className="mt-4">
-      /* Daily average badge with status */
+      {/* Daily average badge with status */}
       <p><strong>Promedio del día: </strong><Badge className={dayData?.status}>{dayData?.average?.toFixed(2)} {unidad[contaminant?.value]}</Badge></p>
       <div className="table-responsive">
-        /* Table of hourly data */
+        {/* Table of hourly data */}
         <Table striped bordered hover size="sm">
           <thead className="thead-dark">
             <tr>
@@ -56,10 +56,10 @@ const HourlyData = ({ dayData, dataByHour, unidad, contaminant }) => {
             </tr>
           </thead>
           <tbody>
-            /* Render each row for 2 hours (0-11 and 12-23) */
+            {/* Render each row for 2 hours (0-11 and 12-23) */}
             {dataByHour && dataByHour.slice(0, 12).map((hourData, currHour) => (
               <tr key={currHour}>
-                /* First column: hour 0-11 */
+                {/* First column: hour 0-11 */}
                 <td>{currHour.toString().padStart(2, '0')}:00</td>
                 <td>
                   {/* Status icon and value for hour 0-11 */}
@@ -68,12 +68,12 @@ const HourlyData = ({ dayData, dataByHour, unidad, contaminant }) => {
                     ? ` ${hourData.value} ${unidad[contaminant?.value]}`
                     : <small style={{ color: "red" }}>No hay registro</small>}
                 </td>
-                /* Second column: hour 12-23, if exists */
+                {/* Second column: hour 12-23, if exists */}
                 {dataByHour[currHour + 12] && (
                   <>
                     <td>{(currHour + 12).toString().padStart(2, '0')}:00</td>
                     <td>
-                      /* Status icon and value for hour 12-23 */
+                      {/* Status icon and value for hour 12-23 */}
                       <AiFillRightSquare style={{ color: "white" }} className={dataByHour[currHour + 12].status} />
                       {dataByHour[currHour + 12].value !== -1 && dataByHour[currHour + 12].value
                         ? ` ${dataByHour[currHour + 12].value} ${unidad[contaminant?.value]}`
