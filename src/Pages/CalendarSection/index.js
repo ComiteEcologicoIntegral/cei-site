@@ -96,10 +96,10 @@ function CalendarSection() {
 
   //Fetch data when date is updated
   useEffect(() => {
-    if (location && contaminant) {
+    if (location && contaminant && avgType?.value) {
       fetchData();
     }
-  }, [selectedDate]);
+  }, [selectedDate, datesOfTheMonth, location, contaminant, avgType, system]);
 
   //Update month range when selected date changes
   useEffect(() => {
@@ -122,11 +122,6 @@ function CalendarSection() {
   }, [selectedDate]);
 
   //Fetch data when month range changes
-  useEffect(() => {
-    if (location && contaminant) {
-      fetchData();
-    }
-  }, [datesOfTheMonth]);
 
   //Fetch calendar daily data
   const fetchCalendarData = () => {
