@@ -289,7 +289,9 @@ function MapPage() {
        */
 
       return {
-        currentLocation: location,
+        // Pass the selected location label (string) so Marcador can compare
+        // it with each marker's `locationStr` and apply the selected style.
+        currentLocation: location?.label || (location && location.value && location.value.address && location.value.address.zone) || null,
         ICAR_PM25: +data.ICAR_PM25 * 0.694,
         OMS_PM25: +data.OMS_PM25,
         AQI_PM25: +data.AQI_PM25,
