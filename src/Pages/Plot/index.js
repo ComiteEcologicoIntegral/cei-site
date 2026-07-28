@@ -42,12 +42,12 @@ function GraphSection() {
   const { contaminant, location, system } = useSelector(state => state.form);
 
   // Datos de los filtros
-  const [startDate, setStartDate] = useState(moment());
+  const [startDate, setStartDate] = useState(moment().startOf("day"));
   const [endDate, setEndDate] = useState(moment());
-  const [startTime, setStartTime] = useState(moment('00:00', 'HH:mm').format("HH:mm"));
+  const [startTime, setStartTime] = useState(moment("00:00", "HH:mm").format("HH:mm"));
   const [endTime, setEndTime] = useState(moment().format("HH:mm"));
-  const [startDateTime, setStartDateTime] = useState(new Date())
-  const [endDateTime, setEndDateTime] = useState(new Date())
+  const [startDateTime, setStartDateTime] = useState(moment().startOf("day").toDate());
+  const [endDateTime, setEndDateTime] = useState(new Date());
 
 
   /**
