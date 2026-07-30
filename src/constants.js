@@ -66,7 +66,7 @@ export const statusClassOrder = [
 
 export const statusClassName = {
   Good: "good",
-  Acceptable: "acceptable",
+  Acceptable: "regular",
   Bad: "bad",
   VeryBad: "very-bad",
   ExtremelyBad: "extremely-bad",
