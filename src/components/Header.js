@@ -65,7 +65,7 @@ const Header = () => {
             styles={{padding: 0}}
         >
             <Container>
-                <Navbar.Brand>
+                <Navbar.Brand as={NavLink} to="/">
                     <TiFeather />
                     CEI
                 </Navbar.Brand>
