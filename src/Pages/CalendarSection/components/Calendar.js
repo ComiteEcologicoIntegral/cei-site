@@ -90,6 +90,9 @@ function Calendar({ calendarData, selectedDate, setSelectedDate, datesOfTheMonth
     datesOfTheMonth.forEach((date) => {
       if (calendarData[date.getDate() - 1]) {
         let status = calendarData[date.getDate() - 1].status
+        if (status === 'ND') {
+          status = "no-data"
+        }
         tmpDayCount[status]++;
       }
     });
