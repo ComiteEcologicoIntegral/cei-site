@@ -146,7 +146,7 @@ function MapPage() {
 
   useEffect(() => {
     if (!location) return;
-    setCenter([location?.value.address.lat, location?.value.address.lon]);
+    setCenter([location?.value.address.lat + 0.06, location?.value.address.lon]);
   }, [location, setCenter]);
 
   // Dictionary that maps Sensor IDs to their assigned station names.

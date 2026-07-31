@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { divIcon } from "leaflet";
@@ -6,10 +12,13 @@ import "leaflet/dist/leaflet.css";
 import { Marker, Popup } from "react-leaflet";
 import { Button, Container, Col, Row } from "react-bootstrap";
 import moment from "moment";
-import {getStatusClassName} from "../handlers/statusCriteria";
-import {getStatusOMS} from "../handlers/statusCriteria";
-import {getICAR} from "../handlers/statusCriteria";
+import { getStatusClassName } from "../handlers/statusCriteria";
+import { getStatusOMS } from "../handlers/statusCriteria";
+import { getICAR } from "../handlers/statusCriteria";
 import { valueToFixed } from "../utils/gasUtils";
+import { useDispatch, useSelector } from "react-redux";
+import useSystemLocations from "../hooks/useSystemLocations";
+import { setLocation } from "../redux/formSlice";
 
 const fixedValues = {
   PM25: 2,
@@ -22,7 +31,7 @@ const fixedValues = {
 
 const isDataValid = (data) => {
   return data >= 0;
-}
+};
 
 const showLabel = (label) => {
   if (typeof label != "number") return label;
@@ -36,11 +45,19 @@ const showLabel = (label) => {
   return fixed;
 };
 
-const renderMarker = (label, status, shape = "round", currentLocation, locationStr) => {
+const renderMarker = (
+  label,
+  status,
+  shape = "round",
+  currentLocation,
+  locationStr,
+) => {
   return (
     <div
       className={`${
-        currentLocation === locationStr ? "marker-wrapper-selected" : "marker-wrapper"
+        currentLocation === locationStr
+          ? "marker-wrapper-selected"
+          : "marker-wrapper"
       }`}
     >
       <div
@@ -48,7 +65,10 @@ const renderMarker = (label, status, shape = "round", currentLocation, locationS
           currentLocation === locationStr ? "marker-border marker-size-" : ""
         }`}
       ></div>
-      <span className={`marker-${status}`} style={{ backgroundColor: "transparent" }}>
+      <span
+        className={`marker-${status}`}
+        style={{ backgroundColor: "transparent" }}
+      >
         {showLabel(label)}
       </span>
     </div>
@@ -100,6 +120,25 @@ function Marcador({
   const marker = useMemo(() => document.createElement("div"), []);
   const [icon, setIcon] = useState(null);
 
+  const { system, location } = useSelector((state) => state.form);
+  const { locations } = useSystemLocations(system?.value);
+
+  const dispatch = useDispatch();
+
+  const handleUpdateLocation = (newLocation) => {
+    dispatch(setLocation(newLocation));
+  };
+
+  const markerRef = useRef(null);
+
+  useEffect(() => {
+    if (location?.label === locationStr && markerRef.current) {
+      markerRef.current.openPopup();
+    } else if (markerRef.current) {
+      markerRef.current.closePopup();
+    }
+  }, [location, locationStr]);
+
   const values = {
     ICAR_PM25,
     OMS_PM25,
@@ -120,8 +159,7 @@ function Marcador({
     ICAR_SO2,
     OMS_SO2,
     AQI_SO2,
-};
-
+  };
 
   const getICARValue = (label) => {
     const getValue = (label) => {
@@ -141,28 +179,35 @@ function Marcador({
   const getOMSValue = (label) => {
     let ans = values[`OMS_${label}`];
     return ans.toFixed(fixedValues);
-  }
+  };
 
   const getAQIValue = (label) => {
     let ans = values[`AQI_${label}`];
     return ans.toFixed(fixedValues);
-  }
+  };
 
   const updateMarker = useCallback(
     (label_, status_, currentLocation_, locationStr_) => {
-      ReactDOM.render(renderMarker(label_, status_, shape, currentLocation_, locationStr_), marker);
+      ReactDOM.render(
+        renderMarker(label_, status_, shape, currentLocation_, locationStr_),
+        marker,
+      );
 
       setIcon(
         divIcon({
           html: marker,
           className: `sensor-icon ${
-            currentLocation_ === locationStr_ ? "top" : shape === "round" ? "" : "behind"
+            currentLocation_ === locationStr_
+              ? "top"
+              : shape === "round"
+                ? ""
+                : "behind"
           }`,
           popupAnchor: [7, 0],
-        })
+        }),
       );
     },
-    [shape, marker]
+    [shape, marker],
   );
 
   useEffect(() => {
@@ -171,14 +216,22 @@ function Marcador({
 
   if (!icon) return null;
 
+  const onClick = (event) => {
+    const selected_location = locations.find((l) => l.label == locationStr);
+    if (selected_location) {
+      handleUpdateLocation(selected_location);
+    }
+  };
+
   return (
     <Marker
+      ref={markerRef}
       position={position}
-      onClick={(event) => event.target.openPopup()}
       icon={icon}
+      eventHandlers={{ click: onClick }}
       {...props}
     >
-      <Popup maxWidth={1700}>
+      <Popup maxWidth={1700} autoPan={false}>
         <div className="px-3 py-2">
           <div
             className={`rounded marker-${current.status}`}
@@ -200,7 +253,9 @@ function Marcador({
             <Col xs={5}>
               <small className="text-muted">Concentración horaria</small>
               <br />
-              <data><time>{moment(lastUpdate).format("LL, LT")}</time></data>
+              <data>
+                <time>{moment(lastUpdate).format("LL, LT")}</time>
+              </data>
             </Col>
           </Row>
 
@@ -217,7 +272,7 @@ function Marcador({
             </Col>
           </Row>
 
-          <Container style={{padding: 0, width: "350px"}}>
+          <Container style={{ padding: 0, width: "350px" }}>
             <Row className="flex-nowrap">
               <Col xs={2} className="px-1 m-1"></Col>
               <Col xs={3} className="px-1 m-1">
@@ -229,51 +284,73 @@ function Marcador({
               <Col xs={2} className="px-1 m-1">
                 <small className="text-muted m-1">OMS</small>
                 <br />
-                <p style={{fontSize: "0.57rem"}} className="mb-0">µg/m3</p>
+                <p style={{ fontSize: "0.57rem" }} className="mb-0">
+                  µg/m3
+                </p>
               </Col>
               <Col xs={2} className="px-1 m-1">
                 <small className="text-muted m-1">EPA AQI</small>
               </Col>
             </Row>
-            {labels.map(({label, status, value, units}, idx) => {
-              if (isPurpleAir && label !="PM2.5") {
+            {labels.map(({ label, status, value, units }, idx) => {
+              if (isPurpleAir && label != "PM2.5") {
                 return;
               }
               let cleanLabel = label.replace(".", "");
               let ICAR_Value = getICARValue(cleanLabel);
               let OMS_Value = getOMSValue(cleanLabel);
               let AQI_Value = getAQIValue(cleanLabel);
-              return (<Row className="flex-nowrap">
-                <Col xs={2}>{label}</Col>
-                <Col xs={3} className={`px-1 m-1 rounded d-flex justify-content-between marker-${status}`}>
-                  <div>{value}</div><div> {units}</div>
-                </Col>
-                <Col xs={2} className={`px-1 m-1 rounded marker-${getICAR(ICAR_Value, cleanLabel, "semarnat")}`}>{ICAR_Value}</Col>
-                <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusOMS(OMS_Value, cleanLabel, "oms")}`}>{OMS_Value}</Col>
-                <Col xs={2} className={`px-1 m-1 rounded marker-${getStatusClassName(AQI_Value, cleanLabel, "ssa")}`}>{AQI_Value}</Col>
-              </Row>)
-            }
-            )}
+              return (
+                <Row className="flex-nowrap">
+                  <Col xs={2}>{label}</Col>
+                  <Col
+                    xs={3}
+                    className={`px-1 m-1 rounded d-flex justify-content-between marker-${status}`}
+                  >
+                    <div>{value}</div>
+                    <div> {units}</div>
+                  </Col>
+                  <Col
+                    xs={2}
+                    className={`px-1 m-1 rounded marker-${getICAR(ICAR_Value, cleanLabel, "semarnat")}`}
+                  >
+                    {ICAR_Value}
+                  </Col>
+                  <Col
+                    xs={2}
+                    className={`px-1 m-1 rounded marker-${getStatusOMS(OMS_Value, cleanLabel, "oms")}`}
+                  >
+                    {OMS_Value}
+                  </Col>
+                  <Col
+                    xs={2}
+                    className={`px-1 m-1 rounded marker-${getStatusClassName(AQI_Value, cleanLabel, "ssa")}`}
+                  >
+                    {AQI_Value}
+                  </Col>
+                </Row>
+              );
+            })}
           </Container>
-        <div className="data-label text-center">
-          <small className="text-muted">
-            *Índice de acuerdo a la{" "}
-            <a
-              className="text-black"
-              href="https://www.dof.gob.mx/nota_detalle.php?codigo=5715154&fecha=25/01/2024#gsc.tab=0"
-            >
-              NOM-172-SEMARNAT-2023
-            </a>
-          </small>
-        </div>
-        <div className="py-2 px-3 border-top text-center">
-          <p className="lh-sm mt-2 mb-0">
-            Fuente(s):{" "}
-            <a target="blank" href={provider.ref}>
-              {provider.name}
-            </a>
-          </p>
-        </div>
+          <div className="data-label text-center">
+            <small className="text-muted">
+              *Índice de acuerdo a la{" "}
+              <a
+                className="text-black"
+                href="https://www.dof.gob.mx/nota_detalle.php?codigo=5715154&fecha=25/01/2024#gsc.tab=0"
+              >
+                NOM-172-SEMARNAT-2023
+              </a>
+            </small>
+          </div>
+          <div className="py-2 px-3 border-top text-center">
+            <p className="lh-sm mt-2 mb-0">
+              Fuente(s):{" "}
+              <a target="blank" href={provider.ref}>
+                {provider.name}
+              </a>
+            </p>
+          </div>
         </div>
       </Popup>
     </Marker>
@@ -333,7 +410,7 @@ Marcador.propTypes = {
       status: PropTypes.number,
       units: PropTypes.string,
       ref: PropTypes.string,
-    })
+    }),
   ),
 };
 

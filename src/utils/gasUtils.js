@@ -8,6 +8,5 @@ const fixedValues = {
 };
 
 export const valueToFixed = (val, gas) => {
-  console.log("gas", gas, fixedValues[gas])
   return val.toFixed(fixedValues[gas]);
 };
