@@ -72,7 +72,7 @@ const unidad = {
 
 function CalendarSection() {
   //Global state (Redux)
-  const { location, contaminant } = useSelector((state) => state.form);
+  const { location, contaminant, system } = useSelector((state) => state.form);
 
   const [dataByHour, setDataByHour] = useState(null);
   const [avgOptions, setAvgOptions] = useState({});
@@ -96,10 +96,10 @@ function CalendarSection() {
 
   //Fetch data when date is updated
   useEffect(() => {
-    if (location && contaminant) {
+    if (location && contaminant && avgType?.value) {
       fetchData();
     }
-  }, [selectedDate]);
+  }, [selectedDate, datesOfTheMonth, location, contaminant, avgType, system]);
 
   //Update month range when selected date changes
   useEffect(() => {
@@ -122,11 +122,6 @@ function CalendarSection() {
   }, [selectedDate]);
 
   //Fetch data when month range changes
-  useEffect(() => {
-    if (location && contaminant) {
-      fetchData();
-    }
-  }, [datesOfTheMonth]);
 
   //Fetch calendar daily data
   const fetchCalendarData = () => {
@@ -170,19 +165,19 @@ function CalendarSection() {
 
   //Build query string to download
   function getQueryStringToDownload() {
-    let queryStr = "location=";
+  if (!location || !contaminant) return null;
 
-    queryStr += location.value;
-    // Para el calendario se descarga todo el mes
-    queryStr +=
-      "&gas=" +
-      contaminant.value +
-      "&start_date=" +
-      moment().startOf("month").format("YYYY-MM-DD") +
-      "&end_date=" +
-      moment().endOf("month").format("YYYY-MM-DD");
-    return queryStr;
-  }
+  const start = moment(selectedDate).startOf("month").toISOString();
+  const end = moment(selectedDate).endOf("month").toISOString();
+
+  return (
+    `location=${location.value.id}` +
+    `&gas=${contaminant.value}` +
+    `&system=${system.opt}` +
+    `&start_date=${start}` +
+    `&end_date=${end}`
+  );
+}
 
   //Trigger file download for selected month
   function downloadFile() {

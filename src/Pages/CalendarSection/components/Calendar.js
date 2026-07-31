@@ -90,6 +90,9 @@ function Calendar({ calendarData, selectedDate, setSelectedDate, datesOfTheMonth
     datesOfTheMonth.forEach((date) => {
       if (calendarData[date.getDate() - 1]) {
         let status = calendarData[date.getDate() - 1].status
+        if (status === 'ND') {
+          status = "no-data"
+        }
         tmpDayCount[status]++;
       }
     });
@@ -105,10 +108,19 @@ function Calendar({ calendarData, selectedDate, setSelectedDate, datesOfTheMonth
    * @param {Date} date - Date to evaluate
    * @returns {string} - Status for the given date (e.g "good","bad")
    */
-  const getDateStatus = (date) => {
-    if (!calendarData) return;
-    return calendarData[date.getDate() - 1].status;
-  }
+  const statusToClass = {
+  good: "good",
+  regular: "regular",
+  bad: "bad",
+  very_bad: "very-bad",
+  extremely_bad: "extremely-bad",
+  ND: "no-data",
+};
+
+const getDateStatus = (date) => {
+  if (!calendarData) return;
+  return statusToClass[calendarData[date.getDate() - 1].status];
+}
   /**
    * tileClassName
    *
@@ -130,7 +142,7 @@ function Calendar({ calendarData, selectedDate, setSelectedDate, datesOfTheMonth
         return "out-of-range";
       }
     },
-    [calendarData]
+    [calendarData, datesOfTheMonth, avgType]
   );
   //Render
   return (
